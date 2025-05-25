@@ -1,2 +1,2 @@
-# PPS-25-Skalamon
+# PPS-24-Skalamon
 Pokémon clone developed in Scala.
