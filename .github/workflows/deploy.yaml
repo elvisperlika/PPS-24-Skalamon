@@ -1,14 +1,15 @@
-name: CI
+name: Deploy
 
 on:
   push:
     branches: [ "main", "develop", "ci-setup" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
   test:
-    runs-on: [ ubuntu-latest ]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -20,12 +21,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'sbt'
-
-      - name: Run tests
-        run: sbt test
-
-      - name: Build JAR
-        run: sbt assembly
 
       - name: Create release
         uses: softprops/action-gh-release@v2
