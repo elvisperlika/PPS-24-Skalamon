@@ -22,7 +22,10 @@ jobs:
           distribution: 'temurin'
           cache: 'sbt'
 
-      - name: Linting
+      - name: Setup sbt launcher
+        uses: sbt/setup-sbt@v1
+
+      - name: Run sbt scalafix
         run: sbt scalafixAll --check
 
       - name: Create release
