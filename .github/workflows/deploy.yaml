@@ -23,7 +23,7 @@ jobs:
           cache: 'sbt'
 
       - name: Linting
-        uses: sbt scalafixAll --check
+        run: sbt scalafixAll --check
 
       - name: Create release
         uses: softprops/action-gh-release@v2
