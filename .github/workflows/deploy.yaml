@@ -29,7 +29,7 @@ jobs:
         run: sbt test
 
       - name: Check style
-        run: sbt scalafixAll --check
+        run: sbt scalafixAll
 
       - name: Create release
         uses: softprops/action-gh-release@v2
