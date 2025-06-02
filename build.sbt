@@ -1,6 +1,13 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.3.6"
+inThisBuild(
+  List(
+    scalaVersion := "3.3.6",
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision,
+    scalacOptions ++= Seq("-Wunused:all", "-Wunused:imports")
+  )
+)
 
 lazy val root = (project in file("."))
   .settings(
