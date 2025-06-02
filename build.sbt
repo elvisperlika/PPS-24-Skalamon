@@ -11,5 +11,6 @@ inThisBuild(
 
 lazy val root = (project in file("."))
   .settings(
-    name := "PPS-24-Skalamon"
+    name := "PPS-24-Skalamon",
+    libraryDependencies += "junit" % "junit" % "4.13.2" % Test
   )

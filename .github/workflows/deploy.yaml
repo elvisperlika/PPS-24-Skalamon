@@ -25,7 +25,10 @@ jobs:
       - name: Setup sbt launcher
         uses: sbt/setup-sbt@v1
 
-      - name: Run sbt scalafix
+      - name: Run tests
+        run: sbt test
+
+      - name: Check style
         run: sbt scalafixAll --check
 
       - name: Create release
