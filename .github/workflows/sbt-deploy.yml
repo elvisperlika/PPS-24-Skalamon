@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    uses: elvisperlika/PPS-24-Skalamon/.github/workflows/sbt-test.yaml
+    uses: elvisperlika/PPS-24-Skalamon/.github/workflows/sbt-test.yaml@ci-setup
 
   build:
     needs: [test]
