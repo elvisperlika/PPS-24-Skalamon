@@ -1,3 +1,5 @@
+package it.unibo.skalamon
+
 
 @main
 def main(): Unit =

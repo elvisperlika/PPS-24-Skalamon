@@ -1,3 +1,5 @@
+package it.unibo.skalamon
+
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
