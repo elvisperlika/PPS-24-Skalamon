@@ -75,10 +75,10 @@
 ## 2. Requirements
 ### 2.1 Business Requirements
 
-[//]: # (Business Requirements why?:
+/* Business Requirements why?:
 answering to: why is this SW strategic?
 high-level: project goals, customers hopes, developers goals...
-should necessarily clarify: how do we judge if the project is successful?)
+should necessarily clarify: how do we judge if the project is successful? */
 
 Business requirements define the "business solution" for a
 project, encompassing customer needs and expectations.
@@ -93,9 +93,9 @@ requirements have been identified:
   local multiplayer mode or against an AI opponent.
 
 ### 2.2 User Requirements
-[//]: # (User Requirements: how the projects result is used by end users
+/* User Requirements: how the projects result is used by end users
 how users specifically interact with the SW?
-which I/O constraints exist?)
+which I/O constraints exist? */
 
  - Users will interact with the system using a keyboard and view
   the game through a graphical user interface (GUI).
@@ -113,40 +113,107 @@ which I/O constraints exist?)
    - Selecting the Pokémon they want to bring into battle
    - Choosing one of the available actions to perform each turn
 
-[//]: # (TODO: manca qualcosa?)
+/* TODO: manca qualcosa */
 
 ### 2.3 Functional Requirements
-[//]: # (Functional Requirements, what functionalities?
+/* Functional Requirements, what functionalities?
 what are the functions/features the system provides?
 2.1 User Requirements: how the projects result is used by end users
-how users speci cally interact with the SW?
+how users specifically interact with the SW?
 which I/O constraints exist?
 2.2 System Requirements: how the system internally works/operates
-what are its rules of behaviour, norms, constraints?)
+what are its rules of behaviour, norms, constraints? */
 
- - la partita dev'essere avviata tramite interazione dell'utente che dovrà scelgiere
-  se giocare contro un altro umano, oppure contro l'intelligenza artificiale
- - prima del'inizio della partita ogni giocatore dovrà scegliere da 1 a 6 pokemon che si dovrà portare apresso durante la battaglia
- - all'inizio della partita ogni giocatore dovrà scegliere uno tra i propri pokemon da schierare sul campo
- - Il gioco si svolge in maniera interattiva, facendo eseguire le mosse dei giocatori una volta a testa, nel caso in cui si giochi contro un umano, altrimenti dopo ogni azione dell'utente l'intelligenza artificiale prendere una decisione in autonomia facendo passare il turno.
- - Dopo che ogni giocatore ha scelta la propria azione, i pokemon li eseguono uno alla volta, in base al livello di *priorità*
-  della mossa. Il livello di priorità va da -7 a +6 e l'azione con la priorità maggiore viene eseguita prima.
-  Nel caso il livello di priorità sia lo stesso, si fa riferimento alla *velocità* del pokemon, che funziona in modo analogo
-  alla priorità. Nel caso sia la priorità dell'azione che della velocità del pokemon siano la stessa, viene scelta un'azione
-  a caso.
- - Le azioni da poter scegleire sono 2:
-   - cambiare pokemon
-   - una tra le 4 possibili mosse, che variano da pokemon a pokemon
+ - The player selects a team consisting of 1 to 6 Pokémon.
 
-TODO: da finire, che mi sono rotto per oggi
+ - **Battle**:
+   - Battles are turn-based.
+   - In the first turn, each player chooses a Pokémon to send out.
+   - On each turn, players choose one of the following actions:
+     - Switch Pokémon  
+     - Use one of the four available moves (which vary by Pokémon)
+   - The match ends when all of a player’s Pokémon have fainted; the
+   - opposing player is declared the winner.
 
- - La partita termina quando tutti i pokemon di un giocatore sono stati sconfitti e l'altro giocatore vince
+ - **Pokémon**:
+   - Each Pokémon is defined by several attributes:
+     - **Descriptive**: Name, Gender (male/female/none), 1–2 types,
+      1–4 moves, 1 passive ability, and weight (in kg)  
+     - **Stats**: HP (Health Points), Attack, Defense, Special Attack,
+      Special Defense, Speed  
+       > These stats are affected by the Pokémon’s level.
 
+ - **Turn**:
+   - The system waits until both players have selected an action.
+   - Actions are executed in order of priority, as explained later.
+   - Once all actions are executed, the turn ends.
+
+ - **Move**:
+  Each move is defined by several properties:
+   - Name  
+   - Type  
+   - Power  
+   - Accuracy (either a percentage or `-`, meaning the move always hits)  
+   - Power Points (number of times the move can be used)  
+   - Priority: ranges from -7 to 6, determining which Pokémon acts first.
+    In case of equal priority, Speed determines the   order.  
+  - Target: *single*, *adjacent*, *all*, *self*, *random*  
+    > (Note: target types are included for potential future support of 2v2
+    battles.)  
+  - Effect: could deal damage, apply a status condition, or alter stats
+    (increase/decrease). Each effect has a percentage chance to occur.
+
+- **Move Classes**:
+  Each move belongs to a class that determines its behavior. Examples
+  include:
+  - Single-hit (default)  
+  - Multi-hit  
+  - Charge (e.g., *Solar Beam*, which skips one turn and attacks the next)
+
+- **Type Efficiency**:
+  A move’s type can interact with the target’s types in the following ways:
+  - Neutral (1×)  
+  - Resisted (0.5×)  
+  - Super effective (2× or 4×)  
+  - Immune (0×)  
+  > All type effectiveness values are shown in the following chart:  
+  ![alt text](https://raw.githubusercontent.com/elvisperlika/PPS-24-Skalamon/refs/heads/gh-pages/images/type-efficiency.png)
+
+- **Field**:
+  The battlefield can be affected by temporary environmental changes. Each
+  lasts exactly 5 turns, and only one instance of each type can be active
+  at any time:
+  - **Weather**: Can be set by abilities or moves and may boost or reduce
+    move effectiveness.
+  - **Terrain**: Similar to Weather but only affects grounded Pokémon.
+  - **Room Effects**: Also triggered by specific moves. Examples include:
+    - *Trick Room*: Reverses move order within each priority bracket; slower
+      Pokémon move before faster ones.  
+    - *Wonder Room*: Swaps Defense and Special Defense stats.
+  - **Side Conditions**: Can be stacked, triggered by specific moves, and
+      affect only one side of the field.
+
+- **Abilities**:
+  Abilities are passive effects that can trigger at different phases:
+  - When switching in  
+  - When receiving damage  
+  - At the start of each turn  
+  - Before or after using a move  
+  - At the end of each turn  
+  - Upon being knocked out  
+  - Permanent (always active)
+
+- **Categories**:
+  Similar to move classes, categories describe the effects or alterations a
+  move or ability might produce. Examples include:
+  - Stat-modifying  
+  - Type-modifying  
+  - Move-altering
 
 ### 2.4 Non-functional Requirements
-[//]: # (Non-functional Requirements, what qualities?
+/* Non-functional Requirements, what qualities?
 what are the general properties and quality attributes of the solution?
-performance, scalability, reliability, friendliness, . . .)
+performance, scalability, reliability, friendliness, . . . */
 
  - A minimal and intuitive graphical interface to ensure accessibility
   even for less experienced players.
@@ -156,13 +223,11 @@ performance, scalability, reliability, friendliness, . . .)
   against an AI opponent.
 
 ### 2.5 Implementation Requirements
-[//]: # (Implementation Requirements what, constraints on production ?,
+/* Implementation Requirements what, constraints on production ?,
 they anticipate details of architecture/design/implementation/process
 what are constraints for the implementor? and why
 technologies, training, material, internal quality
-do not anticipate design decisions!)
-
-
+do not anticipate design decisions! */
 
  - The code should be modular to facilitate the addition of new Pokémon,
   moves, and other game elements.
@@ -176,10 +241,10 @@ The game will be entirely developed in **Scala** and tested using the
 [**AsciiPanel**](https://github.com/trystan/AsciiPanel) library will
 be used.
 
-[//]: # (TODO: inserire un eventuale libreria grafica o anche solo una libreria
+/* TODO: inserire un eventuale libreria grafica o anche solo una libreria
 TODO: che aiuti con l'integrazione del tutto in un terminale
 TODO: vedere se useremo o meno AsciiPanel, nel caso è da tolgiere
-TODO: mettere anche il prolog, cosi non dobbiamo fare il progettino a part)
+TODO: mettere anche il prolog, cosi non dobbiamo fare il progettino a part */
 
 ## 3. Domain Analysis
 ### 3.1 Intensional Aspects
