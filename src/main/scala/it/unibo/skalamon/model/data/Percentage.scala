@@ -26,8 +26,9 @@ case class Percentage(private val value: Int):
     * @return
     *   A random boolean value based on the percentage.
     */
-  def randomBoolean(generator: RandomGenerator = RandomGenerator()): Boolean =
-    scala.util.Random.nextInt(MaxBound) < value
+  def randomBoolean(generator: RandomGenerator = RandomGenerator()): Boolean = {
+    generator.nextInt(MinBound, MaxBound) < value
+  }
 
   override def toString: String = s"$value%"
 

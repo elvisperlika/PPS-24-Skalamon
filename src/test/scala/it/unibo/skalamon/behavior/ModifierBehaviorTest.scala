@@ -43,6 +43,6 @@ class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers {
     val behavior2 = new SimpleSingleHitBehavior(HIT_POWER)
       with ProbabilityModifier(50.percent, generator = generator)
 
-    getPlainBehaviors(behavior1(context)) shouldEqual List(behavior1)
-    getPlainBehaviors(behavior2(context)) shouldEqual List()
+    getPlainBehaviors(behavior1(context)) shouldEqual List()
+    getPlainBehaviors(behavior2(context)) shouldEqual List(behavior1)
 }
