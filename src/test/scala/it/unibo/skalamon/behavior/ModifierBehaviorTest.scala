@@ -4,7 +4,7 @@ import it.unibo.skalamon.behavior.BehaviorTestUtils.*
 import it.unibo.skalamon.model.behavior.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.*
-import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.data.{RandomGenerator, percent}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -37,11 +37,11 @@ class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers {
     getPlainBehaviors(result) shouldEqual List()
 
   "Behavior with 50% chance" should "generate randomly" in:
-    val generator = alternatingNumberGenerator()
+    given RandomGenerator = alternatingNumberGenerator()
     val behavior1 = new SimpleSingleHitBehavior(HIT_POWER)
-      with ProbabilityModifier(50.percent, generator = generator)
+      with ProbabilityModifier(50.percent)
     val behavior2 = new SimpleSingleHitBehavior(HIT_POWER)
-      with ProbabilityModifier(50.percent, generator = generator)
+      with ProbabilityModifier(50.percent)
 
     getPlainBehaviors(behavior1(context)) shouldEqual List()
     getPlainBehaviors(behavior2(context)) shouldEqual List(behavior1)

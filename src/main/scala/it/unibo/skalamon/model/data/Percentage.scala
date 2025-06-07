@@ -26,7 +26,7 @@ case class Percentage(private val value: Int):
     * @return
     *   A random boolean value based on the percentage.
     */
-  def randomBoolean(generator: RandomGenerator = RandomGenerator()): Boolean = {
+  def randomBoolean(using generator: RandomGenerator = RandomGenerator()): Boolean = {
     generator.nextInt(MinBound, MaxBound) < value
   }
 

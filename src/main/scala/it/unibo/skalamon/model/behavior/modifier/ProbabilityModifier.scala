@@ -9,15 +9,15 @@ import it.unibo.skalamon.model.move.MoveContext
   * @param percentage
   *   The probability of applying the behavior.
   */
-trait ProbabilityModifier(
-    percentage: Percentage,
+trait ProbabilityModifier(percentage: Percentage)(using
     generator: RandomGenerator = RandomGenerator()
 ) extends Behavior:
   abstract override def apply(context: MoveContext)(using
       modifiers: BehaviorModifiers
   ): MoveContext =
     given BehaviorModifiers = modifiers
-    if (percentage.randomBoolean(generator)) {
+    given RandomGenerator = generator
+    if (percentage.randomBoolean) {
       super.apply(context)
     } else {
       EmptyBehavior.apply(context)
