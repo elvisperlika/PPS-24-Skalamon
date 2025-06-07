@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.behavior.kind
 
+import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.move.MoveContext
 
 /** A [[HitBehavior]] that represents a multi-hit move, where the move can hit
@@ -20,9 +21,11 @@ trait MultiHitBehavior extends HitBehavior {
     */
   def power(hitIndex: Int): Int
 
-  override def apply(move: MoveContext): MoveContext =
+  override def apply(
+      move: MoveContext
+  )(using modifiers: BehaviorModifiers): MoveContext =
     move.copy(hits = move.hits ++ (0 until hits).map { hitIndex =>
-      MoveContext.Hit(power(hitIndex))
+      MoveContext.Hit(power(hitIndex), target = modifiers.target)
     })
 }
 
@@ -51,14 +54,30 @@ object MultiHitBehavior {
     VariableMultiHitBehavior(hits, power)
 }
 
-private case class FixedMultiHitBehavior(
+/** A simple implementation of [[MultiHitBehavior]] that uses a fixed power for
+  * each hit.
+  *
+  * @param hits
+  *   The number of hits.
+  * @param power
+  *   The fixed power of each hit.
+  */
+case class FixedMultiHitBehavior(
     hits: Int,
     private val power: Int
 ) extends MultiHitBehavior {
   override def power(hitIndex: Int): Int = this.power
 }
 
-private case class VariableMultiHitBehavior(
+/** A simple implementation of [[MultiHitBehavior]] that uses a variable power
+  * for each hit.
+  *
+  * @param hits
+  *   The number of hits.
+  * @param variablePower
+  *   A function that takes the hit index and returns the power for that hit.
+  */
+case class VariableMultiHitBehavior(
     hits: Int,
     private val variablePower: (hitIndex: Int) => Int
 ) extends MultiHitBehavior {
