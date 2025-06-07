@@ -1,7 +1,7 @@
 package it.unibo.skalamon.model.behavior.modifier
 
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
-import it.unibo.skalamon.model.data.Percentage
+import it.unibo.skalamon.model.data.{Percentage, RandomGenerator}
 import it.unibo.skalamon.model.move.MoveContext
 
 /** A mixin trait for [[Behavior]] that allows specifying a probability of
@@ -9,12 +9,15 @@ import it.unibo.skalamon.model.move.MoveContext
   * @param percentage
   *   The probability of applying the behavior.
   */
-trait ProbabilityModifier(percentage: Percentage) extends Behavior:
+trait ProbabilityModifier(
+    percentage: Percentage,
+    generator: RandomGenerator = RandomGenerator()
+) extends Behavior:
   abstract override def apply(context: MoveContext)(using
       modifiers: BehaviorModifiers
   ): MoveContext =
     given BehaviorModifiers = modifiers
-    if (percentage.randomBoolean) {
+    if (percentage.randomBoolean(generator)) {
       super.apply(context)
     } else {
       EmptyBehavior.apply(context)
