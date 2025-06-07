@@ -1,7 +1,6 @@
 package it.unibo.skalamon.model.behavior.kind
 
-import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
-import it.unibo.skalamon.model.move.MoveContext
+import it.unibo.skalamon.model.behavior.Behavior
 
 /** A [[HitBehavior]] that represents a multi-hit move, where the move can hit
   * multiple times. Each hit can have a different power, which can be fixed or
@@ -21,12 +20,15 @@ trait MultiHitBehavior extends HitBehavior {
     */
   def power(hitIndex: Int): Int
 
-  override def apply(
-      move: MoveContext
-  )(using modifiers: BehaviorModifiers): MoveContext =
-    move.copy(hits = move.hits ++ (0 until hits).map { hitIndex =>
-      MoveContext.Hit(power(hitIndex), target = modifiers.target)
-    })
+  /**
+   * Delegates the behavior of an N-hit move to N single-hit behaviors.
+   * @return a list of [[SingleHitBehavior]] of size [[hits]].
+   */
+  override protected def delegates: List[Behavior] =
+    (0 until hits)
+      .map(power)
+      .map(SingleHitBehavior.apply)
+      .toList
 }
 
 object MultiHitBehavior {

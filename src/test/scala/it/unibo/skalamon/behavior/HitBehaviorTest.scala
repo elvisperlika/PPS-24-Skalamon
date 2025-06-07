@@ -21,43 +21,53 @@ class HitBehaviorTest extends AnyFlatSpec with should.Matchers {
     source = MutablePokemon(hp = 100)
   )
 
+  private def getPlainBehaviors(context: MoveContext): List[Behavior] =
+    context.behaviors.map(_._1)
+
   "SingleHitBehavior" should "apply a single hit" in:
     val behavior = SingleHitBehavior(30)
     val result = behavior(context)
-    result.hits shouldEqual List(MoveContext.Hit(30, target = None))
+    getPlainBehaviors(result) shouldEqual List(SingleHitBehavior(30))
 
   "MultiHitBehavior" should "apply multiple hits with the same power" in:
     val behavior = MultiHitBehavior(hits = 3, power = 20)
     val result = behavior(context)
-    result.hits shouldEqual List(
-      MoveContext.Hit(20, target = None),
-      MoveContext.Hit(20, target = None),
-      MoveContext.Hit(20, target = None)
+    getPlainBehaviors(result) shouldEqual List(
+      SingleHitBehavior(20),
+      SingleHitBehavior(20),
+      SingleHitBehavior(20)
     )
 
   "MultiHitBehavior" should "apply multiple hits with the different power" in:
     val behavior =
       MultiHitBehavior(hits = 3, power = hitIndex => (hitIndex + 1) * 10)
     val result = behavior(context)
-    result.hits shouldEqual List(
-      MoveContext.Hit(10, target = None),
-      MoveContext.Hit(20, target = None),
-      MoveContext.Hit(30, target = None)
+    getPlainBehaviors(result) shouldEqual List(
+      SingleHitBehavior(10),
+      SingleHitBehavior(20),
+      SingleHitBehavior(30)
     )
 
   "SingleHitBehavior with self-target" should "target the source" in:
     val behavior = new SimpleSingleHitBehavior(30)
       with TargetModifier(TargetModifier.Type.Self)
     val result = behavior.apply(context)
-    result.hits shouldEqual List(
-      MoveContext.Hit(30, target = Some(TargetModifier.Type.Self))
+    result.behaviors shouldEqual List(
+      (
+        SingleHitBehavior(30),
+        BehaviorModifiers(target = Some(TargetModifier.Type.Self))
+      )
     )
 
-  "SingleHitBehavior with chance" should "have a probability" in:
+  "SingleHitBehavior with 100% chance" should "never fail" in:
     val behavior = new SimpleSingleHitBehavior(30)
-      with ProbabilityModifier(50.percent)
+      with ProbabilityModifier(100.percent)
     val result = behavior.apply(context)
-    result.hits shouldEqual List(
-      MoveContext.Hit(30, target = Some(TargetModifier.Type.Self))
-    )
+    getPlainBehaviors(result) shouldEqual List(behavior)
+
+  "SingleHitBehavior with 0% chance" should "always fail" in:
+    val behavior = new SimpleSingleHitBehavior(30)
+      with ProbabilityModifier(0.percent)
+    val result = behavior.apply(context)
+    getPlainBehaviors(result) shouldEqual List()
 }

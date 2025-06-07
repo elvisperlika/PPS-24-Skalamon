@@ -1,11 +1,14 @@
 package it.unibo.skalamon.model.data
 
+import it.unibo.skalamon.model.data.Percentage.{MaxBound, MinBound}
+
 /** A percentage value that can be used to calculate a portion of a given value.
-  * @param percentage
+  *
+  * @param value
   *   The percentage value, between 0 and 100.
   */
-case class Percentage(percentage: Int):
-  require(percentage >= 0 && percentage <= 100)
+case class Percentage(private val value: Int):
+  require(value >= MinBound && value <= MaxBound)
 
   /** Calculates the percentage of a given value.
     * @param value
@@ -14,9 +17,26 @@ case class Percentage(percentage: Int):
     *   The calculated percentage of the value.
     */
   def of(value: Int): Int =
-    (value * percentage) / 100
+    (value * value) / MaxBound
 
-  override def toString: String = s"$percentage%"
+  /** Generates a random boolean based on the percentage. If the percentage is
+    * 0, it always returns false. If the percentage is 100, it always returns
+    * true.
+    *
+    * @return
+    *   A random boolean value based on the percentage.
+    */
+  def randomBoolean: Boolean =
+    scala.util.Random.nextInt(MaxBound) < value
+
+  override def toString: String = s"$value%"
+
+object Percentage:
+  /** The minimum value accepted by a percentage. */
+  val MinBound: Int = 0
+
+  /** The maximum value accepted by a percentage. */
+  val MaxBound: Int = 100
 
 extension (i: Int)
   /** @return

@@ -1,8 +1,5 @@
 package it.unibo.skalamon.model.behavior.kind
 
-import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
-import it.unibo.skalamon.model.move.MoveContext
-
 /** A [[HitBehavior]] that represents a single-hit move.
   */
 trait SingleHitBehavior extends HitBehavior:
@@ -11,13 +8,6 @@ trait SingleHitBehavior extends HitBehavior:
     *   The power of the hit.
     */
   def power: Int
-
-  override def apply(
-      move: MoveContext
-  )(using modifiers: BehaviorModifiers): MoveContext =
-    move.copy(hits =
-      move.hits :+ MoveContext.Hit(power, target = modifiers.target)
-    )
 
 object SingleHitBehavior:
 

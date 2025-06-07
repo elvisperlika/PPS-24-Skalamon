@@ -1,6 +1,7 @@
 package it.unibo.skalamon.model.move
 
-import it.unibo.skalamon.model.behavior.modifier.TargetModifier
+import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.pokemon.MutablePokemon
 
 /** Represents the context of a move that can be executed in a battle.
@@ -11,22 +12,13 @@ import it.unibo.skalamon.model.pokemon.MutablePokemon
   *   The target Pokémon of the move.
   * @param source
   *   The source Pokémon that is executing the move.
-  * @param hits
-  *   Ordered hits that will occur during the execution of the move, each with
-  *   its own power.
+  * @param behaviors
+  *   Ordered behaviors that will be applied during the execution of the move,
+  *   associated with their modifiers.
   */
 case class MoveContext(
     move: MutableMove,
     target: MutablePokemon,
     source: MutablePokemon,
-    var hits: List[MoveContext.Hit] = List.empty
+    behaviors: List[(Behavior, BehaviorModifiers)] = List.empty
 )
-
-object MoveContext:
-  /** A single hit caused by a move by [[MoveContext]]'s source on
-    * [[MoveContext]]'s target.
-    *
-    * @param power
-    *   The base power of the hit.
-    */
-  case class Hit(power: Int, target: Option[TargetModifier.Type])
