@@ -45,4 +45,17 @@ class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers {
 
     getPlainBehaviors(behavior1(context)) shouldEqual List()
     getPlainBehaviors(behavior2(context)) shouldEqual List(behavior1)
+
+  "HitBehavior with ranging damage" should "generate randomly" in:
+    val MAX_HIT_POWER = 50
+    given RandomGenerator = alternatingNumberGenerator()
+    val behavior =
+      RandomModifier(HIT_POWER, MAX_HIT_POWER)(SimpleSingleHitBehavior(_))
+
+    getPlainBehaviors(behavior(context)) shouldEqual List(
+      SingleHitBehavior(MAX_HIT_POWER)
+    )
+    getPlainBehaviors(behavior(context)) shouldEqual List(
+      SingleHitBehavior(HIT_POWER)
+    )
 }
