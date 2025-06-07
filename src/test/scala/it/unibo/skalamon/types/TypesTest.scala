@@ -1,6 +1,6 @@
 package it.unibo.skalamon.types
 
-import it.unibo.skalamon.model.types.TypesRegister
+import it.unibo.skalamon.model.types.{Type, TypesRegister}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -26,20 +26,25 @@ class TypesTest extends AnyFlatSpec with should.Matchers {
   }
 
   it should "let add new Types" in {
-    TypesRegister.createType("Fire")
+    TypesRegister.createType(Type("Fire"))
     TypesRegister.size should equal(1)
   }
 
   it should "be empty on reset" in {
-    TypesRegister.createType("Fire")
+    TypesRegister.reset()
+    TypesRegister.size should equal(0)
+    TypesRegister.createType(Type("Water"))
     TypesRegister.reset()
     TypesRegister.size should equal(0)
   }
 
   it should "throw IllegalArgumentException if want to create existing type" in {
     TypesRegister.reset()
-    TypesRegister.createType("Fire")
-    a [IllegalArgumentException] should be thrownBy TypesRegister.createType("Fire")
+    TypesRegister.createType(Type("Fire"))
+    a [IllegalArgumentException] should be thrownBy TypesRegister.createType(Type("Fire"))
   }
+
+  
+
 
 }

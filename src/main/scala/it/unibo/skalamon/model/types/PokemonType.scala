@@ -16,13 +16,13 @@ object Type:
 object TypesRegister:
 
   private var typesList: List[Type] = List()
-  
+
   def size: Int = typesList.size
   
-  def createType(typeName: String): Unit =
-    require(!typesList.exists(_.name == typeName))
-    typesList = Type(typeName) :: typesList
+  def createType(newType: Type): Unit =
+    require(!typesList.exists(_.name == newType.name))
+    typesList = newType :: typesList
 
   def reset(): Unit =
-    typesList = Nil
+    typesList = List.empty
   
