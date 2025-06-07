@@ -1,7 +1,7 @@
 package it.unibo.skalamon.model.move
 
-import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
+import it.unibo.skalamon.model.behavior.{Behavior, WithBehaviors}
 import it.unibo.skalamon.model.pokemon.MutablePokemon
 
 /** Represents the context of a move that can be executed in a battle.
@@ -20,5 +20,10 @@ case class MoveContext(
     move: MutableMove,
     target: MutablePokemon,
     source: MutablePokemon,
-    behaviors: List[(Behavior, BehaviorModifiers)] = List.empty
-)
+    override val behaviors: List[(Behavior, BehaviorModifiers)] = List.empty
+) extends WithBehaviors:
+
+  override def append[T <: WithBehaviors](
+      newBehaviors: List[(Behavior, BehaviorModifiers)]
+  ): T =
+    this.copy(behaviors = behaviors ++ newBehaviors).asInstanceOf[T]

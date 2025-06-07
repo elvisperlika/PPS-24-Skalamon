@@ -1,8 +1,7 @@
 package it.unibo.skalamon.model.behavior.modifier
 
-import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.behavior.{Behavior, WithBehaviors}
 import it.unibo.skalamon.model.data.RandomGenerator
-import it.unibo.skalamon.model.move.MoveContext
 
 /** A mixin trait for [[Behavior]] that applies a random modifier to the
   * behavior based on a range of values.
@@ -19,9 +18,9 @@ case class RandomModifier(min: Int, max: Int)(
 )(using generator: RandomGenerator = RandomGenerator())
     extends Behavior:
 
-  override def apply(context: MoveContext)(using
+  override def apply[T <: WithBehaviors](container: T)(using
       modifiers: BehaviorModifiers
-  ): MoveContext =
+  ): T =
     given BehaviorModifiers = modifiers
     val value = generator.nextInt(min, max)
-    behavior(value).apply(context)
+    behavior(value).apply(container)

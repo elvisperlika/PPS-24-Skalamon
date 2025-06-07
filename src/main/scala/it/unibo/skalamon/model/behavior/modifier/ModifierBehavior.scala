@@ -1,7 +1,6 @@
 package it.unibo.skalamon.model.behavior.modifier
 
-import it.unibo.skalamon.model.behavior.Behavior
-import it.unibo.skalamon.model.move.MoveContext
+import it.unibo.skalamon.model.behavior.{Behavior, WithBehaviors}
 
 /** A mixin trait for [[Behavior]] that allows modifying the behavior itself by
   * means of new [[BehaviorModifiers]].
@@ -16,8 +15,8 @@ trait ModifierBehavior extends Behavior:
     */
   protected def apply(modifiers: BehaviorModifiers): BehaviorModifiers
 
-  abstract override def apply(context: MoveContext)(using
+  override def apply[T <: WithBehaviors](container: T)(using
       modifiers: BehaviorModifiers
-  ): MoveContext =
-    given BehaviorModifiers = this(modifiers)
-    super.apply(context)
+  ): T =
+    given BehaviorModifiers = this (modifiers)
+    super.apply(container)

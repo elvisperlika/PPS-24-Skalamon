@@ -1,7 +1,5 @@
 package it.unibo.skalamon.model.behavior.modifier
 
-import it.unibo.skalamon.model.behavior.Behavior
-
 /** A mixin trait for [[Behavior]] that allows specifying a target that is
   * different from the context's.
   * @param target
