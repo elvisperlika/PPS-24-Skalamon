@@ -26,10 +26,9 @@ object BehaviorTestUtils:
     new RandomGenerator {
       private var flag = false
 
-      override def nextInt(min: Int, max: Int): Int = {
+      override def nextInt(min: Int, max: Int): Int =
         flag = !flag
         if (flag) max else min
-      }
     }
 
   /** @return
