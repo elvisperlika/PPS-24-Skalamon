@@ -1,19 +1,16 @@
 package it.unibo.skalamon.model.behavior.modifier
 
 import it.unibo.skalamon.model.behavior.Behavior
-import it.unibo.skalamon.model.move.MoveContext
 
 /** A mixin trait for [[Behavior]] that allows specifying a target that is
   * different from the context's.
   * @param target
   *   The new target type.
   */
-trait TargetModifier(target: TargetModifier.Type) extends Behavior:
-  abstract override def apply(context: MoveContext)(using
+trait TargetModifier(target: TargetModifier.Type) extends ModifierBehavior:
+  override protected def apply(
       modifiers: BehaviorModifiers
-  ): MoveContext =
-    given BehaviorModifiers = modifiers.copy(target = Some(target))
-    super.apply(context)
+  ): BehaviorModifiers = modifiers.copy(target = Some(target))
 
 object TargetModifier:
   /** Possible targets for a behavior. */

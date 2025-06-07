@@ -2,7 +2,8 @@ package it.unibo.skalamon.behavior
 
 import it.unibo.skalamon.model.behavior.*
 import it.unibo.skalamon.model.behavior.kind.*
-import it.unibo.skalamon.model.behavior.modifier.TargetModifier
+import it.unibo.skalamon.model.behavior.modifier.*
+import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.MutablePokemon
 import org.scalatest.flatspec.AnyFlatSpec
@@ -47,6 +48,14 @@ class HitBehaviorTest extends AnyFlatSpec with should.Matchers {
   "SingleHitBehavior with self-target" should "target the source" in:
     val behavior = new SimpleSingleHitBehavior(30)
       with TargetModifier(TargetModifier.Type.Self)
+    val result = behavior.apply(context)
+    result.hits shouldEqual List(
+      MoveContext.Hit(30, target = Some(TargetModifier.Type.Self))
+    )
+
+  "SingleHitBehavior with chance" should "have a probability" in:
+    val behavior = new SimpleSingleHitBehavior(30)
+      with ProbabilityModifier(50.percent)
     val result = behavior.apply(context)
     result.hits shouldEqual List(
       MoveContext.Hit(30, target = Some(TargetModifier.Type.Self))
