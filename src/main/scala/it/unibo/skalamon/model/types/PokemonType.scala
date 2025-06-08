@@ -8,6 +8,12 @@ package it.unibo.skalamon.model.types
   * Fire attack will be super effective.
   */
 trait Type:
+  /** Compute effectiveness of a type against another.
+    * @param t
+    *   is the defensor type
+    * @return
+    *   effectiveness multiplier
+    */
   def computeEffectiveness(t: PokemonType): Double
 
 /** A Pokémon can have one or two Types.
