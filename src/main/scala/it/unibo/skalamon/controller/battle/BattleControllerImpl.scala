@@ -43,11 +43,13 @@ class BattleControllerImpl(_trainers: List[Trainer]) extends BattleController {
 
   override def isOver: Boolean =
     trainers.count(_.team.forall(_.isKO)) == (trainers.size - 1)
-    
+
   override def isDraw: Boolean =
     trainers.forall(_.team.forall(_.isKO))
 
-  override def getWinner: Option[Trainer] = ???
+  override def getWinner: Option[Trainer] =
+    if isOver then trainers.find(_.team.exists(!_.isKO))
+    else None
 
   override def trainers: List[Trainer] = _trainers
 }

@@ -103,8 +103,13 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
     bcAtFinish.getWinner shouldBe Some(
       Trainer(
         "Alice",
-        List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
+        List(MutablePokemon("Pikachu", true), MutablePokemon("Squirell"))
       )
     )
 
+  it should "return None if battle finished on draw" in:
+    bcWithoutWinners.getWinner shouldBe None
+
+  it should "return None if battle is not finished" in:
+    bcOnBattle.getWinner shouldBe None
 }
