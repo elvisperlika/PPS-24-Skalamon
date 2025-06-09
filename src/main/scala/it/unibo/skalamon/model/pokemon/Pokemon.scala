@@ -1,5 +1,7 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.model.move.*
+
 case class Stats(
                   hp: Int,
                   attack: Int,
@@ -14,7 +16,6 @@ case object Male extends Gender
 case object Female extends Gender
 case object Genderless extends Gender
 
-case class Move(name: String) //TODO: to be removed, it is temporary till merge
 case class Type(name: String) //TODO: to be removed, it is temporary till merge
 case class Ability(name: String) //TODO: to be removed, it is temporary till merge
 
@@ -32,7 +33,7 @@ case class BattlePokemon(
                             base: Pokemon,
                             level: Int,
                             currentHP: Int,
-                            moves: List[Move]
+                            moves: List[BattleMove]
                           ):
   def actualStats: Stats = calculateStats(base.baseStats, level)
 

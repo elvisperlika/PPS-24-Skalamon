@@ -1,8 +1,11 @@
 package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.model.pokemon.*
+import it.unibo.skalamon.model.move.*
 
 object PokemonTestUtils:
+  private val moveThunderShock = Move("Thunder Shock")
+  private val moveElectric = Move("Electric")
   
   private val basePokemon = Pokemon("pikachu",
     Male,
@@ -10,7 +13,9 @@ object PokemonTestUtils:
     baseStats = Stats(35, 55, 40, 50, 50, 90),
     ability = Ability("Static"),
     weightKg = 6.0,
-    possibleMoves = List(Move("Thunder Shock"), Move("Electric"))
+    possibleMoves = List(moveThunderShock, moveElectric)
   )
   private val startingHP: Int = 70
-  val simplePokemon: BattlePokemon = BattlePokemon(basePokemon, 100, startingHP, List(Move("Thunder Shock")))
+  private val powerPoint: Int = 4
+  val simplePokemon1: BattlePokemon = BattlePokemon(basePokemon, 100, startingHP, List(BattleMove(moveThunderShock, powerPoint)))
+  val simplePokemon2: BattlePokemon = BattlePokemon(basePokemon, 86, startingHP, List(BattleMove(moveElectric, powerPoint)))
