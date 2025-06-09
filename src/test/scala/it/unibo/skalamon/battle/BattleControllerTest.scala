@@ -12,26 +12,33 @@ import org.scalatest.matchers.should
 class BattleControllerTest extends AnyFlatSpec with should.Matchers {
 
   val bcAtStart: BattleController = BattleControllerImpl(
-    Trainer(
-      "Alice",
-      List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
-    ),
-    Trainer("Bob", List(MutablePokemon("Charizard"), MutablePokemon("Wooper")))
-  )
-
-  val bcAtFinish: BattleController = BattleControllerImpl(
-    Trainer(
-      "Alice",
-      List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
-    ),
-    Trainer(
-      "Bob",
-      List(MutablePokemon("Charizard", true), MutablePokemon("Wooper", true))
+    List(
+      Trainer(
+        "Alice",
+        List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
+      ),
+      Trainer(
+        "Bob",
+        List(MutablePokemon("Charizard"), MutablePokemon("Wooper"))
+      )
     )
   )
 
-  "Battle controller" should "have 2 trainers" in:
-    bcAtStart.trainers shouldBe (
+  val bcAtFinish: BattleController = BattleControllerImpl(
+    List(
+      Trainer(
+        "Alice",
+        List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
+      ),
+      Trainer(
+        "Bob",
+        List(MutablePokemon("Charizard", true), MutablePokemon("Wooper", true))
+      )
+    )
+  )
+
+  "Battle controller" should "have trainers list" in:
+    bcAtStart.trainers shouldBe List(
       Trainer(
         "Alice",
         List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))

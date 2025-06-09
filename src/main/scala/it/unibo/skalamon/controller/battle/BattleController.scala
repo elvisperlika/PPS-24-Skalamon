@@ -9,11 +9,11 @@ trait BattleController:
 
   var currentTurn: TurnController = TurnControllerImpl()
 
-  /** Get trainers on battle.
-    * @return
-    *   tuple of trainers.
-    */
-  def trainers: (Trainer, Trainer)
+  /**
+   * 
+   * @return
+   */
+  def trainers: List[Trainer]
 
   /** Check if battle is finished.
     *

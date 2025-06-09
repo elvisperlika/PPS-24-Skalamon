@@ -17,12 +17,10 @@ case class Switch() extends Action
 case class Trainer(name: String, team: List[MutablePokemon])
 /* end Temporary classes */
 
-class BattleControllerImpl(t1: Trainer, t2: Trainer) extends BattleController {
+class BattleControllerImpl(_trainers: List[Trainer]) extends BattleController {
   val battleView: BattleView = BattleViewImpl(this)
   val battle: Battle = BattleImpl()
   val turnController: TurnController = TurnControllerImpl()
-
-  override def trainers: (Trainer, Trainer) = (t1, t2)
 
   /** Pick the action chosen from a trainer.
     * @param t
@@ -37,14 +35,15 @@ class BattleControllerImpl(t1: Trainer, t2: Trainer) extends BattleController {
     * @return
     */
   private def haveAllTrainersPickedAction: Boolean =
-    turnController.actions.size == 2
+    turnController.actions.size == _trainers.size
 
   /** Define turn as finished and create new turn.
     */
   private def endTurn(): Unit = ???
 
-  override def isOver: Boolean = t1.team.forall(_.isKO) | t2.team.forall(_.isKO)
+  override def isOver: Boolean = ???
 
   override def getWinner: Option[Trainer] = ???
 
+  override def trainers: List[Trainer] = _trainers
 }
