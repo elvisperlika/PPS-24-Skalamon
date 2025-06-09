@@ -8,8 +8,9 @@ enum Efficacy:
   case Resisted
   case Ineffective
 
-  /** Get the efficacy multiplier.
+  /** Get multiplier value.
     * @return
+    *   Multiplier
     */
   def value: Double = this match
     case SuperEffective => 2.0
