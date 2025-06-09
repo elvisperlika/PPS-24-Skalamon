@@ -15,20 +15,18 @@ trait Type(
 
   /** Compute effectiveness of a type against another.
     * @param t
-    *   is the defensor type
+    *   Defensor type
     * @return
-    *   effectiveness multiplier
+    *   Efficacy list
     */
   def computeEffectiveness(t: PokemonType): List[Efficacy] =
     t match
-      case t: Type => List(computeSingleEffectiveness(t))
-      case list: List[Type] => list.foldLeft(List[Efficacy]())((list, t) => computeSingleEffectiveness(t) :: list)
+      case t: Type          => List(computeSingleEffectiveness(t))
+      case list: List[Type] =>
+        list.foldLeft(List[Efficacy]())((list, t) =>
+          computeSingleEffectiveness(t) :: list
+        )
 
-  /**
-   * 
-   * @param t
-   * @return
-   */
   private def computeSingleEffectiveness(t: Type): Efficacy =
     import Efficacy.*
     if superEffectiveAgainst contains t then SuperEffective
