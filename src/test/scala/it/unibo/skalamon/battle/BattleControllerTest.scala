@@ -53,7 +53,10 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
       ),
       Trainer(
         "Jack",
-        List(MutablePokemon("Girafarig", false), MutablePokemon("Drampa", false))
+        List(
+          MutablePokemon("Girafarig", false),
+          MutablePokemon("Drampa", false)
+        )
       )
     )
   )

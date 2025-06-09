@@ -39,7 +39,9 @@ class BattleControllerImpl(_trainers: List[Trainer]) extends BattleController {
 
   /** Define turn as finished and create new turn.
     */
-  private def endTurn(): Unit = ???
+  private def endTurn(): Unit =
+    require(haveAllTrainersPickedAction)
+    currentTurn = new TurnControllerImpl()
 
   override def isOver: Boolean =
     trainers.count(_.team.forall(_.isKO)) == (trainers.size - 1)

@@ -20,10 +20,10 @@ trait BattleController:
     */
   def isOver: Boolean
 
-  /**
-   * Check if battle is finished without a Winner.
-   * @return true if all trainer's teams are KO
-   */
+  /** Check if battle is finished without a Winner.
+    * @return
+    *   true if all trainer's teams are KO
+    */
   def isDraw: Boolean
 
   /** Get winner if battle is over.
