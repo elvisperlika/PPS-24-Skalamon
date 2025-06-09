@@ -60,6 +60,20 @@ case class Pokemon(     name: String,
                         possibleMoves: List[Move]
                   )
 
+/** Represents the whole Pokémon.
+ * @param base
+ *    The base attributes of the Pokémon.
+ * @param level
+ *    The level of the Pokémon.
+ * @param currentHP
+ *    Current Health Points of the Pokémon.
+ * @param moves
+ *    List of moves of the Pokémon.
+ * @param nonVolatileStatus
+ *    The non-volatile status of the Pokémon.
+ * @param volatileStatus
+ *    List of volatile status of the Pokémon.
+ */
 case class BattlePokemon(
                           base: Pokemon,
                           level: Int,
@@ -69,6 +83,9 @@ case class BattlePokemon(
                           volatileStatus: List[VolatileStatus]
                         ):
 
+  /** Return the current stats of the Pokémon, updated to it's level.
+   * @return the current stats of the Pokémon.
+   */
   def actualStats: Stats = calculateStats(base.baseStats, level)
 
   private def calculateStats(base: Stats, level: Int): Stats =
@@ -83,7 +100,15 @@ case class BattlePokemon(
       speed = scale(base.speed)
     )
 
+  /** Return true if the Pokémon is still alive.
+   * @return true if the Pokémon is still alive.
+   */
   def isAlive: Boolean = currentHP > 0
 
+  /** Deals damage to the Pokémon.
+   * @param damage
+   *    The damage to be inflicted on the Pokémon.
+   * @return the copy of the damaged Pokémon.
+   */
   def takeDamage(damage: Int): BattlePokemon =
     this.copy(currentHP = math.max(0, currentHP - damage))
