@@ -18,7 +18,7 @@ case class Move(name: String) //TODO: to be removed, it is temporary till merge
 case class Type(name: String) //TODO: to be removed, it is temporary till merge
 case class Ability(name: String) //TODO: to be removed, it is temporary till merge
 
-case class BasePokemon(
+case class Pokemon(
                         name: String,
                         gender: Gender,
                         types: List[Type],
@@ -28,13 +28,15 @@ case class BasePokemon(
                         possibleMoves: List[Move]
                       )
 
-case class MutablePokemon(
-                            base: BasePokemon,
+case class BattlePokemon(
+                            base: Pokemon,
                             level: Int,
                             currentHP: Int,
                             moves: List[Move]
                           ):
   def actualStats: Stats = calculateStats(base.baseStats, level)
+
+  //TODO: battleMove, nonvolatilestatus: Option[Status], volitile: List[Status], trait Status, trait nonvolatileStatus, trait volatileStatus
   
   private def calculateStats(base: Stats, level: Int): Stats =
     def scale(stat: Int): Int = (stat * level / 100.0).round.toInt + 5
@@ -50,5 +52,5 @@ case class MutablePokemon(
   
   def isAlive: Boolean = currentHP > 0
   
-  def takeDamage(damage: Int): MutablePokemon =
+  def takeDamage(damage: Int): BattlePokemon =
     this.copy(currentHP = math.max(0, currentHP - damage))
