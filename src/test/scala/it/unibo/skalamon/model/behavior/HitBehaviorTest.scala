@@ -1,7 +1,7 @@
-package it.unibo.skalamon.behavior
+package it.unibo.skalamon.model.behavior
 
-import it.unibo.skalamon.behavior.BehaviorTestUtils.*
 import it.unibo.skalamon.model.behavior.*
+import it.unibo.skalamon.model.behavior.BehaviorTestUtils.*
 import it.unibo.skalamon.model.behavior.kind.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should

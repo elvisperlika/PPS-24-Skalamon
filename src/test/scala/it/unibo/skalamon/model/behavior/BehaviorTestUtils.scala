@@ -1,4 +1,4 @@
-package it.unibo.skalamon.behavior
+package it.unibo.skalamon.model.behavior
 
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.data.RandomGenerator
