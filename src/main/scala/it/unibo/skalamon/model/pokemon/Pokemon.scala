@@ -47,5 +47,8 @@ case class MutablePokemon(
       specialDefense = scale(base.specialDefense),
       speed = scale(base.speed)
     )
+  
+  def isAlive: Boolean = currentHP > 0
+  
   def takeDamage(damage: Int): MutablePokemon =
     this.copy(currentHP = math.max(0, currentHP - damage))

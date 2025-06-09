@@ -14,4 +14,8 @@ class MutablePokemonTest extends AnyFlatSpec with should.Matchers {
     
     pokemon.takeDamage(damage1).currentHP shouldEqual (pokemon.currentHP - damage1)
     pokemon.takeDamage(damage1).takeDamage(damage2).currentHP shouldEqual (pokemon.currentHP - damage1 - damage2)
+    
+  "MutablePokemon" should "die" in:
+    val pokemon = PokemonTestUtils.simplePokemon
+    pokemon.takeDamage(pokemon.currentHP).isAlive should be (false)
 }
