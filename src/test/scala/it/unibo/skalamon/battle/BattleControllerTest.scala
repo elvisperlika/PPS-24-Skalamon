@@ -2,10 +2,10 @@ package it.unibo.skalamon.battle
 
 import it.unibo.skalamon.controller.battle.{
   BattleController,
-  BattleControllerImpl
+  BattleControllerImpl,
+  MutablePokemon,
+  Trainer
 }
-import it.unibo.skalamon.model.pokemon.MutablePokemon
-import it.unibo.skalamon.model.trainer.Trainer
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 

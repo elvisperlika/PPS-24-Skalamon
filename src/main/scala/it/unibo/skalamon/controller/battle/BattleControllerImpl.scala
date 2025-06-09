@@ -4,10 +4,18 @@ import it.unibo.skalamon.controller.battle.turn.{
   TurnController,
   TurnControllerImpl
 }
-import it.unibo.skalamon.model.move.Action
 import it.unibo.skalamon.model.{Battle, BattleImpl}
-import it.unibo.skalamon.model.trainer.Trainer
 import it.unibo.skalamon.view.battle.{BattleView, BattleViewImpl}
+
+/* start Temporary classes */
+case class MutablePokemon(name: String, isKO: Boolean = false)
+
+trait Action
+case class Move() extends Action
+case class Switch() extends Action
+
+case class Trainer(name: String, team: List[MutablePokemon])
+/* end Temporary classes */
 
 class BattleControllerImpl(t1: Trainer, t2: Trainer) extends BattleController {
   val battleView: BattleView = BattleViewImpl(this)
@@ -15,28 +23,28 @@ class BattleControllerImpl(t1: Trainer, t2: Trainer) extends BattleController {
   val turnController: TurnController = TurnControllerImpl()
 
   override def trainers: (Trainer, Trainer) = (t1, t2)
-  
+
   /** Pick the action chosen from a trainer.
-   * @param t
-   *   is the Trainer
-   * @param a
-   *   is the Action chosen
-   */
+    * @param t
+    *   is the Trainer
+    * @param a
+    *   is the Action chosen
+    */
   def pickAction(t: Trainer, a: Action): Unit =
     turnController.addAction(t, a)
 
   /** Check if both trainers have picked own actions.
-   * @return
-   */
+    * @return
+    */
   private def haveAllTrainersPickedAction: Boolean =
     turnController.actions.size == 2
 
   /** Define turn as finished and create new turn.
-   */
+    */
   private def endTurn(): Unit = ???
 
   override def isOver: Boolean = t1.team.forall(_.isKO) | t2.team.forall(_.isKO)
 
   override def getWinner: Option[Trainer] = ???
-    
+
 }

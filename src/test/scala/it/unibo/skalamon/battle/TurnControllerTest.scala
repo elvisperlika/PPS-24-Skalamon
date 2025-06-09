@@ -1,5 +1,9 @@
 package it.unibo.skalamon.battle
 
-class TurnControllerTest {
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should
 
+class TurnControllerTest extends AnyFlatSpec with should.Matchers {
+
+  
 }
