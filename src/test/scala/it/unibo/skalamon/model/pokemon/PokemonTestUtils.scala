@@ -3,6 +3,8 @@ package it.unibo.skalamon.model.pokemon
 import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.move.*
 
+/** Test utilities for testing pokemon.
+ */
 object PokemonTestUtils:
   private val moveThunderShock = Move("Thunder Shock")
   private val moveElectric = Move("Electric")

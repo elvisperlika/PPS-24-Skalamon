@@ -3,8 +3,7 @@ package it.unibo.skalamon.model.pokemon
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-/**
- * Tests for [[BattlePokemon]] and its implementations.
+/** Tests for [[BattlePokemon]] and its implementations.
  */
 class BattlePokemonTest extends AnyFlatSpec with should.Matchers {
   "BattlePokemon" should "takeDamage" in:
