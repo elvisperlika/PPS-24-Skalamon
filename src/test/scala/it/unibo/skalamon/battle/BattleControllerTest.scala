@@ -4,19 +4,53 @@ import it.unibo.skalamon.controller.battle.{
   BattleController,
   BattleControllerImpl
 }
+import it.unibo.skalamon.model.pokemon.MutablePokemon
 import it.unibo.skalamon.model.trainer.Trainer
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 class BattleControllerTest extends AnyFlatSpec with should.Matchers {
 
-  "Battle controller" should "have 2 trainers" in:
-    val t1: Trainer = Trainer("Alice")
-    val t2: Trainer = Trainer("Bob")
-    val bc: BattleController = new BattleControllerImpl(t1, t2)
-    bc.trainers shouldBe (t1, t2)
-  
+  val bcAtStart: BattleController = BattleControllerImpl(
+    Trainer(
+      "Alice",
+      List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
+    ),
+    Trainer("Bob", List(MutablePokemon("Charizard"), MutablePokemon("Wooper")))
+  )
 
-  it should "create a turn" in:
-    ???
+  val bcAtFinish: BattleController = BattleControllerImpl(
+    Trainer(
+      "Alice",
+      List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
+    ),
+    Trainer(
+      "Bob",
+      List(MutablePokemon("Charizard", true), MutablePokemon("Wooper", true))
+    )
+  )
+
+  "Battle controller" should "have 2 trainers" in:
+    bcAtStart.trainers shouldBe (
+      Trainer(
+        "Alice",
+        List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
+      ),
+      Trainer(
+        "Bob",
+        List(MutablePokemon("Charizard"), MutablePokemon("Wooper"))
+      )
+    )
+
+  it should "end battle when all Pokémon of one player are KO" in:
+    bcAtFinish.isOver shouldBe true
+
+  it should "return the winner if battle finished" in:
+    bcAtFinish.getWinner shouldBe Some(
+      Trainer(
+        "Alice",
+        List(MutablePokemon("Pikachu"), MutablePokemon("Squirell"))
+      )
+    )
+
 }
