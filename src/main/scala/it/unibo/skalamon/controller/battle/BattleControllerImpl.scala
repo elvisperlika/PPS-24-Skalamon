@@ -41,7 +41,11 @@ class BattleControllerImpl(_trainers: List[Trainer]) extends BattleController {
     */
   private def endTurn(): Unit = ???
 
-  override def isOver: Boolean = ???
+  override def isOver: Boolean =
+    trainers.count(_.team.forall(_.isKO)) == (trainers.size - 1)
+    
+  override def isDraw: Boolean =
+    trainers.forall(_.team.forall(_.isKO))
 
   override def getWinner: Option[Trainer] = ???
 

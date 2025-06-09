@@ -9,18 +9,22 @@ trait BattleController:
 
   var currentTurn: TurnController = TurnControllerImpl()
 
-  /**
-   * 
-   * @return
-   */
+  /** @return
+    *   trainers list
+    */
   def trainers: List[Trainer]
 
   /** Check if battle is finished.
-    *
     * @return
-    *   true if battle completed, false otherwise
+    *   if all trainer's teams are KO or all of them except one.
     */
   def isOver: Boolean
+
+  /**
+   * Check if battle is finished without a Winner.
+   * @return true if all trainer's teams are KO
+   */
+  def isDraw: Boolean
 
   /** Get winner if battle is over.
     * @return
