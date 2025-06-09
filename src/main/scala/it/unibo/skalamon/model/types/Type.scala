@@ -7,14 +7,34 @@ package it.unibo.skalamon.model.types
   * effective against Grass and Bug type, if a Pokémon is Grass and Bug type the
   * Fire attack will be super effective.
   */
-trait Type:
+trait Type(
+    val superEffectiveAgainst: List[Type],
+    val resistedBy: List[Type],
+    val ineffectiveAgainst: List[Type]
+):
+
   /** Compute effectiveness of a type against another.
     * @param t
     *   is the defensor type
     * @return
     *   effectiveness multiplier
     */
-  def computeEffectiveness(t: PokemonType): Double
+  def computeEffectiveness(t: PokemonType): List[Efficacy] =
+    t match
+      case t: Type => List(computeSingleEffectiveness(t))
+      case list: List[Type] => list.foldLeft(List[Efficacy]())((list, t) => computeSingleEffectiveness(t) :: list)
+
+  /**
+   * 
+   * @param t
+   * @return
+   */
+  private def computeSingleEffectiveness(t: Type): Efficacy =
+    import Efficacy.*
+    if superEffectiveAgainst contains t then SuperEffective
+    else if resistedBy contains t then Resisted
+    else if ineffectiveAgainst contains t then Ineffective
+    else Effective
 
 /** A Pokémon can have one or two Types.
   */
