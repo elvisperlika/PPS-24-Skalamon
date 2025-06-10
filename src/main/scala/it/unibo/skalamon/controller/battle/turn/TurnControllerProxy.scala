@@ -5,23 +5,28 @@ import it.unibo.skalamon.controller.battle.{Action, Trainer}
 trait TurnControllerProxy:
   /** Actions map.
     */
-  var actions: Map[Trainer, Action] = Map()
+  private var _actions: Map[Trainer, Action] = Map()
+
+  def actions: Map[Trainer, Action] = _actions
+
+  def actions_=(newActions: Map[Trainer, Action]): Unit = _actions = newActions
 
   /** Add new Action in 'actions' map.
     * @param t
-    *   is the Trainer
+    *   Is the Trainer
     * @param a
-    *   is the Action
+    *   Is the Action
     */
   def addAction(t: Trainer, a: Action): Unit
 
 object TurnControllerProxy:
 
-  def apply(): TurnControllerProxy = TurnControllerProxyImpl()
+  def apply(nTrainers: Int): TurnControllerProxy = 
+    TurnControllerProxyImpl(nTrainers)
 
-  private class TurnControllerProxyImpl extends TurnControllerProxy:
-    import TurnPhase.*
-    var turnPhase: TurnPhase = PokemonGetInField
+  private class TurnControllerProxyImpl(nTrainers: Int)
+      extends TurnControllerProxy:
 
     override def addAction(t: Trainer, a: Action): Unit = actions =
+      require(actions.size < nTrainers)
       actions + (t -> a)
