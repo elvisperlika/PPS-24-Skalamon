@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.move
 
-import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -15,17 +15,19 @@ import it.unibo.skalamon.model.behavior.Behavior
   */
 case class Move(
     name: String,
-    success: MovePhase = MovePhase(List.empty),
-    fail: MovePhase = MovePhase(List.empty)
+    success: MovePhase = MovePhase(EmptyBehavior),
+    fail: MovePhase = MovePhase(EmptyBehavior)
 )
 
 /** Represents an execution case of a move under certain circumstances. Multiple
   * cases compose a move.
   *
-  * @param behaviors
-  *   The list of behaviors to be executed in this phase.
+  * @param behavior
+  *   The behavior, or more than one by means of a
+  *   [[it.unibo.skalamon.model.behavior.modifier.BehaviorGroup]], to be
+  *   executed in this phase.
   */
-case class MovePhase(behaviors: List[Behavior])
+case class MovePhase(behavior: Behavior)
 
 /** A move in the context of a battle.
   *

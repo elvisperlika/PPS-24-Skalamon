@@ -38,13 +38,11 @@ extension (move: BattleMove)
     * @param source
     *   The source Pokémon that is executing the move.
     * @return
-    *   A new [[MoveContext]] with the behaviors applied.
+    *   A new [[MoveContext]] with the phase's behaviors applied.
     */
   def createContext(
       phase: Move => MovePhase,
       target: BattlePokemon,
       source: BattlePokemon
   ): MoveContext =
-    phase(move.move).behaviors.foldLeft(
-      MoveContext(move, target, source)
-    )((context, behavior) => behavior(context))
+    phase(move.move).behavior(MoveContext(move, target, source))

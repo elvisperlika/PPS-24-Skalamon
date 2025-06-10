@@ -23,4 +23,4 @@ case class RandomModifier(min: Int, max: Int)(
   ): T =
     given BehaviorModifiers = modifiers
     val value = generator.nextInt(min, max)
-    behavior(value).apply(container)
+    behavior(value)(container)

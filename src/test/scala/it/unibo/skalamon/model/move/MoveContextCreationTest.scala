@@ -1,9 +1,8 @@
 package it.unibo.skalamon.model.move
 
-import it.unibo.skalamon.model.behavior.kind.{
-  SimpleSingleHitBehavior,
-  SingleHitBehavior
-}
+import it.unibo.skalamon.model.behavior.BehaviorTestUtils.getPlainBehaviors
+import it.unibo.skalamon.model.behavior.EmptyBehavior
+import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.*
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils
@@ -23,7 +22,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
     val move =
       Move(
         "TestMove",
-        success = MovePhase(List.empty)
+        success = MovePhase(EmptyBehavior)
       ).battleMove()
     val context = move.createContext(_.success, target, source)
 
@@ -36,7 +35,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
     val move =
       Move(
         "TestMove",
-        success = MovePhase(List(SingleHitBehavior(10)))
+        success = MovePhase(SingleHitBehavior(10))
       ).battleMove()
     val context = move.createContext(_.success, target, source)
     context.behaviors shouldEqual List((
@@ -49,11 +48,9 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
       Move(
         "TestMove",
         success = MovePhase(
-          List(
-            new SimpleSingleHitBehavior(10)
-              with ProbabilityModifier(100.percent)
-              with TargetModifier(TargetModifier.Type.Self)
-          )
+          new SimpleSingleHitBehavior(10)
+            with ProbabilityModifier(100.percent)
+            with TargetModifier(TargetModifier.Type.Self)
         )
       ).battleMove()
 
@@ -62,3 +59,16 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
       SingleHitBehavior(10),
       BehaviorModifiers(target = Some(TargetModifier.Type.Self))
     ))
+
+  "Move with two behaviors" should "create a context with those behaviors" in:
+    val move =
+      Move(
+        "TestMove",
+        success =
+          MovePhase(BehaviorGroup(SingleHitBehavior(10), SingleHitBehavior(20)))
+      ).battleMove()
+    val context = move.createContext(_.success, target, source)
+    getPlainBehaviors(context) shouldEqual List(
+      SingleHitBehavior(10),
+      SingleHitBehavior(20)
+    )
