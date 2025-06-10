@@ -2,20 +2,22 @@ package it.unibo.skalamon.model.behavior
 
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.data.RandomGenerator
-import it.unibo.skalamon.model.move.{Move, MoveContext, MutableMove}
-import it.unibo.skalamon.model.pokemon.MutablePokemon
+import it.unibo.skalamon.model.move.{Move, MoveContext, BattleMove}
+
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.simplePokemon1
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.simplePokemon2
 
 /** Test utilities for testing behaviors.
   */
 object BehaviorTestUtils:
   /** A mock context for moves. */
   val context: MoveContext = MoveContext(
-    move = MutableMove(
+    move = BattleMove(
       Move("TestMove"),
       pp = 10
     ),
-    target = MutablePokemon(hp = 100),
-    source = MutablePokemon(hp = 100)
+    target = simplePokemon1,
+    source = simplePokemon2
   )
 
   /** @return
