@@ -2,7 +2,6 @@ package it.unibo.skalamon.battle
 
 import it.unibo.skalamon.controller.battle.{
   BattleController,
-  BattleControllerImpl,
   MutablePokemon,
   Trainer
 }
@@ -11,7 +10,7 @@ import org.scalatest.matchers.should
 
 class BattleControllerTest extends AnyFlatSpec with should.Matchers {
 
-  val bcAtStart: BattleController = BattleControllerImpl(
+  val bcAtStart: BattleController = BattleController(
     List(
       Trainer(
         "Alice",
@@ -24,7 +23,7 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
     )
   )
 
-  val bcAtFinish: BattleController = BattleControllerImpl(
+  val bcAtFinish: BattleController = BattleController(
     List(
       Trainer(
         "Alice",
@@ -41,7 +40,7 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
     )
   )
 
-  val bcOnBattle: BattleController = BattleControllerImpl(
+  val bcOnBattle: BattleController = BattleController(
     List(
       Trainer(
         "Alice",
@@ -61,7 +60,7 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
     )
   )
 
-  val bcWithoutWinners: BattleController = BattleControllerImpl(
+  val bcWithoutWinners: BattleController = BattleController(
     List(
       Trainer(
         "Alice",

@@ -1,6 +1,12 @@
 package it.unibo.skalamon.controller
 
-import it.unibo.skalamon.controller.battle.BattleController
+import it.unibo.skalamon.controller.battle.{
+  BattleController,
+  MutablePokemon,
+  Trainer
+}
+
+import scala.language.postfixOps
 
 /** Controller
   */
@@ -11,6 +17,14 @@ trait Controller {
     * @return
     *   BattleController to manage the battle
     */
-  def createBattle(): BattleController
+  def createBattle(): Unit =
+    val battleController: BattleController = BattleController(
+      List(
+        Trainer("Bob", List(MutablePokemon("Pikachu"))),
+        Trainer("Alice", List(MutablePokemon("Squirrel")))
+      )
+    )
+    // viewCoordinator show battleController.view
+    battleController.update
 
 }
