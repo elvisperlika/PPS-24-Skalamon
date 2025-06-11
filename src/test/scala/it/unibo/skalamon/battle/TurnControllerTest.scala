@@ -1,22 +1,19 @@
 package it.unibo.skalamon.battle
 
-import it.unibo.skalamon.controller.battle.{
-  Action,
-  Move,
-  MutablePokemon,
-  Switch,
-  Trainer
-}
 import it.unibo.skalamon.controller.battle.turn.TurnControllerProxy
+import it.unibo.skalamon.controller.battle.*
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 import scala.Predef.Map
 
-class TurnControllerTest extends AnyFlatSpec with should.Matchers:
+class TurnControllerTest
+    extends AnyFlatSpec
+    with should.Matchers
+    with ScalaFutures:
 
   val N_TRAINERS: Int = 2
-  val tcp: TurnControllerProxy = TurnControllerProxy(N_TRAINERS)
   val alice: Trainer = Trainer(
     name = "Alice",
     team = List(MutablePokemon("Pickachu"), MutablePokemon("Squirrel"))
@@ -31,13 +28,28 @@ class TurnControllerTest extends AnyFlatSpec with should.Matchers:
   )
 
   "TCP" should "let add new actions" in:
-    tcp.actions = Map.empty
+    val tcp: TurnControllerProxy = TurnControllerProxy(N_TRAINERS)
     tcp.addAction(alice, Switch())
     tcp.actions shouldBe Map[Trainer, Action]((alice, Switch()))
 
   it should "don't let add more actions than trainers in field" in:
-    tcp.actions = Map.empty
+    val tcp: TurnControllerProxy = TurnControllerProxy(N_TRAINERS)
     tcp.addAction(alice, Switch())
     tcp.addAction(bob, Move())
-    tcp.addAction(gio, Move()) shouldBe a[IllegalArgumentException]
+    assertThrows[IllegalArgumentException] {
+      tcp.addAction(gio, Move())
+    }
     tcp.actions shouldBe Map[Trainer, Action]((alice, Switch()), (bob, Move()))
+
+  it should "return actions when ready" in:
+    val tcp: TurnControllerProxy = TurnControllerProxy(N_TRAINERS)
+    tcp.addAction(alice, Switch())
+    tcp.addAction(bob, Move())
+    whenReady(tcp.getChosenActions) { result =>
+      result shouldBe Map[Trainer, Action]((alice, Switch()), (bob, Move()))
+    }
+
+  it should "have not been completed when not all users made own choice" in:
+    val tcp: TurnControllerProxy = TurnControllerProxy(N_TRAINERS)
+    tcp.addAction(alice, Switch())
+    tcp.getChosenActions.isCompleted shouldBe false
