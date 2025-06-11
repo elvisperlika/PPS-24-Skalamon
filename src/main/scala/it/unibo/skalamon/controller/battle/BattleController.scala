@@ -18,12 +18,36 @@ case class Trainer(name: String, team: List[MutablePokemon])
 /** Battle controller manage battle status and end game logic.
   */
 trait BattleController:
+  /** Get list of trainers in Battle.
+    * @return
+    *   Trainers List
+    */
   def trainers: List[Trainer]
+
+  /** @return
+    *   True if all trainers or all trainers except one have the team KO.
+    */
   def isOver: Boolean
+
+  /** @return
+    *   True if all trainers have the team KO.
+    */
   def isDraw: Boolean
+
+  /** Winner getter.
+    * @return
+    *   Optionally the winner Trainer.
+    */
   def getWinner: Option[Trainer]
-  def update: Unit
-  def turnIndex: Int
+
+  /** Update view and model's data.
+    */
+  def update(): Unit
+
+  /** @return
+    *   the turn index.
+    */
+  def getTurnIndex: Int
 
 object BattleController:
 
@@ -48,21 +72,20 @@ object BattleController:
       else None
 
     // TODO: use for-yield for this
-    override def update: Unit =
+    override def update(): Unit =
       import scala.util.{Success, Failure}
       import scala.concurrent.ExecutionContext.Implicits.global
-      if !isOver then
+      while !isOver do
         _turnIndex += 1
-        _battleView.updateTurn(i = turnIndex)
+        _battleView.updateTurn(i = getTurnIndex)
         // _battleModel.pokemonGetInField
+        _battleView.updatePokemon(???)
         _battleView.showActions(map = ???)
-        _controllerProxy.getChosenActions.onComplete {
+        _controllerProxy.getChosenActions.onComplete:
           case Success(actions) =>
             // _battleModel.updateWithActions(actions)
             _battleView.updatePokemon(???)
-            update
           case Failure(ex) =>
             println(s"Failure: ${ex.getMessage}")
-        }
 
-    override def turnIndex: Int = _turnIndex
+    override def getTurnIndex: Int = _turnIndex
