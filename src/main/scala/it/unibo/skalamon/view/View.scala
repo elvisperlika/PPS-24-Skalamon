@@ -1,8 +1,7 @@
 package it.unibo.skalamon.view
 
-/**
- *
- */
-trait View {
+import javax.swing.JFrame
 
-}
+/** */
+trait View extends JFrame:
+  def createView(): Unit
