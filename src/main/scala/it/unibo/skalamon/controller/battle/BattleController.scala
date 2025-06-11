@@ -22,7 +22,7 @@ trait BattleController:
   def isOver: Boolean
   def isDraw: Boolean
   def getWinner: Option[Trainer]
-  def start: Unit
+  def update: Unit
   def turnIndex: Int
 
 object BattleController:
@@ -34,11 +34,11 @@ object BattleController:
       extends BattleController():
 
     var _turnIndex: Int = 0
-    val battleModel: Battle = BattleImpl()
-    val controllerProxy: TurnControllerProxy = TurnControllerProxy(
+    val _battleModel: Battle = BattleImpl()
+    val _controllerProxy: TurnControllerProxy = TurnControllerProxy(
       _trainers.size
     )
-    val battleView: BattleView = BattleView(controllerProxy)
+    val _battleView: BattleView = BattleView(_controllerProxy)
 
     override def trainers: List[Trainer] = _trainers
     override def isOver: Boolean = trainers.count(_.team.exists(!_.isKO)) <= 1
@@ -48,19 +48,19 @@ object BattleController:
       else None
 
     // TODO: use for-yield for this
-    override def start: Unit =
+    override def update: Unit =
       import scala.util.{Success, Failure}
       import scala.concurrent.ExecutionContext.Implicits.global
       if !isOver then
         _turnIndex += 1
-        battleView.updateTurn(i = turnIndex)
-        // battleModel.pokemonGetInField
-        battleView.showActions(map = ???)
-        controllerProxy.getChosenActions.onComplete {
+        _battleView.updateTurn(i = turnIndex)
+        // _battleModel.pokemonGetInField
+        _battleView.showActions(map = ???)
+        _controllerProxy.getChosenActions.onComplete {
           case Success(actions) =>
-            // battleModel.updateWithActions(actions)
-            battleView.updatePokemon(???)
-            start
+            // _battleModel.updateWithActions(actions)
+            _battleView.updatePokemon(???)
+            update
           case Failure(ex) =>
             println(s"Failure: ${ex.getMessage}")
         }

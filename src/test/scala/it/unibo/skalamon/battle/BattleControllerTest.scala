@@ -124,10 +124,10 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers:
     bcOnBattle.getWinner shouldBe None
 
   it should "have turn index at 0 with a finished battle with winner" in:
-    bcAtFinish.start
+    bcAtFinish.update
     bcAtFinish.turnIndex shouldBe 0
 
   it should "have turn index at 0 with a finished battle with draw" in:
-    bcWithoutWinners.start
+    bcWithoutWinners.update
     bcWithoutWinners.turnIndex shouldBe 0
 

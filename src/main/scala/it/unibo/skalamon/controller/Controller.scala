@@ -23,6 +23,6 @@ trait Controller {
       )
     )
     // viewCoordinator show battleController.view
-    battleController.start
+    battleController.update
 
 }
