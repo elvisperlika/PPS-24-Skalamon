@@ -2,6 +2,7 @@ package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.turn.TurnControllerProxy
 import it.unibo.skalamon.model.{Battle, BattleImpl}
+import it.unibo.skalamon.util.Monad
 import it.unibo.skalamon.view.battle.BattleView
 
 /* start Temporary classes */
@@ -22,6 +23,7 @@ trait BattleController:
   def isDraw: Boolean
   def getWinner: Option[Trainer]
   def start: Unit
+  def turnIndex: Int
 
 object BattleController:
 
@@ -31,6 +33,7 @@ object BattleController:
   private class BasicBattleControllerImpl(_trainers: List[Trainer])
       extends BattleController():
 
+    var _turnIndex: Int = 0
     val battleModel: Battle = BattleImpl()
     val controllerProxy: TurnControllerProxy = TurnControllerProxy(
       _trainers.size
@@ -43,11 +46,23 @@ object BattleController:
     override def getWinner: Option[Trainer] =
       if isOver && !isDraw then trainers.find(_.team.exists(!_.isKO))
       else None
+
     // TODO: use for-yield for this
-    override def start: Unit = ???
-//        battleView.updateTurn(i = ???)
-//        battleModel.firstUpdate
-//        battleView.showActions(map = ???)
-//        controllerProxy.getChosenActions
-//        battleModel.updateWithActions
-//        battleView.updatePokemon(???)
+    override def start: Unit =
+      import scala.util.{Success, Failure}
+      import scala.concurrent.ExecutionContext.Implicits.global
+      if !isOver then
+        _turnIndex += 1
+        battleView.updateTurn(i = turnIndex)
+        // battleModel.pokemonGetInField
+        battleView.showActions(map = ???)
+        controllerProxy.getChosenActions.onComplete {
+          case Success(actions) =>
+            // battleModel.updateWithActions(actions)
+            battleView.updatePokemon(???)
+            start
+          case Failure(ex) =>
+            println(s"Failure: ${ex.getMessage}")
+        }
+
+    override def turnIndex: Int = _turnIndex

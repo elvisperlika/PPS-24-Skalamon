@@ -8,8 +8,10 @@ import it.unibo.skalamon.controller.battle.{
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class BattleControllerTest extends AnyFlatSpec with should.Matchers {
+class BattleControllerTest extends AnyFlatSpec with should.Matchers:
 
+  /** Battle just started.
+    */
   val bcAtStart: BattleController = BattleController(
     List(
       Trainer(
@@ -23,6 +25,8 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
     )
   )
 
+  /** Battle finished.
+    */
   val bcAtFinish: BattleController = BattleController(
     List(
       Trainer(
@@ -40,6 +44,8 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
     )
   )
 
+  /** Battle in progress.
+    */
   val bcOnBattle: BattleController = BattleController(
     List(
       Trainer(
@@ -60,6 +66,8 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
     )
   )
 
+  /** Battle finished with draw.
+    */
   val bcWithoutWinners: BattleController = BattleController(
     List(
       Trainer(
@@ -114,4 +122,12 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers {
 
   it should "return None if battle is not finished" in:
     bcOnBattle.getWinner shouldBe None
-}
+
+  it should "have turn index at 0 with a finished battle with winner" in:
+    bcAtFinish.start
+    bcAtFinish.turnIndex shouldBe 0
+
+  it should "have turn index at 0 with a finished battle with draw" in:
+    bcWithoutWinners.start
+    bcWithoutWinners.turnIndex shouldBe 0
+
