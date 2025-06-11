@@ -14,14 +14,14 @@ case class Switch() extends Action
 case class Trainer(name: String, team: List[MutablePokemon])
 /* end Temporary classes */
 
+/** Battle controller manage battle status and end game logic.
+  */
 trait BattleController:
-  private val controllerProxy: TurnControllerProxy = TurnControllerProxy()
-  val battleView: BattleView = BattleView(controllerProxy)
   def trainers: List[Trainer]
   def isOver: Boolean
   def isDraw: Boolean
   def getWinner: Option[Trainer]
-  def update: Unit
+  def start: Unit
 
 object BattleController:
 
@@ -29,10 +29,13 @@ object BattleController:
     new BasicBattleControllerImpl(trainers)
 
   private class BasicBattleControllerImpl(_trainers: List[Trainer])
-      extends BattleController:
+      extends BattleController():
 
     val battleModel: Battle = BattleImpl()
-    var turnController: TurnControllerProxy = TurnControllerProxy()
+    val controllerProxy: TurnControllerProxy = TurnControllerProxy(
+      _trainers.size
+    )
+    val battleView: BattleView = BattleView(controllerProxy)
 
     override def trainers: List[Trainer] = _trainers
     override def isOver: Boolean = trainers.count(_.team.exists(!_.isKO)) <= 1
@@ -41,10 +44,10 @@ object BattleController:
       if isOver && !isDraw then trainers.find(_.team.exists(!_.isKO))
       else None
     // TODO: use for-yield for this
-    override def update: Unit = ???
+    override def start: Unit = ???
 //        battleView.updateTurn(i = ???)
 //        battleModel.firstUpdate
 //        battleView.showActions(map = ???)
-//        controllerProxy.getChoosenActions
+//        controllerProxy.getChosenActions
 //        battleModel.updateWithActions
 //        battleView.updatePokemon(???)

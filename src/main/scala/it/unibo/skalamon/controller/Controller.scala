@@ -6,8 +6,6 @@ import it.unibo.skalamon.controller.battle.{
   Trainer
 }
 
-import scala.language.postfixOps
-
 /** Controller
   */
 trait Controller {
@@ -25,6 +23,6 @@ trait Controller {
       )
     )
     // viewCoordinator show battleController.view
-    battleController.update
+    battleController.start
 
 }
