@@ -4,6 +4,18 @@ enum GameState:
   case InProgress
   case GameOver(w: Trainer)
 
-  def isGameOver: Boolean = this match 
+  /** Check if battle is finished.
+    * @return
+    *   True if battle is finished
+    */
+  def isGameOver: Boolean = this match
     case GameOver(w) => true
-    case _ => false
+    case _           => false
+
+  /** Winner getter.
+    * @return
+    *   Optionaly the Winner if battle is finished.
+    */
+  def getWinner: Option[Trainer] = this match
+    case GameOver(w) => Some(w)
+    case _           => None
