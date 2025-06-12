@@ -16,7 +16,7 @@ class MainView extends View, KeyListener:
     add(terminal.get)
     pack()
 
-    //screen = Option(MainMenuScreen())
+    // screen = Option(MainMenuScreen())
     screen = Option(PlayScreen("Fabrizio", "Edgar"))
     addKeyListener(this)
     repaint()
@@ -28,8 +28,8 @@ class MainView extends View, KeyListener:
     screen.get.displayOutput(terminal.get)
     super.repaint()
 
-  def keyPressed(e: KeyEvent): Unit =
+  override def keyPressed(e: KeyEvent): Unit =
     screen = Option(screen.get.respondToUserInput(e))
     repaint
-  def keyReleased(e: KeyEvent): Unit = {}
-  def keyTyped(e: KeyEvent): Unit = {}
+  override def keyReleased(e: KeyEvent): Unit = {}
+  override def keyTyped(e: KeyEvent): Unit = {}

@@ -20,8 +20,8 @@ class PlayScreen(
     terminal.writeCenter(player, 22)
     HorizontalContainer(terminal, 3, 4, 12, 5)
 
-  def displayOutput(terminal: AsciiPanel): Unit =
+  override def displayOutput(terminal: AsciiPanel): Unit =
     setPlayersName(terminal, playerName, opponentName)
 
-  def respondToUserInput(key: KeyEvent): Screen =
+  override def respondToUserInput(key: KeyEvent): Screen =
     this
