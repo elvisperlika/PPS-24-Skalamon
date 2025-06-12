@@ -16,7 +16,8 @@ class MainView extends View, KeyListener:
     add(terminal.get)
     pack()
 
-    screen = Option(MainMenuScreen())
+    //screen = Option(MainMenuScreen())
+    screen = Option(PlayScreen("Fabrizio", "Edgar"))
     addKeyListener(this)
     repaint()
     this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
