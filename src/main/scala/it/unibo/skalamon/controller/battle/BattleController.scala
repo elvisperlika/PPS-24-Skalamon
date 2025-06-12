@@ -3,7 +3,6 @@ package it.unibo.skalamon.controller.battle
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.controller.battle.turn.TurnControllerProxy
 import it.unibo.skalamon.model.Battle
-import it.unibo.skalamon.util.Monad
 import it.unibo.skalamon.view.battle.BattleView
 
 /* start Temporary classes */
@@ -33,18 +32,20 @@ object BattleController:
       extends BattleController():
 
     private val battleModel: Battle = Battle()
-    private val controllerProxy: TurnControllerProxy = TurnControllerProxy(trainers.size)
+    private val controllerProxy: TurnControllerProxy = TurnControllerProxy(
+      trainers.size
+    )
     private val battleView: BattleView = BattleView(controllerProxy)
     private var state: GameState = InProgress
 
-    def getWinner: Option[Trainer] =
-      if trainers.count(_.team.exists(!_.isKO)) <= 1 then
-        trainers.find(_.team.exists(!_.isKO))
-      else None
+    def checkGameOver: GameState =
+      if trainers.count(_.team.exists(!_.isKO)) == 1 then
+        GameOver(trainers.find(_.team.exists(!_.isKO)).get)
+      else InProgress
 
     override def update(): Unit =
-      import scala.util.{Success, Failure}
       import scala.concurrent.ExecutionContext.Implicits.global
+      import scala.util.{Failure, Success}
       while !state.isGameOver do
         battleView.updateTurn(i = battleModel.getTurnIndex)
         // battleModel.pokemonGetInField
@@ -52,11 +53,9 @@ object BattleController:
         battleView.showActions(map = ???)
         controllerProxy.getChosenActions.onComplete:
           case Success(actions) =>
-            // battleModel.updateWithActions(actions)
+            // battleModel.updateAfterActions(actions)
             battleView.updatePokemon(???)
           case Failure(ex) =>
             println(s"Failure: ${ex.getMessage}")
-      getWinner match
-        case Some(winner) => state = GameOver(w = winner)
-        case _ => state = InProgress
-      // battleView.showWinner
+        state = checkGameOver
+  //  battleView.showWinner(state.getWinner)

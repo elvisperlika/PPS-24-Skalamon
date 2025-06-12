@@ -8,7 +8,7 @@ import it.unibo.skalamon.controller.battle.{
 
 /** Controller
   */
-trait Controller {
+trait Controller:
 
   /** Create a battle with 2 trainers, both of them with a team of Pokémon.
     *
@@ -24,5 +24,3 @@ trait Controller {
     )
     // viewCoordinator show battleController.view
     battleController.update()
-
-}
