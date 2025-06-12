@@ -2,6 +2,18 @@ package it.unibo.skalamon.view.Container
 
 import asciiPanel.AsciiPanel
 
+/** Creates a box in the terminal that can contain text.
+  * @param terminal
+  *   The AsciiPanel that holds all the text.
+  * @param x
+  *   The 'x' starting coordinate of the box.
+  * @param y
+  *   The 'y' starting coordinate of the box.
+  * @param width
+  *   The width of the box.
+  * @param height
+  *   The height of the box.
+  */
 class BoxContainer(
     private val terminal: AsciiPanel,
     x: Int,
@@ -11,6 +23,16 @@ class BoxContainer(
 ):
   drawEmptyBox(x, y, width, height)
 
+  /** Draws the box boundaries
+    * @param x
+    *   The 'x' starting coordinate of the box.
+    * @param y
+    *   The 'y' starting coordinate of the box.
+    * @param width
+    *   The width of the box.
+    * @param height
+    *   The height of the box.
+    */
   private def drawEmptyBox(x: Int, y: Int, width: Int, height: Int): Unit =
     for (i <- 1 until width - 1)
       terminal.write('-', x + i, y)
