@@ -4,4 +4,4 @@ package it.unibo.skalamon.model.field.expirable.weather
   * Only one [[Weather]] can be active at a time. If one is active, it is
   * overridden.
   */
-case class Weather()
+case class Weather(name: String)

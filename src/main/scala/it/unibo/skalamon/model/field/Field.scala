@@ -29,8 +29,8 @@ class FieldBuilder:
 
   def setTerrain(name: String): Unit = terrain = Some(Terrain(name))
   def setRoom(name: String): Unit = room = Some(Room(name))
-  def setWeather(description: String): Unit =
-    weather = Some(Weather())
+  def setWeather(name: String): Unit =
+    weather = Some(Weather(name))
 
   def build(sides: Map[Trainer, FieldSide]): Field =
     Field(sides, terrain, room, weather)
