@@ -1,4 +1,4 @@
-package it.unibo.skalamon.types
+package it.unibo.skalamon.model.types
 
 import it.unibo.skalamon.model.types.*
 import org.scalatest.flatspec.AnyFlatSpec
