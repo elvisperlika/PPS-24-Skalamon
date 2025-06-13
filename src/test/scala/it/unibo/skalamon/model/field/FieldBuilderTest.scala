@@ -1,9 +1,9 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.field.expirable.room.Room
-import it.unibo.skalamon.model.field.expirable.weather.Weather
 import it.unibo.skalamon.model.field.fieldside.FieldSide
+import it.unibo.skalamon.model.field.room.Room
 import it.unibo.skalamon.model.field.terrain.Terrain
+import it.unibo.skalamon.model.field.weather.Weather
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -19,7 +19,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
 
   it should "let create field with Terrain" in:
     val mudField: Field = field(bob :: Nil) { b =>
-      b.setTerrain("Mud")
+      b.setTerrain(Terrain("Mud"))
     }
     mudField shouldBe Field(
       Map((bob -> FieldSide())),
@@ -30,7 +30,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
 
   it should "let create field with Room" in:
     val darkField: Field = field(bob :: Nil) { b =>
-      b.setRoom("Dark")
+      b.setRoom(Room("Dark"))
     }
     darkField shouldBe Field(
       Map((bob -> FieldSide())),
@@ -41,7 +41,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
 
   it should "let create field with Weather" in:
     val foggyField: Field = field(bob :: alice :: Nil) { b =>
-      b.setWeather("Foggy")
+      b.setWeather(Weather("Foggy"))
     }
     foggyField shouldBe Field(
       Map((bob -> FieldSide()), (alice -> FieldSide())),
@@ -52,9 +52,9 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
 
   it should "let create combinations" in:
     val foggyMudAndDark: Field = field(alice :: bob :: Nil) { b =>
-      b.setTerrain("Mud")
-      b.setWeather("Foggy")
-      b.setRoom("Dark")
+      b.setTerrain(Terrain("Mud"))
+      b.setWeather(Weather("Foggy"))
+      b.setRoom(Room("Dark"))
     }
     foggyMudAndDark shouldBe Field(
       Map((alice -> FieldSide()), (bob -> FieldSide())),
@@ -65,9 +65,9 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
 
   it should "let change side" in:
     val foggyMudAndDark: Field = field(alice :: bob :: Nil) { b =>
-      b.setTerrain("Mud")
-      b.setWeather("Foggy")
-      b.setRoom("Dark")
+      b.setTerrain(Terrain("Mud"))
+      b.setWeather(Weather("Foggy"))
+      b.setRoom(Room("Dark"))
     }
     object SimpleFieldSide extends FieldSide
     foggyMudAndDark.changeSide(alice, SimpleFieldSide)

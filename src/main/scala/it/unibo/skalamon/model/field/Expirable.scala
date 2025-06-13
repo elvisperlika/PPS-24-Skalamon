@@ -1,4 +1,4 @@
-package it.unibo.skalamon.model.field.expirable
+package it.unibo.skalamon.model.field
 
 /** Status that mutate the [[Field]] for a defined number of turns.
   */

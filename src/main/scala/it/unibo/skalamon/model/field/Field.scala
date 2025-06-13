@@ -1,9 +1,9 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.field.expirable.room.Room
-import it.unibo.skalamon.model.field.expirable.weather.Weather
 import it.unibo.skalamon.model.field.fieldside.FieldSide
+import it.unibo.skalamon.model.field.room.Room
 import it.unibo.skalamon.model.field.terrain.Terrain
+import it.unibo.skalamon.model.field.weather.Weather
 
 /* temporary classes start */
 case class Trainer(name: String)
@@ -27,10 +27,10 @@ class FieldBuilder:
   private var room: Option[Room] = None
   private var weather: Option[Weather] = None
 
-  def setTerrain(name: String): Unit = terrain = Some(Terrain(name))
-  def setRoom(name: String): Unit = room = Some(Room(name))
-  def setWeather(name: String): Unit =
-    weather = Some(Weather(name))
+  def setTerrain(t: Terrain): Unit = terrain = Some(t)
+  def setRoom(r: Room): Unit = room = Some(r)
+  def setWeather(w: Weather): Unit =
+    weather = Some(w)
 
   def build(sides: Map[Trainer, FieldSide]): Field =
     Field(sides, terrain, room, weather)

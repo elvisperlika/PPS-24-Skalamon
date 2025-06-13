@@ -1,6 +1,6 @@
-package it.unibo.skalamon.model.field.expirable.weather.kind
+package it.unibo.skalamon.model.field.weather.kind
 
-import it.unibo.skalamon.model.field.expirable.Expirable
-import it.unibo.skalamon.model.field.expirable.weather.Weather
+import it.unibo.skalamon.model.field.Expirable
+import it.unibo.skalamon.model.field.weather.Weather
 
 trait Sandstorm extends Weather with Expirable
