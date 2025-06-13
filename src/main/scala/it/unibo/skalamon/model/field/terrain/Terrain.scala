@@ -1,4 +1,4 @@
-package it.unibo.skalamon.model.field.expirable
+package it.unibo.skalamon.model.field.terrain
 
 import it.unibo.skalamon.model.field.expirable.weather.Weather
 

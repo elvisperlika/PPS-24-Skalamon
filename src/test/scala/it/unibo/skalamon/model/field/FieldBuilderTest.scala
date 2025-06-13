@@ -1,9 +1,9 @@
 package it.unibo.skalamon.model.field
 
 import it.unibo.skalamon.model.field.expirable.room.Room
-import it.unibo.skalamon.model.field.expirable.Terrain
 import it.unibo.skalamon.model.field.expirable.weather.Weather
 import it.unibo.skalamon.model.field.fieldside.FieldSide
+import it.unibo.skalamon.model.field.terrain.Terrain
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
