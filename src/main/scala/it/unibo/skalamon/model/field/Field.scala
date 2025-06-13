@@ -10,10 +10,14 @@ case class Field(
 
 class FieldBuilder:
   private var t: Option[Terrain] = None
-  
-  def terrain(name: String): Unit = t = Some(Terrain(name))
+  private var r: Option[Room] = None
+  private var w: Option[Weather] = None
 
-  def build(): Field = Field(t, None, None)
+  def terrain(name: String): Unit = t = Some(Terrain(name))
+  def room(name: String): Unit = r = Some(Room(name))
+  def weather(description: String): Unit = w = Some(Weather(description))
+
+  def build(): Field = Field(t, r, w)
 
 def field(init: FieldBuilder => Unit): Field =
   val builder = new FieldBuilder
