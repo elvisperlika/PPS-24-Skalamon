@@ -9,11 +9,11 @@ case class Field(
 )
 
 class FieldBuilder:
-  private val t: Option[Terrain] = None
-  private val r: Option[Room] = None
-  private val w: Option[Weather] = None
+  private var t: Option[Terrain] = None
+  
+  def terrain(name: String): Unit = t = Some(Terrain(name))
 
-  def build(): Field = Field(t, r, w)
+  def build(): Field = Field(t, None, None)
 
 def field(init: FieldBuilder => Unit): Field =
   val builder = new FieldBuilder
