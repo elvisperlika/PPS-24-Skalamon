@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.field
 
 /** Status that mutate the [[Field]] for a defined number of turns.
   */
-trait Expirable(turn: Int, elapsedTurn: Int):
+trait Expirable(bornTurn: Int, elapsedTurn: Int):
 
   /** Check if status is yet on course.
     * @param currentTurn
@@ -10,4 +10,4 @@ trait Expirable(turn: Int, elapsedTurn: Int):
     * @return
     *   True if status ends his period of execution.
     */
-  def isExpired(currentTurn: Int): Boolean = currentTurn > turn + elapsedTurn
+  def isExpired(currentTurn: Int): Boolean = currentTurn >= bornTurn + elapsedTurn

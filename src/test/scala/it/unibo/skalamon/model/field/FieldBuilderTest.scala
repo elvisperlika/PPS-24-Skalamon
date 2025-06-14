@@ -3,7 +3,7 @@ package it.unibo.skalamon.model.field
 import it.unibo.skalamon.model.field.fieldside.FieldSide
 import it.unibo.skalamon.model.field.room.Room
 import it.unibo.skalamon.model.field.terrain.Terrain
-import it.unibo.skalamon.model.field.weather.Weather
+import it.unibo.skalamon.model.field.weather.kind.Sunny
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -41,32 +41,32 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
 
   it should "let create field with Weather" in:
     val foggyField: Field = field(bob :: alice :: Nil) { b =>
-      b.setWeather(Weather("Foggy"))
+      b.setWeather(Sunny(1))
     }
     foggyField shouldBe Field(
       Map((bob -> FieldSide()), (alice -> FieldSide())),
       None,
       None,
-      Some(Weather("Foggy"))
+      Some(Sunny(1))
     )
 
   it should "let create combinations" in:
     val foggyMudAndDark: Field = field(alice :: bob :: Nil) { b =>
       b.setTerrain(Terrain("Mud"))
-      b.setWeather(Weather("Foggy"))
+      b.setWeather(Sunny(2))
       b.setRoom(Room("Dark"))
     }
     foggyMudAndDark shouldBe Field(
       Map((alice -> FieldSide()), (bob -> FieldSide())),
       Some(Terrain("Mud")),
       Some(Room("Dark")),
-      Some(Weather("Foggy"))
+      Some(Sunny(2))
     )
 
   it should "let change side" in:
     val foggyMudAndDark: Field = field(alice :: bob :: Nil) { b =>
       b.setTerrain(Terrain("Mud"))
-      b.setWeather(Weather("Foggy"))
+      b.setWeather(Sunny(3))
       b.setRoom(Room("Dark"))
     }
     object SimpleFieldSide extends FieldSide
@@ -75,5 +75,5 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
       Map((alice -> SimpleFieldSide), (bob -> FieldSide())),
       Some(Terrain("Mud")),
       Some(Room("Dark")),
-      Some(Weather("Foggy"))
+      Some(Sunny(3))
     )

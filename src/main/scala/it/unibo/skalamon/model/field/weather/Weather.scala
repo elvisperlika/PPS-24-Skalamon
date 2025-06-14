@@ -4,4 +4,4 @@ package it.unibo.skalamon.model.field.weather
   * Only one [[Weather]] can be active at a time. If one is active, it is
   * overridden.
   */
-case class Weather(name: String)
+trait Weather(name: String)
