@@ -2,5 +2,12 @@ package it.unibo.skalamon.model.field.weather.kind
 
 import it.unibo.skalamon.model.field.Expirable
 import it.unibo.skalamon.model.field.weather.Weather
+import it.unibo.skalamon.model.types.{Ground, Rock, Steel, Type}
 
-trait Sandstorm extends Weather with Expirable
+case class Sandstorm(name: String, turn: Int, elapsedTurn: Int)
+    extends Weather(name) with Expirable(turn, elapsedTurn):
+
+  override val typesMultiplierMap: Map[Type, Double] = Map.empty
+
+object Sandstorm:
+  def apply(t: Int): Sandstorm = Sandstorm("Sandstorm", t, 5)

@@ -12,4 +12,3 @@ case class Sunny(name: String, turn: Int, elapsedTurn: Int)
 
 object Sunny:
   def apply(t: Int): Sunny = Sunny("Sunny", t, 5)
-  
