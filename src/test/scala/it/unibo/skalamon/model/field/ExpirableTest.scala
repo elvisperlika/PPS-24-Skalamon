@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.field.weather.Weather
 import it.unibo.skalamon.model.field.weather.kind.Sunny
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
