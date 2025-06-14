@@ -1,6 +1,7 @@
 package it.unibo.skalamon.model.ability
 
-import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
+import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.event.EventType
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -8,9 +9,10 @@ import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
   *
   * @param name
   *   The name of the ability.
+  * @param hooks
+  *   Behaviors that are triggered at specific events in a battle.
   */
 case class Ability(
     name: String,
-    onSwitchIn: Behavior = EmptyBehavior,
-    onSwitchOut: Behavior = EmptyBehavior,
+    hooks: Map[EventType[_], Behavior]
 )
