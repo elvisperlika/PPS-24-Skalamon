@@ -22,11 +22,11 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
     val move =
       Move(
         "TestMove",
-        success = MovePhase(EmptyBehavior)
+        success = EmptyBehavior
       ).battleMove()
     val context = move.createContext(_.success, target, source)
 
-    context.move shouldEqual move
+    context.origin shouldEqual move
     context.target shouldEqual target
     context.source shouldEqual source
     context.behaviors shouldBe empty
@@ -35,7 +35,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
     val move =
       Move(
         "TestMove",
-        success = MovePhase(SingleHitBehavior(10))
+        success = SingleHitBehavior(10)
       ).battleMove()
     val context = move.createContext(_.success, target, source)
     context.behaviors shouldEqual List((
@@ -47,11 +47,10 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
     val move =
       Move(
         "TestMove",
-        success = MovePhase(
+        success =
           new SimpleSingleHitBehavior(10)
             with ProbabilityModifier(100.percent)
             with TargetModifier(TargetModifier.Type.Self)
-        )
       ).battleMove()
 
     val context = move.createContext(_.success, target, source)
@@ -64,8 +63,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
     val move =
       Move(
         "TestMove",
-        success =
-          MovePhase(BehaviorGroup(SingleHitBehavior(10), SingleHitBehavior(20)))
+        success = BehaviorGroup(SingleHitBehavior(10), SingleHitBehavior(20))
       ).battleMove()
     val context = move.createContext(_.success, target, source)
     getPlainBehaviors(context) shouldEqual List(
