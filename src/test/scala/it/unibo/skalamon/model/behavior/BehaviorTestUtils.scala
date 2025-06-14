@@ -36,5 +36,5 @@ object BehaviorTestUtils:
   /** @return
     *   The plain behaviors from the context, without modifiers.
     */
-  def getPlainBehaviors(context: MoveContext): List[Behavior] =
+  def getPlainBehaviors(context: BehaviorsContext[_]): List[Behavior] =
     context.behaviors.map(_._1)
