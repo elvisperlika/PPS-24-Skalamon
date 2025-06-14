@@ -29,8 +29,7 @@ class FieldBuilder:
 
   def setTerrain(t: Terrain): Unit = terrain = Some(t)
   def setRoom(r: Room): Unit = room = Some(r)
-  def setWeather(w: Weather): Unit =
-    weather = Some(w)
+  def setWeather(w: Weather): Unit = weather = Some(w)
 
   def build(sides: Map[Trainer, FieldSide]): Field =
     Field(sides, terrain, room, weather)
@@ -38,9 +37,4 @@ class FieldBuilder:
 def field(trainers: List[Trainer])(init: FieldBuilder => Unit): Field =
   val builder = new FieldBuilder
   init(builder)
-
-  def createSides(trainers: List[Trainer]): Map[Trainer, FieldSide] =
-    trainers.foldLeft(Map[Trainer, FieldSide]())((map, t) =>
-      map + (t -> FieldSide())
-    )
-  builder.build(createSides(trainers))
+  builder.build(trainers.map(t => t -> FieldSide()).toMap)
