@@ -11,11 +11,11 @@ class MainView extends View, KeyListener:
   private var screen: Option[Screen] = None
 
   private val terminalWidth: Int = 80
-  private val terminalHeight: Int = 29
+  private val terminalHeight: Int = 35
 
   def createView(): Unit =
     terminal = Option(AsciiPanel(terminalWidth, terminalHeight))
-    terminal.get.write("rl tutorial", 1, 1)
+    setResizable(false)
     add(terminal.get)
     pack()
 
