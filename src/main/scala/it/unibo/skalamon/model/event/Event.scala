@@ -27,7 +27,3 @@ trait EventType[T]:
     *   An [[Event]] of this type containing the data.
     */
   def of(data: T): Event[T] = Event(this, data)
-
-// TODO temporaneo, questo puoi spostarlo nel model della battaglia/turno
-object BattleEvents:
-  object PokemonSwitchIn extends EventType[BattlePokemon]
