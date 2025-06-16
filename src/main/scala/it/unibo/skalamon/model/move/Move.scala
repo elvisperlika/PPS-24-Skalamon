@@ -15,19 +15,9 @@ import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
   */
 case class Move(
     name: String,
-    success: MovePhase = MovePhase(EmptyBehavior),
-    fail: MovePhase = MovePhase(EmptyBehavior)
+    success: Behavior = EmptyBehavior,
+    fail: Behavior = EmptyBehavior
 )
-
-/** Represents an execution case of a move under certain circumstances. Multiple
-  * cases compose a move.
-  *
-  * @param behavior
-  *   The behavior, or more than one by means of a
-  *   [[it.unibo.skalamon.model.behavior.modifier.BehaviorGroup]], to be
-  *   executed in this phase.
-  */
-case class MovePhase(behavior: Behavior)
 
 /** A move in the context of a battle.
   *
