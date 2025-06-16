@@ -1,7 +1,7 @@
 package it.unibo.skalamon.view.battle
 
-import it.unibo.skalamon.controller.battle.turn.TurnControllerProxy
-import it.unibo.skalamon.controller.battle.{Action, MutablePokemon, Trainer}
+import it.unibo.skalamon.controller.battle.action.*
+import it.unibo.skalamon.controller.battle.{MutablePokemon, Trainer}
 
 trait BattleView:
 
@@ -24,10 +24,10 @@ trait BattleView:
   def updatePokemon(map: Map[Trainer, MutablePokemon]): Unit
 
 object BattleView {
-  def apply(controllerProxy: TurnControllerProxy): BattleView =
+  def apply(controllerProxy: ActionBuffer): BattleView =
     new BattleViewImpl(controllerProxy)
 
-  private class BattleViewImpl(_controllerProxy: TurnControllerProxy)
+  private class BattleViewImpl(_controllerProxy: ActionBuffer)
       extends BattleView {
     private val controllerProxy = _controllerProxy
 
