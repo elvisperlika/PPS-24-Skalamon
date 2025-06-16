@@ -1,4 +1,4 @@
-package it.unibo.skalamon.battle
+package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.controller.battle.Trainer
