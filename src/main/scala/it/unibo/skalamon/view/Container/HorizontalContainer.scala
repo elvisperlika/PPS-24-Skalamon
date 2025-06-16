@@ -18,6 +18,7 @@ import asciiPanel.AsciiPanel
   */
 case class HorizontalContainer(
     terminal: AsciiPanel,
+    textList: Seq[String] = Seq(), // TODO: documentare
     startY: Int,
     numBoxes: Int,
     boxWidth: Int,
@@ -29,5 +30,5 @@ case class HorizontalContainer(
 
   val boxes: Seq[BoxContainer] = (0 until numBoxes).map { i =>
     val x = startX + i * (boxWidth + spacing)
-    BoxContainer(terminal, x, startY, boxWidth, boxHeight)
+    BoxContainer(terminal, textList, x, startY, boxWidth, boxHeight)
   }

@@ -20,8 +20,16 @@ class PlayScreen(
     terminal.writeCenter(opponent, opponentNameY)
     terminal.writeCenter(player, playerNameY)
 
+    val abilityTextList: Seq[String] =
+      Seq("Move1", "Electric", "Physical", "50-80%", "5/10pp", "rep w button")
+
+    val pokemonTextList: Seq[String] = Seq("Pikachu")
+
+    val battlePokemonText: Seq[String] = Seq("Bulbasaur 50/120 Hp Ability: Synthesis")
+
     val p1Pokemon = HorizontalContainer(
       terminal,
+      pokemonTextList,
       startY,
       pokemonSlotNum,
       pokemonSlotWidth,
@@ -30,6 +38,7 @@ class PlayScreen(
 
     val p1Abilities = HorizontalContainer(
       terminal,
+      abilityTextList,
       p1PokemonY + pokemonSlotHeight,
       abilitySlotNum,
       abilitySlotWidth,
@@ -38,6 +47,7 @@ class PlayScreen(
 
     val p1BattlePokemon = HorizontalContainer(
       terminal,
+      battlePokemonText,
       p1AbilitiesY + abilitySlotHeight,
       battlePokemonSlotNum,
       battlePokemonWidth,
@@ -46,6 +56,7 @@ class PlayScreen(
 
     val p2BattlePokemon = HorizontalContainer(
       terminal,
+      battlePokemonText,
       p1BattlePokemonY + battlePokemonHeight + playerPadding,
       battlePokemonSlotNum,
       battlePokemonWidth,
@@ -54,6 +65,7 @@ class PlayScreen(
 
     val p2Abilities = HorizontalContainer(
       terminal,
+      abilityTextList,
       p2BattlePokemonY + battlePokemonHeight,
       abilitySlotNum,
       abilitySlotWidth,
@@ -62,6 +74,7 @@ class PlayScreen(
 
     val p2Pokemon = HorizontalContainer(
       terminal,
+      pokemonTextList,
       p2AbilitiesY + abilitySlotHeight,
       pokemonSlotNum,
       pokemonSlotWidth,
