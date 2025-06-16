@@ -81,17 +81,17 @@ object PlayScreen:
 
   // Pokemon slots
   val pokemonSlotNum = 5
-  val pokemonSlotWidth = 12
+  val pokemonSlotWidth = 14
   val pokemonSlotHeight = 3
 
   // Abilities
   val abilitySlotNum = 4
-  val abilitySlotWidth = 16
-  val abilitySlotHeight = 5
+  val abilitySlotWidth = 18
+  val abilitySlotHeight = 8
 
   // Battle Pokemon
   val battlePokemonSlotNum = 1
-  val battlePokemonWidth = 20
+  val battlePokemonWidth = 46
   val battlePokemonHeight = 3
 
   // Layout positions (computed)
