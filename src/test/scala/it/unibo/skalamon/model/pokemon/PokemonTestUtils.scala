@@ -3,7 +3,6 @@ package it.unibo.skalamon.model.pokemon
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
-import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.move.*
 
 /** Test utilities for testing Pokémon.
