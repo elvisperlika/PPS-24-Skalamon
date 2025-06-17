@@ -1,8 +1,9 @@
 package it.unibo.skalamon.model.field.weather.kind
 
-import it.unibo.skalamon.model.field.Expirable
 import it.unibo.skalamon.model.field.weather.Weather
-import it.unibo.skalamon.model.types.{Fire, Type, Water}
+import it.unibo.skalamon.model.field.{Expirable, PokemonRule}
+import it.unibo.skalamon.model.types.Type
+import it.unibo.skalamon.model.types.TypesCollection.{Fire, Water}
 
 case class Sunny(name: String, turn: Int, elapsedTurn: Int)
     extends Weather(name) with Expirable(turn, elapsedTurn):
@@ -10,5 +11,13 @@ case class Sunny(name: String, turn: Int, elapsedTurn: Int)
   override val typesMultiplierMap: Map[Type, Double] =
     Map((Fire -> 1.5), (Water -> 1.5))
 
+  override val fieldEffects: List[PokemonRule] = Nil
+
 object Sunny:
+  /** Create a Sunny weather.
+    * @param t
+    *   Number of turns in which weather is active.
+    * @return
+    *   Sunny weather
+    */
   def apply(t: Int): Sunny = Sunny("Sunny", t, 5)

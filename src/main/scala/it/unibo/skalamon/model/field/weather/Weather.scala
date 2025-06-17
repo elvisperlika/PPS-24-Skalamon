@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.field.weather
 
+import it.unibo.skalamon.model.field.PokemonRule
 import it.unibo.skalamon.model.types.Type
 
 /** [[Weather]] changes last 5 turns and can be triggered by moves or abilities.
@@ -8,6 +9,11 @@ import it.unibo.skalamon.model.types.Type
   */
 trait Weather(name: String):
 
-  /** Type affected by the weather that change the Type multiplier.
+  /** Type affected by the weather that increase or decrease the move's power by
+    * a multiplier.
     */
   val typesMultiplierMap: Map[Type, Double]
+
+  /** List of actions to perform on Pokémon in the field.
+    */
+  val fieldEffects: List[PokemonRule]

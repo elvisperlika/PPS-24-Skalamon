@@ -2,6 +2,7 @@ package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 
 /** Test utilities for testing Pokémon.
   */
@@ -17,7 +18,7 @@ object PokemonTestUtils:
   private val basePokemon1 = Pokemon(
     "Pikachu",
     Male,
-    List(Type("Electric")),
+    Electric,
     baseStats = Stats(35, 55, 40, 50, 50, 90),
     ability = Ability("Static"),
     weightKg = 6.0,
@@ -35,7 +36,7 @@ object PokemonTestUtils:
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
-    List(Type("Electric")),
+    Electric,
     baseStats = Stats(35, 55, 40, 50, 50, 90),
     ability = Ability("Static"),
     weightKg = 6.0,
