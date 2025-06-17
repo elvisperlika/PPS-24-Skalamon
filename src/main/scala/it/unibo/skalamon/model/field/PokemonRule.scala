@@ -1,32 +1,31 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.field.Filter.Except
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-import it.unibo.skalamon.model.types.TypesCollection.Ice
 import it.unibo.skalamon.model.types.Type
+import it.unibo.skalamon.model.types.TypesCollection.Ice
 
 trait PokemonRule:
   def apply(p: BattlePokemon): BattlePokemon
 
-enum Filter:
+trait Filter:
+  val filter: FilterEnum
+  val types: List[Type]
+
+  def shouldApplyTo(p: BattlePokemon): Boolean = filter match
+    case FilterEnum.All    => types.contains(p.base.types)
+    case FilterEnum.Except => !types.contains(p.base.types)
+
+trait Damage:
+  val damage: Int
+
+enum FilterEnum:
   case All
   case Except
 
-class DamageTypesWithFilter(
-    val damage: Int,
-    val filter: Filter,
-    val types: Type*
-) extends PokemonRule:
-  private def shouldApplyTo(p: BattlePokemon): Boolean = filter match
-    case Filter.All    => types.contains(p.base.types)
-    case Filter.Except => !types.contains(p.base.types)
+object DamageAllExceptIce extends PokemonRule with Filter with Damage:
   override def apply(p: BattlePokemon): BattlePokemon =
-    if shouldApplyTo(p) then p.copy(currentHP = p.currentHP - damage)
-    else p
+    if shouldApplyTo(p) then p.copy(currentHP = p.currentHP - damage) else p
 
-object DamageAllExceptIce
-    extends DamageTypesWithFilter(
-      damage = 10,
-      filter = Except,
-      types = Ice
-    )
+  override val filter: FilterEnum = FilterEnum.Except
+  override val types: List[Type] = Ice :: Nil
+  override val damage: Int = 10
