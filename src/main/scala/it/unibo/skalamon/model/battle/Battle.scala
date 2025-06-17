@@ -9,15 +9,15 @@ import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
   *   The trainers participating in the battle.
   */
 case class Battle(trainers: List[Trainer]):
-  
+
   /* Stack to maintain battle's turn history */
   private var turnHistory: Stack[Turn] = Stack.empty
-  
+
   /* Current turn */
   private var _turn = Turn(TurnState.initial(trainers))
 
   /** The current turn of the battle. */
-  def turn: Turn = _turn
+  def turn: Option[Turn] = Some(_turn)
 
   /** The event manager for handling battle/turn events. */
   val eventManager = EventManager()
@@ -25,22 +25,23 @@ case class Battle(trainers: List[Trainer]):
   /** Makes the battle advance to the next stage.
     */
   def update(): Unit =
+    turn match
+      case Some(t) => update(t)
+      case _ => throw new IllegalStateException("No active turn to update")
+
+  private def update(turn: Turn): Unit =
     import TurnStage.*
+    given Turn = turn
     turn.state.stage match
-      case Started =>
-        turn.state = turn.state.copy(stage = TurnStage.WaitingForActions)
-
-      case WaitingForActions => return
-
-      case ActionsReceived(actionBuffer) =>
-        turn.state = turn.state.copy(stage = TurnStage.ExecutingActions)
-
-      case TurnStage.ExecutingActions =>
-        turn.state = turn.state.copy(stage = TurnStage.Ended)
-
-      case TurnStage.Ended =>
-        turnHistory = turnHistory.push(_turn)
-        _turn = Turn(turn.state.copy(stage = TurnStage.Started))
+      case Started                       => setStage(WaitingForActions)
+      case WaitingForActions             => return
+      case ActionsReceived(actionBuffer) => setStage(ExecutingActions)
+      case ExecutingActions              => setStage(Ended)
+      case Ended => _turn = Turn(turn.state.copy(stage = Started))
 
     given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
+
     eventManager.notify(turn.state.stage of turn)
+
+  private def setStage(stage: TurnStage)(using turn: Turn): Unit =
+    turn.state = turn.state.copy(stage = stage)
