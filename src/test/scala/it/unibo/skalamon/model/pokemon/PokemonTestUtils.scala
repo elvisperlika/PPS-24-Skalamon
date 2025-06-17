@@ -11,8 +11,6 @@ object PokemonTestUtils:
   private val moveThunderShock = Move("Thunder Shock")
   private val moveElectric = Move("Electric")
 
-  private val pokemonTypeElectric = Electric
-
   private val genericAbility = Ability("Static", Map.empty)
 
   private val startingHP: Int = 70
@@ -23,7 +21,7 @@ object PokemonTestUtils:
   private val basePokemon1 = Pokemon(
     "Pikachu",
     Male,
-    List(pokemonTypeElectric),
+    List(Electric),
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 55,
@@ -49,7 +47,7 @@ object PokemonTestUtils:
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
-    List(pokemonTypeElectric),
+    List(Grass, Poison),
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 55,
