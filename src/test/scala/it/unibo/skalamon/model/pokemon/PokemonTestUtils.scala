@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.pokemon.*
@@ -11,6 +12,8 @@ object PokemonTestUtils:
   private val moveThunderShock = Move("Thunder Shock")
   private val moveElectric = Move("Electric")
 
+  private val pokemonTypeElectric = Electric
+
   private val genericAbility = Ability("Static", Map.empty)
 
   private val startingHP: Int = 70
@@ -21,7 +24,7 @@ object PokemonTestUtils:
   private val basePokemon1 = Pokemon(
     "Pikachu",
     Male,
-    List(Type("Electric")),
+    List(pokemonTypeElectric),
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 55,
@@ -47,7 +50,7 @@ object PokemonTestUtils:
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
-    List(Type("Electric")),
+    List(pokemonTypeElectric),
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 55,

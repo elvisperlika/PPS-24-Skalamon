@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
@@ -9,8 +10,6 @@ sealed trait Gender
 case object Male extends Gender
 case object Female extends Gender
 case object Genderless extends Gender
-
-case class Type(name: String) //TODO: to be removed, it is temporary till merge
 
 /** Represents the base attributes of a Pokémon.
   * @param name
