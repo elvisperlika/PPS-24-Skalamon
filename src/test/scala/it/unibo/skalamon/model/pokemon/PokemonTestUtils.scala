@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.move.*
@@ -9,6 +10,8 @@ import it.unibo.skalamon.model.move.*
 object PokemonTestUtils:
   private val moveThunderShock = Move("Thunder Shock")
   private val moveElectric = Move("Electric")
+
+  private val genericAbility = Ability("Static", Map.empty)
 
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
@@ -28,7 +31,7 @@ object PokemonTestUtils:
         Stat.Speed -> 90
       )
     ),
-    ability = Ability("Static"),
+    ability = genericAbility,
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
@@ -54,7 +57,7 @@ object PokemonTestUtils:
         Stat.Speed -> 90
       )
     ),
-    ability = Ability("Static"),
+    ability = genericAbility,
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
