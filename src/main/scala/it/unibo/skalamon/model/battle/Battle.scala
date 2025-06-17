@@ -1,6 +1,7 @@
 package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.controller.battle.Trainer
+import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
 
 /** A battle between trainers.
@@ -8,7 +9,11 @@ import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
   *   The trainers participating in the battle.
   */
 case class Battle(trainers: List[Trainer]):
-  // TODO use stack
+  
+  /* Stack to maintain battle's turn history */
+  private var turnHistory: Stack[Turn] = Stack.empty
+  
+  /* Current turn */
   private var _turn = Turn(TurnState.initial(trainers))
 
   /** The current turn of the battle. */
@@ -34,7 +39,7 @@ case class Battle(trainers: List[Trainer]):
         turn.state = turn.state.copy(stage = TurnStage.Ended)
 
       case TurnStage.Ended =>
-        // TODO handle stack
+        turnHistory = turnHistory.push(_turn)
         _turn = Turn(turn.state.copy(stage = TurnStage.Started))
 
     given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
