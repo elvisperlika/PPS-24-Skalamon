@@ -1,11 +1,12 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.model.behavior.kind.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 /** Tests for [[BattlePokemon]] and its implementations.
   */
-class BattlePokemonTest extends AnyFlatSpec with should.Matchers {
+class BattlePokemonTest extends AnyFlatSpec with should.Matchers:
   "BattlePokemon" should "takeDamage" in:
     val pokemon = PokemonTestUtils.simplePokemon1
     val damage1 = 10
@@ -22,4 +23,3 @@ class BattlePokemonTest extends AnyFlatSpec with should.Matchers {
   "BattlePokemon" should "die" in:
     val pokemon = PokemonTestUtils.simplePokemon1
     pokemon.takeDamage(pokemon.currentHP).isAlive should be(false)
-}

@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.move.*
 
