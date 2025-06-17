@@ -17,6 +17,12 @@ trait BattleController:
   /** The battle managed by this controller. */
   val battle: Battle
 
+  /** Starts the battle.
+    *
+    * This method initializes the battle and sets the initial turn stage.
+    */
+  def start(): Unit
+
   /** Registers an action from a trainer.
     *
     * @param trainer
@@ -47,15 +53,16 @@ private class BattleControllerImpl(override val battle: Battle)
     extends BattleController:
   private var actionBuffer = ActionBuffer(battle.trainers.size)
 
+  override def start(): Unit = ??? // TODO push turn to stack
+
   override def registerAction(trainer: Trainer, action: Action): Unit =
     import TurnStage.*
 
-    battle.turn.state.stage match
-      case WaitingForActions =>
+    battle.turn match
+      case Some(turn) if turn.state.stage == WaitingForActions =>
         this.actionBuffer = actionBuffer.register(trainer, action)
         if (actionBuffer.isFull) {
-          battle.turn.state =
-            battle.turn.state.copy(stage = ActionsReceived(actionBuffer))
+          turn.state = turn.state.copy(stage = ActionsReceived(actionBuffer))
           this.actionBuffer = actionBuffer.clear()
         }
 
