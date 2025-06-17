@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.pokemon
 
-import it.unibo.skalamon.model.pokemon.*
+import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.model.move.*
 
 /** Test utilities for testing Pokémon.
@@ -35,9 +35,9 @@ object PokemonTestUtils:
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
-    List(Type("Electric")),
+    List(Type("Grass"), Type("Poison")),
     baseStats = Stats(35, 55, 40, 50, 50, 90),
-    ability = Ability("Static"),
+    ability = Ability("Synthesis"),
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
@@ -49,3 +49,30 @@ object PokemonTestUtils:
     Option.empty,
     List()
   )
+
+  private val basePokemon3 = Pokemon(
+    "Charmander",
+    Male,
+    List(Type("Fire")),
+    baseStats = Stats(39, 52, 43, 60, 50, 65),
+    ability = Ability("Blaze"),
+    weightKg = 8.5,
+    possibleMoves = List(moveThunderShock, moveElectric)
+  )
+  private val simplePokemon3: BattlePokemon = BattlePokemon(
+    basePokemon3,
+    levelPokemon1,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option.empty,
+    List()
+  )
+
+  def trainerAlice: Trainer =
+    Trainer("Alice", List(simplePokemon1))
+
+  def trainerBob: Trainer =
+    Trainer("Bob", List(simplePokemon2))
+
+  def trainerGio: Trainer =
+    Trainer("Gio", List(simplePokemon3))

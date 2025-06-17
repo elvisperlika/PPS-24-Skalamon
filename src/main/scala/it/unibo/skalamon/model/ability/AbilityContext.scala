@@ -6,7 +6,7 @@ import it.unibo.skalamon.model.behavior.{
   BehaviorsContext,
   WithBehaviors
 }
-import it.unibo.skalamon.model.pokemon.*
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** Represents the context of a move that can be executed in a battle.
   *

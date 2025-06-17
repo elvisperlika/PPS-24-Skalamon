@@ -1,21 +1,41 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.model.battle.turn.Turn
-import it.unibo.skalamon.model.event.EventManager
+import it.unibo.skalamon.controller.battle.Trainer
+import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
 
-import scala.collection.mutable
-
-/* start temporary */
-trait Trainer(name: String)
-/* end temporary */
-
-/** Battle model.
+/** A battle between trainers.
+  * @param trainers
+  *   The trainers participating in the battle.
   */
-trait Battle
+case class Battle(trainers: List[Trainer]):
+  // TODO use stack
+  private var _turn = Turn(TurnState.initial(trainers))
 
-object Battle:
-  def apply(trainers: List[Trainer]): Battle = new BattleImpl(trainers)
+  /** The current turn of the battle. */
+  def turn: Turn = _turn
 
-  private class BattleImpl(trainers: List[Trainer]) extends Battle:
-    val eventManager: EventManager = EventManager()
-    val turns: mutable.Stack[Turn] = mutable.Stack.empty
+  /** The event manager for handling battle/turn events. */
+  val eventManager = EventManager()
+
+  /** Makes the battle advance to the next stage.
+    */
+  def update(): Unit =
+    import TurnStage.*
+    turn.state.stage match
+      case Started =>
+        turn.state = turn.state.copy(stage = TurnStage.WaitingForActions)
+
+      case WaitingForActions => return
+
+      case ActionsReceived(actionBuffer) =>
+        turn.state = turn.state.copy(stage = TurnStage.ExecutingActions)
+
+      case TurnStage.ExecutingActions =>
+        turn.state = turn.state.copy(stage = TurnStage.Ended)
+
+      case TurnStage.Ended =>
+        // TODO handle stack
+        _turn = Turn(turn.state.copy(stage = TurnStage.Started))
+
+    given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
+    eventManager.notify(turn.state.stage of turn)
