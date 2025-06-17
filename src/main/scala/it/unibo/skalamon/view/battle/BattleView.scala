@@ -1,7 +1,8 @@
 package it.unibo.skalamon.view.battle
 
+import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.controller.battle.{MutablePokemon, Trainer}
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 trait BattleView:
 
@@ -21,7 +22,7 @@ trait BattleView:
     * @param map
     *   Map: Trainer -> MutablePokémon
     */
-  def updatePokemon(map: Map[Trainer, MutablePokemon]): Unit
+  def updatePokemon(map: Map[Trainer, BattlePokemon]): Unit
 
 object BattleView {
   def apply(controllerProxy: ActionBuffer): BattleView =
@@ -35,6 +36,6 @@ object BattleView {
 
     override def showActions(map: Map[Trainer, List[Action]]): Unit = ???
 
-    override def updatePokemon(map: Map[Trainer, MutablePokemon]): Unit = ???
+    override def updatePokemon(map: Map[Trainer, BattlePokemon]): Unit = ???
   }
 }

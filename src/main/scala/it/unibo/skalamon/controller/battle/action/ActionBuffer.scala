@@ -2,7 +2,8 @@ package it.unibo.skalamon.controller.battle.action
 
 import it.unibo.skalamon.controller.battle.Trainer
 
-/** Immutable container for actions picked by trainers (players) during a battle turn.
+/** Immutable container for actions picked by trainers (players) during a battle
+  * turn.
   */
 trait ActionBuffer:
   /** Maximum number of trainers that can register an action in the buffer. */
@@ -40,6 +41,12 @@ trait ActionBuffer:
     */
   def isFull: Boolean
 
+  /** Clears the action buffer, removing all registered actions.
+    * @return
+    *   A new empty [[ActionBuffer]] instance.
+    */
+  def clear(): ActionBuffer
+
 object ActionBuffer:
 
   /** Creates a new [[ActionBuffer]].
@@ -67,3 +74,5 @@ private case class BasicActionBuffer(
     actions.get(trainer)
 
   override def isFull: Boolean = actions.size >= maxSize
+  
+  override def clear(): ActionBuffer = BasicActionBuffer(maxSize)

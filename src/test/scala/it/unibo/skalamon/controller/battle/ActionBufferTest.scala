@@ -1,7 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
-import it.unibo.skalamon.controller.battle.*
 import it.unibo.skalamon.controller.battle.action.*
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -10,20 +10,9 @@ import org.scalatest.matchers.should
 class ActionBufferTest extends AnyFlatSpec with should.Matchers:
   val N_TRAINERS: Int = 2
 
-  private val alice: Trainer = Trainer(
-    name = "Alice",
-    team = List(MutablePokemon("Pickachu"), MutablePokemon("Squirrel"))
-  )
-
-  private val bob: Trainer = Trainer(
-    name = "Bob",
-    team = List(MutablePokemon("Charizard"), MutablePokemon("Wooper"))
-  )
-
-  private val gio: Trainer = Trainer(
-    name = "Gio",
-    team = List(MutablePokemon("Squirrel"), MutablePokemon("Wooper"))
-  )
+  private val alice = trainerAlice
+  private val bob = trainerBob
+  private val gio = trainerGio
 
   private val buffer = ActionBuffer(N_TRAINERS)
 
@@ -31,6 +20,7 @@ class ActionBufferTest extends AnyFlatSpec with should.Matchers:
     val result =
       buffer.register(alice, SwitchAction())
         .register(bob, SwitchAction())
+
     result.getAction(alice) shouldBe Some(SwitchAction())
     result.getAction(bob) shouldBe Some(SwitchAction())
     result.isFull shouldBe true
@@ -54,4 +44,14 @@ class ActionBufferTest extends AnyFlatSpec with should.Matchers:
 
     result.getAction(alice) shouldBe None
     result.getAction(bob) shouldBe Some(SwitchAction())
+    result.isFull shouldBe false
+
+  it should "allow clearing all actions" in:
+    val result =
+      buffer.register(alice, SwitchAction())
+        .register(bob, SwitchAction())
+        .clear()
+
+    result.getAction(alice) shouldBe None
+    result.getAction(bob) shouldBe None
     result.isFull shouldBe false

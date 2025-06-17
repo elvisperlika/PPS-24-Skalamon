@@ -1,26 +1,15 @@
 package it.unibo.skalamon.controller
 
-import it.unibo.skalamon.controller.battle.{
-  BattleController,
-  MutablePokemon,
-  Trainer
-}
+import it.unibo.skalamon.controller.battle.BattleController
+import it.unibo.skalamon.model.battle.Battle
 
-/** Controller
+/** The main controller of the game.
   */
 trait Controller:
 
-  /** Create a battle with 2 trainers, both of them with a team of Pokémon.
+  /** Creates a battle with 2 trainers, both of them with a team of Pokémon.
     *
     * @return
-    *   BattleController to manage the battle
+    *   The new battle controller.
     */
-  def createBattle(): Unit =
-    val battleController: BattleController = BattleController(
-      List(
-        Trainer("Bob", List(MutablePokemon("Pikachu"))),
-        Trainer("Alice", List(MutablePokemon("Squirrel")))
-      )
-    )
-    // viewCoordinator show battleController.view
-    battleController.update()
+  def createBattle(battle: Battle): BattleController = BattleController(battle)
