@@ -11,13 +11,11 @@ import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
 case class Battle(trainers: List[Trainer]):
 
   /* Stack to maintain battle's turn history */
-  private var turnHistory: Stack[Turn] = Stack.empty
-
-  /* Current turn */
-  private var _turn = Turn(TurnState.initial(trainers))
+  private var turnHistory: Stack[Turn] =
+    Stack.empty.push(Turn(TurnState.initial(trainers)))
 
   /** The current turn of the battle. */
-  def turn: Option[Turn] = Some(_turn)
+  def turn: Option[Turn] = turnHistory.peek
 
   /** The event manager for handling battle/turn events. */
   val eventManager = EventManager()
@@ -37,7 +35,7 @@ case class Battle(trainers: List[Trainer]):
       case WaitingForActions             => return
       case ActionsReceived(actionBuffer) => setStage(ExecutingActions)
       case ExecutingActions              => setStage(Ended)
-      case Ended => _turn = Turn(turn.state.copy(stage = Started))
+      case Ended => turnHistory = turnHistory.push(Turn(turn.state.copy(stage = Started)))
 
     given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
 
