@@ -19,7 +19,15 @@ object PokemonTestUtils:
     "Pikachu",
     Male,
     List(Type("Electric")),
-    baseStats = Stats(35, 55, 40, 50, 50, 90),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 55,
+        Stat.Defense -> 40,
+        Stat.SpecialAttack -> 50,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 90
+      )
+    ),
     ability = Ability("Static"),
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
@@ -37,7 +45,15 @@ object PokemonTestUtils:
     "Bulbasaur",
     Male,
     List(Type("Electric")),
-    baseStats = Stats(35, 55, 40, 50, 50, 90),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 55,
+        Stat.Defense -> 40,
+        Stat.SpecialAttack -> 50,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 90
+      )
+    ),
     ability = Ability("Static"),
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
