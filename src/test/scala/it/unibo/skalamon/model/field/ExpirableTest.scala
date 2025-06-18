@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.field.weather.kind.Sunny
+import it.unibo.skalamon.model.field.weather.Sunny
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
@@ -12,6 +12,7 @@ class ExpirableTest extends AnyFlatSpec with should.Matchers:
     val sunny: Sunny = Sunny(1)
     val testCases = Table(
       ("turn", "expected"),
+      (1, false),
       (2, false),
       (3, false),
       (4, false),

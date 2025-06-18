@@ -1,9 +1,7 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.field.FieldEffectMixin.{Room, Terrain, Weather}
 import it.unibo.skalamon.model.field.fieldside.FieldSide
-import it.unibo.skalamon.model.field.room.Room
-import it.unibo.skalamon.model.field.terrain.Terrain
-import it.unibo.skalamon.model.field.weather.Weather
 
 /* temporary classes start */
 case class Trainer(name: String)
