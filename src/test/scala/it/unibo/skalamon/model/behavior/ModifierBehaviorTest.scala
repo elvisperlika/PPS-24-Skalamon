@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.behavior
 
-import it.unibo.skalamon.model.behavior.*
 import it.unibo.skalamon.model.behavior.BehaviorTestUtils.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.*
@@ -10,7 +9,7 @@ import org.scalatest.matchers.should
 
 /** Tests for [[HitBehavior]] and its implementations.
   */
-class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers {
+class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers:
   private val HIT_POWER = 30
 
   "Behavior with self-target" should "target the move's source" in:
@@ -58,4 +57,32 @@ class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers {
     getPlainBehaviors(behavior(context)) shouldEqual List(
       SingleHitBehavior(HIT_POWER)
     )
-}
+
+  "Grouped behaviors" should "apply all behaviors in the group" in:
+    val behavior1 = new SimpleSingleHitBehavior(HIT_POWER)
+      with ProbabilityModifier(100.percent)
+    val behavior2 = new SimpleSingleHitBehavior(HIT_POWER)
+      with TargetModifier(TargetModifier.Type.Self)
+
+    val group = BehaviorGroup(behavior1, behavior2, behavior1)
+    val result = group(context)
+
+    result.behaviors shouldEqual List(
+      (SingleHitBehavior(HIT_POWER), BehaviorModifiers()),
+      (
+        SingleHitBehavior(HIT_POWER),
+        BehaviorModifiers(target = Some(TargetModifier.Type.Self))
+      ),
+      (SingleHitBehavior(HIT_POWER), BehaviorModifiers())
+    )
+
+  "Grouped behaviors with modifier" should "apply the behavior to children" in:
+    val behavior = SimpleSingleHitBehavior(HIT_POWER)
+
+    val group = new BehaviorGroup(behavior, behavior) with TargetModifier(TargetModifier.Type.Self)
+    val result = group(context)
+
+    result.behaviors shouldEqual List(
+      (SingleHitBehavior(HIT_POWER), BehaviorModifiers(target = Some(TargetModifier.Type.Self))),
+      (SingleHitBehavior(HIT_POWER), BehaviorModifiers(target = Some(TargetModifier.Type.Self)))
+    )

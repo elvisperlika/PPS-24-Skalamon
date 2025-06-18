@@ -1,0 +1,73 @@
+package it.unibo.skalamon.controller.battle
+
+import it.unibo.skalamon.controller.battle.action.{Action, ActionBuffer}
+import it.unibo.skalamon.model.battle.{Battle, TurnStage}
+import it.unibo.skalamon.model.pokemon.BattlePokemon
+
+/* start Temporary classes */
+case class Trainer(name: String, team: List[BattlePokemon])
+/* end Temporary classes */
+
+/** Controller for managing battles in the game.
+  *
+  * This controller handles the registration of actions from trainers and
+  * updates the battle state.
+  */
+trait BattleController:
+  /** The battle managed by this controller. */
+  val battle: Battle
+
+  /** Starts the battle.
+    *
+    * This method initializes the battle and sets the initial turn stage.
+    */
+  def start(): Unit
+
+  /** Registers an action from a trainer.
+    *
+    * @param trainer
+    *   The trainer who is performing the action.
+    * @param action
+    *   The action to be registered.
+    * @throws IllegalStateException
+    *   If the current turn stage does not allow action registration.
+    */
+  def registerAction(trainer: Trainer, action: Action): Unit
+
+  /** Updates the battle state to the next stage.
+    */
+  def update(): Unit
+
+object BattleController:
+  /** Creates a new instance of BattleController for the given battle.
+    *
+    * @param battle
+    *   The battle to be managed by the controller.
+    * @return
+    *   A new BattleController instance.
+    */
+  def apply(battle: Battle): BattleController =
+    new BattleControllerImpl(battle)
+
+private class BattleControllerImpl(override val battle: Battle)
+    extends BattleController:
+  private var actionBuffer = ActionBuffer(battle.trainers.size)
+
+  override def start(): Unit = ??? // TODO push turn to stack
+
+  override def registerAction(trainer: Trainer, action: Action): Unit =
+    import TurnStage.*
+
+    battle.turn match
+      case Some(turn) if turn.state.stage == WaitingForActions =>
+        this.actionBuffer = actionBuffer.register(trainer, action)
+        if (actionBuffer.isFull) {
+          turn.state = turn.state.copy(stage = ActionsReceived(actionBuffer))
+          this.actionBuffer = actionBuffer.clear()
+        }
+
+      case _ => throw new IllegalStateException(
+          "Cannot accept actions in the current turn stage."
+        )
+
+  override def update(): Unit = battle.update()
