@@ -8,19 +8,23 @@ trait PokemonRule:
   def apply(p: BattlePokemon): BattlePokemon
 
 enum FilterEnum:
-  case All
+  case Only
   case Except
+  case All
 
 object Modify:
   def only(types: Type*): ModifyBuilder =
-    ModifyBuilder(FilterEnum.All, types.toList)
+    ModifyBuilder(FilterEnum.Only, types.toList)
   def except(types: Type*): ModifyBuilder =
     ModifyBuilder(FilterEnum.Except, types.toList)
+  def all: ModifyBuilder =
+    ModifyBuilder(FilterEnum.All, Nil)
 
 case class ModifyBuilder(filter: FilterEnum, types: List[Type]):
   def apply(modification: BattlePokemon => BattlePokemon): PokemonRule =
     (p: BattlePokemon) =>
       val matches = filter match
-        case FilterEnum.All    => types.contains(p.base.types)
+        case FilterEnum.Only   => types.contains(p.base.types)
         case FilterEnum.Except => !types.contains(p.base.types)
+        case _                 => true
       if matches then modification(p) else p
