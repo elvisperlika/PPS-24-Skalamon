@@ -18,14 +18,14 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
   "Field Builder" should "let create empty field" in:
     val empty: Field = field(bob :: Nil)(_ => ())
     println(empty)
-    empty shouldBe Field(Map((bob -> FieldSide())), None, None, None)
+    empty shouldBe Field(Map(bob -> FieldSide()), None, None, None)
 
   it should "let create field with Terrain" in:
     val mudField: Field = field(bob :: Nil) { b =>
       b.setTerrain(Mud(1))
     }
     mudField shouldBe Field(
-      Map((bob -> FieldSide())),
+      Map(bob -> FieldSide()),
       Some(Mud(1)),
       None,
       None
@@ -36,7 +36,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
       b.setRoom(TrickRoom(1))
     }
     darkField shouldBe Field(
-      Map((bob -> FieldSide())),
+      Map(bob -> FieldSide()),
       None,
       Some(TrickRoom(1)),
       None
@@ -47,7 +47,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
       b.setWeather(Sunny(1))
     }
     foggyField shouldBe Field(
-      Map((bob -> FieldSide()), (alice -> FieldSide())),
+      Map(bob -> FieldSide(), alice -> FieldSide()),
       None,
       None,
       Some(Sunny(1))
@@ -60,7 +60,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
       b.setRoom(TrickRoom(1))
     }
     foggyMudAndDark shouldBe Field(
-      Map((alice -> FieldSide()), (bob -> FieldSide())),
+      Map(alice -> FieldSide(), bob -> FieldSide()),
       Some(Mud(2)),
       Some(TrickRoom(1)),
       Some(Sunny(2))
@@ -75,7 +75,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
     object SimpleFieldSide extends FieldSide
     foggyMudAndDark.changeSide(alice, SimpleFieldSide)
     foggyMudAndDark shouldBe Field(
-      Map((alice -> SimpleFieldSide), (bob -> FieldSide())),
+      Map(alice -> SimpleFieldSide, bob -> FieldSide()),
       Some(Mud(2)),
       Some(TrickRoom(1)),
       Some(Sunny(3))

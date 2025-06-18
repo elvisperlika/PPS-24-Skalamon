@@ -8,7 +8,7 @@ import org.scalatest.matchers.should
 
 class WeatherTest extends AnyFlatSpec with should.Matchers:
 
-  var pokemon1 = BattlePokemon(
+  var pokemon1: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Pikachu",
       gender = Male,
@@ -25,7 +25,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     volatileStatus = Nil
   )
 
-  var pokemon2 = BattlePokemon(
+  var pokemon2: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Snowsaur",
       gender = Female,
@@ -44,7 +44,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
 
   "Weather" should "have types multiplier modifier" in:
     val sunny: Sunny = Sunny(2)
-    sunny.typesModifier shouldBe Map((Fire -> 1.5), (Water -> 1.5))
+    sunny.typesModifier shouldBe Map(Fire -> 1.5, Water -> 1.5)
 
   it should "have functions to mutate Pokémon" in:
     val snow: Snow = Snow(5)

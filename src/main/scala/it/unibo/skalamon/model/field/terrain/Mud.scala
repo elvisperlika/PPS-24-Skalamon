@@ -8,7 +8,7 @@ case class Mud(t: Int) extends BaseTerrain(
       creationTurn = t,
       onApply = Nil,
       onTurns = Nil,
-      typesModifier = Map((Fire -> 1.5), (Water -> 1.5))
+      typesModifier = Map(Fire -> 1.5, Water -> 1.5)
     ) with Expirable(t):
   override val duration: Int = Mud.Duration
 
