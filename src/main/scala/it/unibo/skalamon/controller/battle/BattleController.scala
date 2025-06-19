@@ -1,7 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.{Action, ActionBuffer}
-import it.unibo.skalamon.model.battle.{Battle, Turn, TurnStage, TurnState}
+import it.unibo.skalamon.model.battle.{Battle, Turn, TurnStage}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /* start Temporary classes */
@@ -53,7 +53,7 @@ private class BattleControllerImpl(override val battle: Battle)
     extends BattleController:
   private var actionBuffer = ActionBuffer(battle.trainers.size)
 
-  override def start(): Unit = battle.startNewTurn()
+  override def start(): Unit = battle.start()
 
   override def registerAction(trainer: Trainer, action: Action): Unit =
     import TurnStage.*
@@ -62,7 +62,7 @@ private class BattleControllerImpl(override val battle: Battle)
       case Some(turn) if turn.state.stage == WaitingForActions =>
         this.actionBuffer = actionBuffer.register(trainer, action)
         if (actionBuffer.isFull) {
-          turn.state = turn.state.copy(stage = ActionsReceived(actionBuffer))
+          battle.setStage(ActionsReceived(actionBuffer))
           this.actionBuffer = actionBuffer.clear()
         }
 

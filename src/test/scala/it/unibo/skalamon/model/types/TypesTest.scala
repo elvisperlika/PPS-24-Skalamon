@@ -1,17 +1,7 @@
 package it.unibo.skalamon.model.types
 
 import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.types.TypesCollection.{
-  Dragon,
-  Electric,
-  Fairy,
-  Fire,
-  Flying,
-  Grass,
-  Ground,
-  Steel,
-  Water
-}
+import it.unibo.skalamon.model.types.TypesCollection.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 

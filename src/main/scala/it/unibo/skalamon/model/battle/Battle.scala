@@ -11,13 +11,19 @@ import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
 case class Battle(trainers: List[Trainer]):
 
   /* Stack to maintain battle's turn history */
-  var turnHistory: Stack[Turn] = Stack.empty
+  private var turnHistory: Stack[Turn] = Stack.empty
 
   /** The current turn of the battle. */
   def currentTurn: Option[Turn] = turnHistory.peek
 
   /** The event manager for handling battle/turn events. */
   val eventManager = EventManager()
+
+  /** Starts the battle by initializing the first turn.
+    */
+  def start(): Unit =
+    turnHistory = turnHistory push Turn(TurnState.initial(trainers))
+    setStage(TurnStage.Started)
 
   /** Makes the battle advance to the next stage.
     */
@@ -28,23 +34,25 @@ case class Battle(trainers: List[Trainer]):
 
   private def update(turn: Turn): Unit =
     import TurnStage.*
-    given Turn = turn
     turn.state.stage match
       case Started                       => setStage(WaitingForActions)
-      case WaitingForActions             => return
+      case WaitingForActions             =>
       case ActionsReceived(actionBuffer) => setStage(ExecutingActions)
       case ExecutingActions              => setStage(Ended)
       case Ended                         =>
-        turnHistory = turnHistory.push(Turn(turn.state.copy(stage = Started)))
+        turnHistory = turnHistory push Turn(turn.state.copy(stage = Started))
 
-    given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
-
-    eventManager.notify(turn.state.stage of turn)
-
-  private def setStage(stage: TurnStage)(using turn: Turn): Unit =
-    turn.state = turn.state.copy(stage = stage)
-
-  /** Push new turn in the turn history.
+  /** Sets the stage of the current turn, and notifies the event manager of the
+    * change via the approriate [[TurnStageEvents]].
+    *
+    * @param stage
+    *   The new stage to set for the turn.
     */
-  def startNewTurn(): Unit =
-    turnHistory = turnHistory push Turn(TurnState.initial(trainers))
+  def setStage(stage: TurnStage): Unit =
+    currentTurn match
+      case Some(turn) =>
+        turn.state = turn.state.copy(stage = stage)
+        given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
+        eventManager.notify(turn.state.stage of turn)
+      case None =>
+        throw new IllegalStateException("No active turn to set stage")

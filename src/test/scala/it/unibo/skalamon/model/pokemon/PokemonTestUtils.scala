@@ -2,7 +2,12 @@ package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.model.move.*
-import it.unibo.skalamon.model.types.TypesCollection.{Electric, Fire, Grass, Poison}
+import it.unibo.skalamon.model.types.TypesCollection.{
+  Electric,
+  Fire,
+  Grass,
+  Poison
+}
 
 /** Test utilities for testing Pokémon.
   */
