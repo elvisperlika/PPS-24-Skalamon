@@ -14,7 +14,7 @@ enum GameState:
 
   /** Winner getter.
     * @return
-    *   Optionaly the Winner if battle is finished.
+    *   Optionally the Winner if battle is finished.
     */
   def getWinner: Option[Trainer] = this match
     case GameOver(w) => Some(w)
