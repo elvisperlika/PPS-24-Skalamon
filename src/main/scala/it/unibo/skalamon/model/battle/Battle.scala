@@ -9,13 +9,17 @@ import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
   */
 case class Battle(trainers: List[Trainer]):
   // TODO use stack
-  private var _turn = Turn(TurnState.initial(trainers))
+  private var _turn: Option[Turn] = None
 
   /** The current turn of the battle. */
-  def turn: Option[Turn] = Some(_turn)
+  def turn: Option[Turn] = _turn
 
   /** The event manager for handling battle/turn events. */
   val eventManager = EventManager()
+
+  def start(): Unit =
+    _turn = Some(Turn(TurnState.initial(trainers)))
+    setStage(TurnStage.Started)
 
   /** Makes the battle advance to the next stage.
     */
@@ -31,7 +35,7 @@ case class Battle(trainers: List[Trainer]):
       case WaitingForActions             =>
       case ActionsReceived(actionBuffer) => setStage(ExecutingActions)
       case ExecutingActions              => setStage(Ended)
-      case Ended => _turn = Turn(turn.state.copy(stage = Started))
+      case Ended => _turn = Some(Turn(turn.state.copy(stage = Started)))
 
   /** Sets the stage of the current turn, and notifies the event manager of the
     * change via the approriate [[TurnStageEvents]].

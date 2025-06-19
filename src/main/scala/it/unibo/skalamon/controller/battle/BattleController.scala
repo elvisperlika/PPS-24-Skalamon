@@ -53,7 +53,7 @@ private class BattleControllerImpl(override val battle: Battle)
     extends BattleController:
   private var actionBuffer = ActionBuffer(battle.trainers.size)
 
-  override def start(): Unit = ??? // TODO push turn to stack
+  override def start(): Unit = battle.start()
 
   override def registerAction(trainer: Trainer, action: Action): Unit =
     import TurnStage.*
