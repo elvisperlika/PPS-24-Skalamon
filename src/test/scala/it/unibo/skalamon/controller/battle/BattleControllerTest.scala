@@ -2,6 +2,7 @@ package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.*
 import it.unibo.skalamon.model.battle.{Battle, TurnStage}
+import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
@@ -46,4 +47,26 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers with BeforeA
 
     controller.update()
 
+    controller.battle.turn.get.state.stage shouldBe TurnStage.ExecutingActions
+
+  it should "trigger events" in:
+    var eventTriggered = false
+    controller.battle.eventManager.watch(TurnStageEvents.ActionsReceived) { turn =>
+      eventTriggered = true
+    }
+
+    val action1 = SwitchAction()
+    val action2 = SwitchAction()
+
+    controller.update()
+    controller.registerAction(alice, action1)
+    controller.registerAction(bob, action2)
+
+    controller.battle.turn.get.state.stage shouldBe TurnStage.ActionsReceived(
+      ActionBuffer(2).register(alice, action1).register(bob, action2)
+    )
+
+    controller.update()
+
+    eventTriggered shouldBe true
     controller.battle.turn.get.state.stage shouldBe TurnStage.ExecutingActions

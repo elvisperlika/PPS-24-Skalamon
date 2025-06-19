@@ -26,17 +26,24 @@ case class Battle(trainers: List[Trainer]):
 
   private def update(turn: Turn): Unit =
     import TurnStage.*
-    given Turn = turn
     turn.state.stage match
       case Started                       => setStage(WaitingForActions)
-      case WaitingForActions             => return
+      case WaitingForActions             =>
       case ActionsReceived(actionBuffer) => setStage(ExecutingActions)
       case ExecutingActions              => setStage(Ended)
       case Ended => _turn = Turn(turn.state.copy(stage = Started))
 
-    given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
-
-    eventManager.notify(turn.state.stage of turn)
-
-  private def setStage(stage: TurnStage)(using turn: Turn): Unit =
-    turn.state = turn.state.copy(stage = stage)
+  /** Sets the stage of the current turn, and notifies the event manager of the
+    * change via the approriate [[TurnStageEvents]].
+    *
+    * @param stage
+    *   The new stage to set for the turn.
+    */
+  def setStage(stage: TurnStage): Unit =
+    turn match
+      case Some(turn) =>
+        turn.state = turn.state.copy(stage = stage)
+        given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
+        eventManager.notify(turn.state.stage of turn)
+      case None =>
+        throw new IllegalStateException("No active turn to set stage")
