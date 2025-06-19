@@ -2,6 +2,7 @@ package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.types.PokemonType
 
 /** Represents the Stats of a Pokémon.
   *
@@ -32,7 +33,6 @@ case object Male extends Gender
 case object Female extends Gender
 case object Genderless extends Gender
 
-case class Type(name: String) //TODO: to be removed, it is temporary till merge
 case class Ability(
     name: String
 ) //TODO: to be removed, it is temporary till merge
@@ -56,7 +56,7 @@ case class Ability(
 case class Pokemon(
     name: String,
     gender: Gender,
-    types: List[Type],
+    types: PokemonType,
     baseStats: Stats,
     ability: Ability,
     weightKg: Double,
