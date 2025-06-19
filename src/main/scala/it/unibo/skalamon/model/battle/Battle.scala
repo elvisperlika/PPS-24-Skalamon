@@ -1,6 +1,7 @@
 package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.controller.battle.Trainer
+import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
 
 /** A battle between trainers.
@@ -8,23 +9,26 @@ import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
   *   The trainers participating in the battle.
   */
 case class Battle(trainers: List[Trainer]):
-  // TODO use stack
-  private var _turn: Option[Turn] = None
+
+  /* Stack to maintain battle's turn history */
+  private var turnHistory: Stack[Turn] = Stack.empty
 
   /** The current turn of the battle. */
-  def turn: Option[Turn] = _turn
+  def currentTurn: Option[Turn] = turnHistory.peek
 
   /** The event manager for handling battle/turn events. */
   val eventManager = EventManager()
 
+  /** Starts the battle by initializing the first turn.
+    */
   def start(): Unit =
-    _turn = Some(Turn(TurnState.initial(trainers)))
+    turnHistory = turnHistory push Turn(TurnState.initial(trainers))
     setStage(TurnStage.Started)
 
   /** Makes the battle advance to the next stage.
     */
   def update(): Unit =
-    turn match
+    currentTurn match
       case Some(t) => update(t)
       case _ => throw new IllegalStateException("No active turn to update")
 
@@ -35,7 +39,8 @@ case class Battle(trainers: List[Trainer]):
       case WaitingForActions             =>
       case ActionsReceived(actionBuffer) => setStage(ExecutingActions)
       case ExecutingActions              => setStage(Ended)
-      case Ended => _turn = Some(Turn(turn.state.copy(stage = Started)))
+      case Ended                         =>
+        turnHistory = turnHistory push Turn(turn.state.copy(stage = Started))
 
   /** Sets the stage of the current turn, and notifies the event manager of the
     * change via the approriate [[TurnStageEvents]].
@@ -44,7 +49,7 @@ case class Battle(trainers: List[Trainer]):
     *   The new stage to set for the turn.
     */
   def setStage(stage: TurnStage): Unit =
-    turn match
+    currentTurn match
       case Some(turn) =>
         turn.state = turn.state.copy(stage = stage)
         given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)

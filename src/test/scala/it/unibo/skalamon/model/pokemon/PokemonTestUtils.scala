@@ -2,6 +2,12 @@ package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.types.TypesCollection.{
+  Electric,
+  Fire,
+  Grass,
+  Poison
+}
 
 /** Test utilities for testing Pokémon.
   */
@@ -17,7 +23,7 @@ object PokemonTestUtils:
   private val basePokemon1 = Pokemon(
     "Pikachu",
     Male,
-    List(Type("Electric")),
+    Electric,
     baseStats = Stats(35, 55, 40, 50, 50, 90),
     ability = Ability("Static"),
     weightKg = 6.0,
@@ -35,7 +41,7 @@ object PokemonTestUtils:
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
-    List(Type("Grass"), Type("Poison")),
+    Grass :: Poison :: Nil,
     baseStats = Stats(35, 55, 40, 50, 50, 90),
     ability = Ability("Synthesis"),
     weightKg = 6.0,
@@ -53,7 +59,7 @@ object PokemonTestUtils:
   private val basePokemon3 = Pokemon(
     "Charmander",
     Male,
-    List(Type("Fire")),
+    Fire,
     baseStats = Stats(39, 52, 43, 60, 50, 65),
     ability = Ability("Blaze"),
     weightKg = 8.5,

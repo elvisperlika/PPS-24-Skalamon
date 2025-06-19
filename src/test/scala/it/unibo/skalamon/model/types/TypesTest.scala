@@ -1,6 +1,7 @@
-package it.unibo.skalamon.types
+package it.unibo.skalamon.model.types
 
 import it.unibo.skalamon.model.types.*
+import it.unibo.skalamon.model.types.TypesCollection.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -69,7 +70,7 @@ class TypesTest extends AnyFlatSpec with should.Matchers:
     pikachu.attack(light)(diglett)
     diglett._hp shouldBe 100
 
-  "Electric move" should "be effective on Water-Grass Pokémon" in:
+  "Electric move" should "be effective oxn Water-Grass Pokémon" in:
     val pikachu: TestMutablePokemon = TestMutablePokemon(100, Electric)
     val lotad: TestMutablePokemon = TestMutablePokemon(100, List(Grass, Water))
     val light: TestMove = TestMove(10, Electric)

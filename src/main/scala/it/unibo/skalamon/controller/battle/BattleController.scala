@@ -58,7 +58,7 @@ private class BattleControllerImpl(override val battle: Battle)
   override def registerAction(trainer: Trainer, action: Action): Unit =
     import TurnStage.*
 
-    battle.turn match
+    battle.currentTurn match
       case Some(turn) if turn.state.stage == WaitingForActions =>
         this.actionBuffer = actionBuffer.register(trainer, action)
         if (actionBuffer.isFull) {
