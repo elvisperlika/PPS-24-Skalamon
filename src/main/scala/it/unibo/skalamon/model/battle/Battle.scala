@@ -11,11 +11,10 @@ import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
 case class Battle(trainers: List[Trainer]):
 
   /* Stack to maintain battle's turn history */
-  private var turnHistory: Stack[Turn] =
-    Stack.empty.push(Turn(TurnState.initial(trainers)))
+  var turnHistory: Stack[Turn] = Stack.empty
 
   /** The current turn of the battle. */
-  def turn: Option[Turn] = turnHistory.peek
+  def currentTurn: Option[Turn] = turnHistory.peek
 
   /** The event manager for handling battle/turn events. */
   val eventManager = EventManager()
@@ -23,7 +22,7 @@ case class Battle(trainers: List[Trainer]):
   /** Makes the battle advance to the next stage.
     */
   def update(): Unit =
-    turn match
+    currentTurn match
       case Some(t) => update(t)
       case _ => throw new IllegalStateException("No active turn to update")
 
@@ -35,7 +34,8 @@ case class Battle(trainers: List[Trainer]):
       case WaitingForActions             => return
       case ActionsReceived(actionBuffer) => setStage(ExecutingActions)
       case ExecutingActions              => setStage(Ended)
-      case Ended => turnHistory = turnHistory.push(Turn(turn.state.copy(stage = Started)))
+      case Ended                         =>
+        turnHistory = turnHistory.push(Turn(turn.state.copy(stage = Started)))
 
     given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
 
@@ -43,3 +43,8 @@ case class Battle(trainers: List[Trainer]):
 
   private def setStage(stage: TurnStage)(using turn: Turn): Unit =
     turn.state = turn.state.copy(stage = stage)
+
+  /** Push new turn in the turn history.
+    */
+  def startNewTurn(): Unit =
+    turnHistory = turnHistory push Turn(TurnState.initial(trainers))

@@ -1,7 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.model.battle.{Battle, TurnStage}
+import it.unibo.skalamon.model.battle.{Battle, Turn, TurnStage, TurnState}
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
@@ -19,14 +19,15 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers with BeforeA
   override def beforeEach(): Unit = {
     battle = Battle(List(alice, bob))
     controller = BattleController(battle)
+    controller.start()
   }
 
   "Battle controller" should "begin in started stage" in:
-    controller.battle.turn.get.state.stage shouldBe TurnStage.Started
+    controller.battle.currentTurn.get.state.stage shouldBe TurnStage.Started
 
   it should "advance to waiting for actions stage" in:
     controller.update()
-    controller.battle.turn.get.state.stage shouldBe TurnStage.WaitingForActions
+    controller.battle.currentTurn.get.state.stage shouldBe TurnStage.WaitingForActions
 
   it should "not allow action registration in started stage" in:
     val action = SwitchAction()
@@ -40,10 +41,14 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers with BeforeA
     controller.registerAction(alice, action1)
     controller.registerAction(bob, action2)
 
-    controller.battle.turn.get.state.stage shouldBe TurnStage.ActionsReceived(
+    controller.battle.currentTurn.get.state.stage shouldBe TurnStage.ActionsReceived(
       ActionBuffer(2).register(alice, action1).register(bob, action2)
     )
 
     controller.update()
 
-    controller.battle.turn.get.state.stage shouldBe TurnStage.ExecutingActions
+    controller.battle.currentTurn.get.state.stage shouldBe TurnStage.ExecutingActions
+
+  it should "add new turn" in:
+    controller.start()
+    battle.currentTurn shouldEqual Some(Turn(TurnState.initial(battle.trainers)))
