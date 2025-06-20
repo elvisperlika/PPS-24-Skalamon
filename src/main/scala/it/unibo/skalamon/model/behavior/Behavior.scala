@@ -27,7 +27,7 @@ trait Behavior:
   def apply[T <: WithBehaviors](container: T)(using
       modifiers: BehaviorModifiers = BehaviorModifiers()
   ): T =
-    container.append(container.behaviors ++ delegates.map((_, modifiers)))
+    container.append(delegates.map((_, modifiers)))
 
 /** An empty behavior that does nothing.
   */

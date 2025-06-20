@@ -18,5 +18,5 @@ trait ModifierBehavior extends Behavior:
   override def apply[T <: WithBehaviors](container: T)(using
       modifiers: BehaviorModifiers
   ): T =
-    given BehaviorModifiers = this (modifiers)
+    given BehaviorModifiers = this(modifiers)
     super.apply(container)

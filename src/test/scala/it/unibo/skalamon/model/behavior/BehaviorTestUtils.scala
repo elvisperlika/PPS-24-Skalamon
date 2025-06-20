@@ -1,21 +1,23 @@
 package it.unibo.skalamon.model.behavior
 
-import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.data.RandomGenerator
-import it.unibo.skalamon.model.move.{Move, MoveContext, MutableMove}
-import it.unibo.skalamon.model.pokemon.MutablePokemon
+import it.unibo.skalamon.model.move.{BattleMove, Move, MoveContext}
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.{
+  simplePokemon1,
+  simplePokemon2
+}
 
 /** Test utilities for testing behaviors.
   */
 object BehaviorTestUtils:
   /** A mock context for moves. */
   val context: MoveContext = MoveContext(
-    move = MutableMove(
+    origin = BattleMove(
       Move("TestMove"),
       pp = 10
     ),
-    target = MutablePokemon(hp = 100),
-    source = MutablePokemon(hp = 100)
+    target = simplePokemon1,
+    source = simplePokemon2
   )
 
   /** @return
@@ -34,5 +36,5 @@ object BehaviorTestUtils:
   /** @return
     *   The plain behaviors from the context, without modifiers.
     */
-  def getPlainBehaviors(context: MoveContext): List[Behavior] =
+  def getPlainBehaviors(context: BehaviorsContext[_]): List[Behavior] =
     context.behaviors.map(_._1)

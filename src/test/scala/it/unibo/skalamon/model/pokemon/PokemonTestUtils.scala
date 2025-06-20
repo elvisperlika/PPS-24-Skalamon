@@ -1,16 +1,124 @@
 package it.unibo.skalamon.model.pokemon
 
-import it.unibo.skalamon.model.pokemon.*
+import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.controller.battle.Trainer
+import it.unibo.skalamon.model.types.*
+import it.unibo.skalamon.model.ability.*
+import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model
+import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.types.TypesCollection.{
+  Electric,
+  Fire,
+  Grass,
+  Poison
+}
 
+/** Test utilities for testing Pokémon.
+  */
 object PokemonTestUtils:
-  
-  private val basePokemon = Pokemon("pikachu",
-    Male,
-    List(Type("Electric")),
-    baseStats = Stats(35, 55, 40, 50, 50, 90),
-    ability = Ability("Static"),
-    weightKg = 6.0,
-    possibleMoves = List(Move("Thunder Shock"), Move("Electric"))
-  )
+  private val moveThunderShock = Move("Thunder Shock")
+  private val moveElectric = Move("Electric")
+
+  private val genericAbility = Ability("Static", Map.empty)
+  private val blazeAbility = Ability("Blaze", Map.empty)
+
   private val startingHP: Int = 70
-  val simplePokemon: BattlePokemon = BattlePokemon(basePokemon, 100, startingHP, List(Move("Thunder Shock")))
+  private val powerPoint: Int = 4
+  private val levelPokemon1: Int = 100
+  private val levelPokemon2: Int = 86
+
+  private val basePokemon1 = Pokemon(
+    "Pikachu",
+    Male,
+    List(Electric),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 55,
+        Stat.Defense -> 40,
+        Stat.SpecialAttack -> 50,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 90
+      )
+    ),
+    ability = genericAbility,
+    weightKg = 6.0,
+    possibleMoves = List(moveThunderShock, moveElectric)
+  )
+  val simplePokemon1: BattlePokemon = BattlePokemon(
+    basePokemon1,
+    levelPokemon1,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option(AssignedStatus(Burn, 1)),
+    List(
+      AssignedStatus(PerishSong, 4),
+      AssignedStatus(AquaRingIngrain, 3),
+      AssignedStatus(Substitute, 8)
+    )
+  )
+
+  private val basePokemon2 = Pokemon(
+    "Bulbasaur",
+    Male,
+    List(Grass, Poison),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 55,
+        Stat.Defense -> 40,
+        Stat.SpecialAttack -> 50,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 90
+      )
+    ),
+    ability = genericAbility,
+    weightKg = 6.0,
+    possibleMoves = List(moveThunderShock, moveElectric)
+  )
+  val simplePokemon2: BattlePokemon = BattlePokemon(
+    basePokemon2,
+    levelPokemon2,
+    startingHP,
+    List(BattleMove(moveElectric, powerPoint)),
+    Option.empty,
+    List()
+  )
+
+  private val basePokemon3 = Pokemon(
+    "Charmander",
+    Male,
+    Fire,
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 52,
+        Stat.Defense -> 43,
+        Stat.SpecialAttack -> 60,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 65
+      )
+    ),
+    ability = blazeAbility,
+    weightKg = 8.5,
+    possibleMoves = List(moveThunderShock, moveElectric)
+  )
+  private val simplePokemon3: BattlePokemon = BattlePokemon(
+    basePokemon3,
+    levelPokemon1,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option(AssignedStatus(Sleep, 4)),
+    List(
+      AssignedStatus(Torment, 4),
+      AssignedStatus(Trapped, 3),
+      AssignedStatus(Encore, 8)
+    )
+  )
+
+  def trainerAlice: Trainer =
+    Trainer("Alice", List(simplePokemon1))
+
+  def trainerBob: Trainer =
+    Trainer("Bob", List(simplePokemon2))
+
+  def trainerGio: Trainer =
+    Trainer("Gio", List(simplePokemon3))
