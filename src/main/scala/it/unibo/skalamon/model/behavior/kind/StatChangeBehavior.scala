@@ -1,11 +1,7 @@
 package it.unibo.skalamon.model.behavior.kind
 
+import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.behavior.*
-
-/** Enumeration of all stat types a Pokémon can have.
-  */
-enum Stat:
-  case Attack, Defense, SpecialAttack, SpecialDefense, Speed
 
 /** A change in a Pokémon's stats.
   * @param stat
