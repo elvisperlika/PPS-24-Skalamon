@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.behavior.kind
 
+import it.unibo.skalamon.model.pokemon.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
