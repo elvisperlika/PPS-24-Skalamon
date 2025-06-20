@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.model.status.*
 import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.model.move.*
 
@@ -28,8 +29,12 @@ object PokemonTestUtils:
     levelPokemon1,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option.empty,
-    List()
+    Option(AssignedStatus(Burn, 1)),
+    List(
+      AssignedStatus(PerishSong, 4),
+      AssignedStatus(AquaRingIngrain, 3),
+      AssignedStatus(Substitute, 8)
+    )
   )
 
   private val basePokemon2 = Pokemon(
@@ -64,8 +69,12 @@ object PokemonTestUtils:
     levelPokemon1,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option.empty,
-    List()
+    Option(AssignedStatus(Sleep, 4)),
+    List(
+      AssignedStatus(Torment, 4),
+      AssignedStatus(Trapped, 3),
+      AssignedStatus(Encore, 8)
+    )
   )
 
   def trainerAlice: Trainer =
