@@ -1,7 +1,9 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.behavior.kind.Stats
 import it.unibo.skalamon.model.field.weather.{Snow, Sunny}
 import it.unibo.skalamon.model.pokemon.*
+import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
   Fire,
@@ -18,8 +20,16 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       name = "Pikachu",
       gender = Male,
       types = Electric,
-      baseStats = Stats(100, 100, 100, 100, 100, 100),
-      ability = Ability("Say Hello"),
+      baseStats = Stats(
+        base = Map(
+          Stat.Attack -> 100,
+          Stat.Defense -> 100,
+          Stat.SpecialAttack -> 100,
+          Stat.SpecialDefense -> 100,
+          Stat.Speed -> 100
+        )
+      ),
+      ability = Ability("Say Hello", Map.empty),
       weightKg = 10,
       possibleMoves = Nil
     ),
@@ -35,8 +45,16 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       name = "Snowsaur",
       gender = Female,
       types = Ice,
-      baseStats = Stats(80, 90, 70, 95, 100, 60),
-      ability = Ability("Cold Veil"),
+      baseStats = Stats(
+        base = Map(
+          Stat.Attack -> 90,
+          Stat.Defense -> 70,
+          Stat.SpecialAttack -> 95,
+          Stat.SpecialDefense -> 100,
+          Stat.Speed -> 60
+        )
+      ),
+      ability = Ability("Cold Veil", Map.empty),
       weightKg = 85,
       possibleMoves = Nil
     ),
@@ -59,8 +77,16 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
         name = "Pikachu",
         gender = Male,
         types = Electric,
-        baseStats = Stats(100, 100, 100, 100, 100, 100),
-        ability = Ability("Say Hello"),
+        baseStats = Stats(
+          base = Map(
+            Stat.Attack -> 100,
+            Stat.Defense -> 100,
+            Stat.SpecialAttack -> 100,
+            Stat.SpecialDefense -> 100,
+            Stat.Speed -> 100
+          )
+        ),
+        ability = Ability("Say Hello", Map.empty),
         weightKg = 10,
         possibleMoves = Nil
       ),

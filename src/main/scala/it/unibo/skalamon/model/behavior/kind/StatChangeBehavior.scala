@@ -1,10 +1,7 @@
 package it.unibo.skalamon.model.behavior.kind
 
-/** Behavior that changes a statistic of a Pokémon.
-  * @param change
-  *   The stat change to apply
-  */
-case class StatChangeBehavior(change: StatChange) extends HitBehavior
+import it.unibo.skalamon.model.pokemon.*
+import it.unibo.skalamon.model.behavior.*
 
 /** A change in a Pokémon's stats.
   * @param stat
@@ -18,15 +15,61 @@ case class StatChange(
     stage: Int
 )
 
+/** Extension method to create a StatChange from a Stat + stage syntax.
+  */
 extension (stat: Stat)
   /** Creates a [[StatChange]] with the given stage.
     * @param stage
     *   The stage of the change.
     */
-  def +(stage: Int): StatChange =
-    StatChange(stat, stage)
+  def +(stage: Int): StatChange = StatChange(stat, stage)
 
-// temp
+/** Behavior that changes a statistic of a Pokémon.
+  * @param change
+  *   The stat change to apply
+  */
+case class StatChangeBehavior(change: StatChange) extends HitBehavior:
+  override protected def delegates: List[Behavior] = List(this)
 
-enum Stat:
-  case Attack, Defense, SpecialAttack, SpecialDefense, Speed
+/** Utility object for stat stage clamping and conversion.
+  */
+object StatStage:
+  private val MinStage = -6
+  private val MaxStage = 6
+
+  /** Clamp the stage between allowed bounds (-6 and +6). */
+  def clamp(stage: Int): Int = stage.max(MinStage).min(MaxStage)
+
+  /** Convert a stage into a multiplier:
+    *   - 0 → 1.0
+    *   - +1 → 1.5
+    *   - -1 → 0.66...
+    */
+  def multiplier(stage: Int): Double =
+    if stage >= 0 then (2.0 + stage) / 2.0
+    else 2.0 / (2.0 - stage)
+
+/** Represents the base stats and current stage-modifiers of a Pokémon.
+  */
+case class Stats(
+    base: Map[Stat, Int],
+    stages: Map[Stat, Int] = Map.empty
+):
+  /** Apply a single stat change and return the updated stats.
+    */
+  def applyChange(change: StatChange): Stats =
+    val currentStage = stages.getOrElse(change.stat, 0)
+    val newStage = StatStage.clamp(currentStage + change.stage)
+    copy(stages = stages.updated(change.stat, newStage))
+
+  /** Compute the effective value of a stat with current stage modifiers.
+    */
+  def effective(stat: Stat): Double =
+    val baseValue = base.getOrElse(stat, 0)
+    val stage = stages.getOrElse(stat, 0)
+    baseValue * StatStage.multiplier(stage)
+
+  /** Compute the effective value of all stats.
+    */
+  def allEffective: Map[Stat, Double] =
+    Stat.values.map(s => s -> effective(s)).toMap

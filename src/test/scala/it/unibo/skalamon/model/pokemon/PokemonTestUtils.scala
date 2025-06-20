@@ -1,6 +1,10 @@
 package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.controller.battle.Trainer
+import it.unibo.skalamon.model.types.*
+import it.unibo.skalamon.model.ability.*
+import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
@@ -15,6 +19,9 @@ object PokemonTestUtils:
   private val moveThunderShock = Move("Thunder Shock")
   private val moveElectric = Move("Electric")
 
+  private val genericAbility = Ability("Static", Map.empty)
+  private val blazeAbility = Ability("Blaze", Map.empty)
+
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
   private val levelPokemon1: Int = 100
@@ -23,9 +30,17 @@ object PokemonTestUtils:
   private val basePokemon1 = Pokemon(
     "Pikachu",
     Male,
-    Electric,
-    baseStats = Stats(35, 55, 40, 50, 50, 90),
-    ability = Ability("Static"),
+    List(Electric),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 55,
+        Stat.Defense -> 40,
+        Stat.SpecialAttack -> 50,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 90
+      )
+    ),
+    ability = genericAbility,
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
@@ -41,9 +56,17 @@ object PokemonTestUtils:
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
-    Grass :: Poison :: Nil,
-    baseStats = Stats(35, 55, 40, 50, 50, 90),
-    ability = Ability("Synthesis"),
+    List(Grass, Poison),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 55,
+        Stat.Defense -> 40,
+        Stat.SpecialAttack -> 50,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 90
+      )
+    ),
+    ability = genericAbility,
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
@@ -60,8 +83,16 @@ object PokemonTestUtils:
     "Charmander",
     Male,
     Fire,
-    baseStats = Stats(39, 52, 43, 60, 50, 65),
-    ability = Ability("Blaze"),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 52,
+        Stat.Defense -> 43,
+        Stat.SpecialAttack -> 60,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 65
+      )
+    ),
+    ability = blazeAbility,
     weightKg = 8.5,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
