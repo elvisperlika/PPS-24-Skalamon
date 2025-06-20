@@ -57,8 +57,8 @@ case class BattlePokemon(
     level: Int,
     currentHP: Int,
     moves: List[BattleMove],
-    nonVolatileStatus: Option[NonVolatileStatus],
-    volatileStatus: List[VolatileStatus]
+    nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
+    volatileStatus: List[AssignedStatus[VolatileStatus]]
 ):
 
   /** Return the current stats of the Pokémon, updated to it's level.

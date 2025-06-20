@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.status
 
+/** Represents the status of a Pokémon.
+  */
 trait Status
-
-trait NonVolatileStatus extends Status
-trait VolatileStatus extends Status
