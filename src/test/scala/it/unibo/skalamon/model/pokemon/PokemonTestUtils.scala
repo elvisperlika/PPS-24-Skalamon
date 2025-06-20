@@ -1,8 +1,10 @@
 package it.unibo.skalamon.model.pokemon
 
+import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
@@ -18,6 +20,7 @@ object PokemonTestUtils:
   private val moveElectric = Move("Electric")
 
   private val genericAbility = Ability("Static", Map.empty)
+  private val blazeAbility = Ability("Blaze", Map.empty)
 
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
@@ -80,8 +83,16 @@ object PokemonTestUtils:
     "Charmander",
     Male,
     Fire,
-    baseStats = Stats(39, 52, 43, 60, 50, 65),
-    ability = Ability("Blaze"),
+    baseStats = Stats(
+      base = Map(
+        Stat.Attack -> 52,
+        Stat.Defense -> 43,
+        Stat.SpecialAttack -> 60,
+        Stat.SpecialDefense -> 50,
+        Stat.Speed -> 65
+      )
+    ),
+    ability = blazeAbility,
     weightKg = 8.5,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
