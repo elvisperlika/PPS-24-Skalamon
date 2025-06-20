@@ -5,6 +5,7 @@ import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.types.PokemonType
 
 sealed trait Gender
 case object Male extends Gender
@@ -30,7 +31,7 @@ case object Genderless extends Gender
 case class Pokemon(
     name: String,
     gender: Gender,
-    types: List[Type],
+    types: PokemonType,
     baseStats: Stats,
     ability: Ability,
     weightKg: Double,
