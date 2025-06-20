@@ -1,12 +1,9 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.field.FieldEffectMixin.BaseWeather
-import it.unibo.skalamon.model.field.fieldside.FieldSide
+import it.unibo.skalamon.model.field.fieldside.{FieldSide, SideCondition}
 import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.terrain.Mud
 import it.unibo.skalamon.model.field.weather.Sunny
-import it.unibo.skalamon.model.types.Type
-import it.unibo.skalamon.model.types.TypesCollection.{Dark, Fairy}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -67,16 +64,18 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
     )
 
   it should "let change side" in:
-    val foggyMudAndDark: Field = field(alice :: bob :: Nil) { b =>
+    var foggyMudAndDark: Field = field(alice :: bob :: Nil) { b =>
       b.setTerrain(Mud(2))
       b.setWeather(Sunny(3))
       b.setRoom(TrickRoom(1))
     }
-    object SimpleFieldSide extends FieldSide
-    foggyMudAndDark.changeSide(alice, SimpleFieldSide)
+    object SimpleCondition extends SideCondition
+    object SimpleFieldSide extends FieldSide(SimpleCondition :: Nil)
+    foggyMudAndDark = foggyMudAndDark.changeSide(alice, SimpleFieldSide)
     foggyMudAndDark shouldBe Field(
       Map(alice -> SimpleFieldSide, bob -> FieldSide()),
       Some(Mud(2)),
       Some(TrickRoom(1)),
       Some(Sunny(3))
     )
+    foggyMudAndDark.sides(alice) shouldEqual SimpleFieldSide
