@@ -18,7 +18,6 @@ extension (field: FieldSide)
     * @return
     *   FieldSide updated
     */
-
   def add(condition: SideCondition | SideCondition with AddConstraint)
       : FieldSide =
     condition match
@@ -33,14 +32,28 @@ extension (field: FieldSide)
   */
 trait SideCondition
 
+/** Mixin to create [[SideCondition]] with constraint.
+  */
 trait AddConstraint:
   def canAdd(existing: List[SideCondition]): Boolean
 
+/** Mixin constraint to create [[SideCondition]] that can be added on
+  * [[FieldSide]] only one for time.
+  * @tparam E
+  *   Kind of the [[SideCondition]] created with this mixin
+  */
 trait Unique[E] extends AddConstraint:
   def classTag: ClassTag[E]
   override def canAdd(existing: List[SideCondition]): Boolean =
     !existing.exists(e => classTag.runtimeClass.isInstance(e))
 
+/** Mixin constraint to create [[SideCondition]] that can be added on
+  * [[FieldSide]] until number of them reach the limit.
+  * @tparam E
+  *   Kind of the [[SideCondition]] created with this mixin
+  * @param limit
+  *   Number of [[SideCondition]] of type [[E]] are allowed
+  */
 trait Multi[E](limit: Int) extends AddConstraint:
   def classTag: ClassTag[E]
   override def canAdd(existing: List[SideCondition]): Boolean =
