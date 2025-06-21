@@ -32,8 +32,7 @@ extension (oldField: Field)
     * @param t
     *   [[Trainer]] affected by the update
     * @param s
-    *   [[FieldSide]] to apply instead the current [[FieldSide]] of the
-    *   [[Trainer]] 't'
+    *   [[FieldSide]] to apply instead the current [[FieldSide]] of [[t]]
     * @return
     *   Field with the side changed
     */
@@ -77,7 +76,7 @@ class FieldBuilder:
   * @param init
   *   FieldBuilder configuration
   * @return
-  *   Field
+  *   Field without [[FieldSide]]s
   */
 def field(trainers: List[Trainer])(init: FieldBuilder => Unit): Field =
   val builder = new FieldBuilder

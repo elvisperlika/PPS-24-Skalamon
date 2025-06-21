@@ -2,7 +2,6 @@ package it.unibo.skalamon.model.field
 
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.types.Type
-import it.unibo.skalamon.model.types.TypesCollection.{Electric, Ice}
 
 /** A rule that can be applied to a BattlePokemon to produce a modified version.
   */
