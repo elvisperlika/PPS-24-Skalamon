@@ -6,9 +6,9 @@ import org.scalatest.matchers.should
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
 import org.scalatest.prop.Tables.Table
 
- class ExpirableTest extends AnyFlatSpec with should.Matchers:
+class ExpirableTest extends AnyFlatSpec with should.Matchers:
 
- "Expirable weather" should "return true if more than 5 turns passed" in: 
+  "Expirable weather" should "return true if more than 5 turns passed" in:
     val sunny: Sunny = Sunny(1)
     val testCases = Table(
       ("turn", "expected"),
