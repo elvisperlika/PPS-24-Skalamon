@@ -47,6 +47,10 @@ object BattleView:
           s"Expected ${screen.playerNumber} trainers, but got ${trainers.size}."
         )
       }
+
       val player = trainers(0)
       val opponent = trainers(1)
+
       screen.setPlayersName(player.name, opponent.name)
+
+      screen.setBattlePokemon(player.inField, player.inField)

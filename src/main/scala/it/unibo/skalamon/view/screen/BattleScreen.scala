@@ -2,6 +2,8 @@ package it.unibo.skalamon.view.screen
 
 import it.unibo.skalamon.view.Container.*
 import asciiPanel.AsciiPanel
+import it.unibo.skalamon.model.pokemon.BattlePokemon
+
 import java.awt.event.KeyEvent
 
 class BattleScreen(
@@ -10,6 +12,7 @@ class BattleScreen(
   import BattleScreen.*
 
   val playerNumber: Int = 2
+  private val defaultPokemonName = "No Pokémon"
 
   def setPlayersName(
       player: String,
@@ -18,28 +21,22 @@ class BattleScreen(
     terminal.writeCenter(opponent, opponentNameY)
     terminal.writeCenter(player, playerNameY)
 
-  private def setBattlePokemon(
-      terminal: AsciiPanel
+  def setBattlePokemon(
+      playerBP: Option[BattlePokemon],
+      opponentBP: Option[BattlePokemon]
   ): Unit =
-    val battlePokemonText: Seq[String] =
-      Seq("TODO")
+    val playerBPText =
+      playerBP.map(bp => Seq(bp.base.name)).getOrElse(Seq(defaultPokemonName))
+    val opponentBPText =
+      opponentBP.map(bp => Seq(bp.base.name)).getOrElse(Seq(defaultPokemonName))
 
-    val p1BattlePokemon = HorizontalContainer(
-      terminal,
-      battlePokemonText,
-      p1AbilitiesY + abilitySlotHeight,
-      battlePokemonSlotNum,
-      battlePokemonWidth,
-      battlePokemonHeight
+    setBattlePokemonSlot(
+      playerBPText,
+      BattleScreen.p1AbilitiesY + BattleScreen.abilitySlotHeight
     )
-
-    val p2BattlePokemon = HorizontalContainer(
-      terminal,
-      battlePokemonText,
-      p1BattlePokemonY + battlePokemonHeight + playerPadding,
-      battlePokemonSlotNum,
-      battlePokemonWidth,
-      battlePokemonHeight
+    setBattlePokemonSlot(
+      opponentBPText,
+      BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerPadding
     )
 
   private def setPokemonPool(
@@ -86,6 +83,29 @@ class BattleScreen(
       abilitySlotNum,
       abilitySlotWidth,
       abilitySlotHeight
+    )
+
+  private def setPlayerBattlePokemon(battlePokemonText: Seq[String]): Unit =
+    HorizontalContainer(
+      terminal,
+      battlePokemonText,
+      p1AbilitiesY + abilitySlotHeight,
+      battlePokemonSlotNum,
+      battlePokemonWidth,
+      battlePokemonHeight
+    )
+
+  private def setBattlePokemonSlot(
+      battlePokemonText: Seq[String],
+      y: Int
+  ): Unit =
+    HorizontalContainer(
+      terminal,
+      battlePokemonText,
+      y,
+      BattleScreen.battlePokemonSlotNum,
+      BattleScreen.battlePokemonWidth,
+      BattleScreen.battlePokemonHeight
     )
 
   override def respondToUserInput(key: KeyEvent): Screen =
