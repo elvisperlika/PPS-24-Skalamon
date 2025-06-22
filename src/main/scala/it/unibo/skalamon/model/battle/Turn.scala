@@ -1,8 +1,6 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.controller.battle.action.ActionBuffer
-import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** A turn in a battle.
   *
@@ -13,13 +11,13 @@ case class Turn(var state: TurnState)
 
 /** A snapshot of a turn state in a battle.
   *
-  * @param pokemonInField
-  *   A map of trainers to their Pokémon currently in the field.
+  * @param snapshot
+  *   The current state of the battle, including trainers and their Pokémon.
   * @param stage
   *   The current stage of the turn.
   */
 case class TurnState(
-    pokemonInField: Map[Trainer, BattlePokemon],
+    snapshot: BattleState,
     stage: TurnStage
 )
 
@@ -67,11 +65,10 @@ object TurnState:
     *   The list of trainers participating in the turn.
     * @return
     *   A new TurnState with the initial Pokémon in the field and the stage set
-    *   to Started.
+    *   to `Started`.
     */
   def initial(trainers: List[Trainer]): TurnState =
     TurnState(
-      pokemonInField =
-        trainers.map(trainer => trainer -> trainer.team.head).toMap,
+      snapshot = BattleState(trainers),
       stage = TurnStage.Started
     )

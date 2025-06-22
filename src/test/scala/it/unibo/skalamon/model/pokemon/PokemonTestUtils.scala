@@ -1,12 +1,12 @@
 package it.unibo.skalamon.model.pokemon
 
-import it.unibo.skalamon.model.status.*
-import it.unibo.skalamon.controller.battle.Trainer
-import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.ability.*
-import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model
+import it.unibo.skalamon.model.ability.*
+import it.unibo.skalamon.model.battle.Trainer
+import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
   Fire,
@@ -51,7 +51,7 @@ object PokemonTestUtils:
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Burn, 1)),
-    List(
+    Set(
       AssignedStatus(PerishSong, 4),
       AssignedStatus(AquaRingIngrain, 3),
       AssignedStatus(Substitute, 8)
@@ -81,7 +81,7 @@ object PokemonTestUtils:
     startingHP,
     List(BattleMove(moveElectric, powerPoint)),
     Option.empty,
-    List()
+    Set.empty
   )
 
   private val basePokemon3 = Pokemon(
@@ -107,7 +107,7 @@ object PokemonTestUtils:
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Sleep, 4)),
-    List(
+    Set(
       AssignedStatus(Torment, 4),
       AssignedStatus(Trapped, 3),
       AssignedStatus(Encore, 8)

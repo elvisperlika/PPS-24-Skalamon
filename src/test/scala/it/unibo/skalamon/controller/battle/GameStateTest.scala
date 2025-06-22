@@ -1,7 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
-import it.unibo.skalamon.controller.battle.Trainer
+import it.unibo.skalamon.model.battle.Trainer
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
