@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.controller.battle.action.ActionBuffer
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 

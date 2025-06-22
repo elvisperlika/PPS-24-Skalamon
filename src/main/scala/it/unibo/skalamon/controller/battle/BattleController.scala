@@ -1,12 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.{Action, ActionBuffer}
-import it.unibo.skalamon.model.battle.{Battle, Turn, TurnStage}
-import it.unibo.skalamon.model.pokemon.BattlePokemon
-
-/* start Temporary classes */
-case class Trainer(name: String, team: List[BattlePokemon])
-/* end Temporary classes */
+import it.unibo.skalamon.model.battle.{Battle, Trainer, Turn, TurnStage}
 
 /** Controller for managing battles in the game.
   *

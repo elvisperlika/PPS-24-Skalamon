@@ -1,7 +1,7 @@
 package it.unibo.skalamon.view.battle
 
-import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.controller.battle.action.*
+import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 trait BattleView:

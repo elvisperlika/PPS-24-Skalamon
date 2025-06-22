@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.Trainer
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
 
