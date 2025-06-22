@@ -1,25 +1,25 @@
 package it.unibo.skalamon.model.field.weather
 
-import it.unibo.skalamon.model.field.FieldEffectMixin.{BaseWeather, Expirable}
+import it.unibo.skalamon.model.event.EventManager
+import it.unibo.skalamon.model.field.FieldEffectMixin.{
+  Expirable,
+  FieldEffect,
+  PokemonRules,
+  TypesModifier,
+  Weather
+}
+import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.{Fire, Water}
 
-case class Sunny(t: Int) extends BaseWeather(
-      description = Sunny.Description,
-      creationTurn = t,
-      onApply = Nil,
-      onTurns = Nil,
-      typesModifier = Map(Fire -> 1.5, Water -> 1.5)
-    ) with Expirable(t):
-  override val duration: Int = Sunny.Duration
+case class Sunny(t: Int)
+    extends Weather
+    with FieldEffect(t)
+    with TypesModifier
+    with Expirable(t, Sunny.Duration):
+  override val typesModifier: Map[Type, Double] = Map(Fire -> 1.5, Water -> 1.5)
+  override val description: String = Sunny.Description
 
 object Sunny:
   val Description: String = "Sunny burn grass Pokémon"
   val Duration: Int = 5
-
-  /** Create a Sunny weather.
-    * @param t
-    *   Creation turn
-    * @return
-    *   Sunny weather
-    */
-  def apply(t: Int): Sunny = new Sunny(t)
+  def apply(t: Int, em: EventManager): Sunny = new Sunny(t)

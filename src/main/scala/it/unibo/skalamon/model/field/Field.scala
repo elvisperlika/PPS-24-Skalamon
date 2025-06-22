@@ -9,8 +9,9 @@ case class Trainer(name: String)
 
 /** Immutable [[Field]] is the zone Pokémon battle. [[Field]] has as many
   * [[FieldSide]] as Pokémon in battle, and it's dynamic environment with
-  * dynamic creation of [[Room]], [[Terrain]] or [[Weather]] caused by Pokémon
+  * dynamic creation of [[Room]], [[Terrain]] or [[Weather2]] caused by Pokémon
   * moves.
+  *
   * @param sides
   *   Specific piece of the battlefield where Pokémon in battle is located
   * @param terrain
@@ -18,7 +19,7 @@ case class Trainer(name: String)
   * @param room
   *   The active [[Room]], if any
   * @param weather
-  *   The active [[Weather]], if any
+  *   The active [[Weather2]], if any
   */
 case class Field(
     sides: Map[Trainer, FieldSide],
@@ -60,7 +61,8 @@ class FieldBuilder:
     */
   def setRoom(r: Room): Unit = room = Some(r)
 
-  /** [[Weather]] setter.
+  /** [[Weather2]] setter.
+    *
     * @param w
     *   Weather to apply
     */

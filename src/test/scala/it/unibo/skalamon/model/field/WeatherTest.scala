@@ -4,6 +4,10 @@ import it.unibo.skalamon.model.behavior.kind.Stats
 import it.unibo.skalamon.model.field.weather.{Snow, Sunny}
 import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.ability.*
+import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateWeather
+import it.unibo.skalamon.model.battle.{Turn, TurnState}
+import it.unibo.skalamon.model.event.EventManager
+import it.unibo.skalamon.model.event.TurnStageEvents.Started
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
   Fire,
@@ -15,7 +19,7 @@ import org.scalatest.matchers.should
 
 class WeatherTest extends AnyFlatSpec with should.Matchers:
 
-  var pokemon1: BattlePokemon = BattlePokemon(
+  var pikachu: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Pikachu",
       gender = Male,
@@ -40,7 +44,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     volatileStatus = Nil
   )
 
-  var pokemon2: BattlePokemon = BattlePokemon(
+  var snowsaur: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Snowsaur",
       gender = Female,
@@ -66,33 +70,17 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
   )
 
   "Weather" should "have types multiplier modifier" in:
-    val sunny: Sunny = Sunny(2)
-    sunny.typesModifier shouldBe Map(Fire -> 1.5, Water -> 1.5)
+    val snow: Sunny = Sunny(1)
+    snow.typesModifier shouldBe Map(Fire -> 1.5, Water -> 1.5)
 
-  it should "have functions to mutate Pokémon" in:
+  "Snow weather" should "mutate non-Ice Pokémon on weather creation" in:
+    val fieldEvents: EventManager = EventManager()
+    var pokemonInBattle = pikachu :: snowsaur :: Nil
     val snow: Snow = Snow(5)
-    snow.onTurns.foreach(f => pokemon1 = f(pokemon1))
-    pokemon1 shouldEqual BattlePokemon(
-      base = Pokemon(
-        name = "Pikachu",
-        gender = Male,
-        types = Electric,
-        baseStats = Stats(
-          base = Map(
-            Stat.Attack -> 100,
-            Stat.Defense -> 100,
-            Stat.SpecialAttack -> 100,
-            Stat.SpecialDefense -> 100,
-            Stat.Speed -> 100
-          )
-        ),
-        ability = Ability("Say Hello", Map.empty),
-        weightKg = 10,
-        possibleMoves = Nil
-      ),
-      level = 1,
-      currentHP = 90,
-      moves = Nil,
-      nonVolatileStatus = None,
-      volatileStatus = Nil
+    snow.rules.foreach((e, r) =>
+      fieldEvents.watch(e)(_ =>
+        pokemonInBattle = pokemonInBattle.map(r(_))
+      )
     )
+    fieldEvents.notify(CreateWeather of snow)
+    pokemonInBattle shouldEqual pikachu.copy(currentHP = 90) :: snowsaur :: Nil
