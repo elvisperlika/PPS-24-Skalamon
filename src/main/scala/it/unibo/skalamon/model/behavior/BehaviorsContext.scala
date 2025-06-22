@@ -30,6 +30,6 @@ trait BehaviorsContext[O] extends WithBehaviors:
     */
   def apply(state: BattleState): BattleState =
     behaviors.foldLeft(state) { case (currentState, (behavior, modifiers)) =>
-      val visitor = BattleStateUpdaterBehaviorVisitor(state, this, modifiers)
+      val visitor = BattleStateUpdaterBehaviorVisitor(currentState, this, modifiers)
       behavior.accept(visitor)
     }
