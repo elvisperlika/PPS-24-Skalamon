@@ -6,14 +6,25 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 import java.awt.event.KeyEvent
 
+/** Represents the battle screen in the game. It displays the players' Pokémon,
+  * abilities, and other relevant information during a battle.
+  *
+  * @param terminal
+  *   The terminal where the battle screen will be displayed.
+  */
 class BattleScreen(
     terminal: AsciiPanel
 ) extends Screen:
   import BattleScreen.*
 
-  val playerNumber: Int = 2
   private val defaultPokemonName = "No Pokémon"
 
+  /** Shows the player's and opponent's names on the screen.
+    * @param player
+    *   The name of the player.
+    * @param opponent
+    *   The name of the opponent.
+    */
   def setPlayersName(
       player: String,
       opponent: String
@@ -21,6 +32,12 @@ class BattleScreen(
     terminal.writeCenter(opponent, opponentNameY)
     terminal.writeCenter(player, playerNameY)
 
+  /** Shows the player's and opponent's Battle Pokémon on the screen.
+    * @param playerBP
+    *   The player's Battle Pokémon.
+    * @param opponentBP
+    *   The opponent's Battle Pokémon.
+    */
   def setBattlePokemon(
       playerBP: Option[BattlePokemon],
       opponentBP: Option[BattlePokemon]
@@ -85,16 +102,12 @@ class BattleScreen(
       abilitySlotHeight
     )
 
-  private def setPlayerBattlePokemon(battlePokemonText: Seq[String]): Unit =
-    HorizontalContainer(
-      terminal,
-      battlePokemonText,
-      p1AbilitiesY + abilitySlotHeight,
-      battlePokemonSlotNum,
-      battlePokemonWidth,
-      battlePokemonHeight
-    )
-
+  /** Shows the Battle Pokémon slot in a specific position on the screen.
+    * @param battlePokemonText
+    *   The text to display in the Battle Pokémon slot.
+    * @param y
+    *   The vertical position where the Battle Pokémon slot will be displayed.
+    */
   private def setBattlePokemonSlot(
       battlePokemonText: Seq[String],
       y: Int
@@ -112,32 +125,36 @@ class BattleScreen(
     this
 
 object BattleScreen:
-  val opponentNameY = 1
-  val startY = 3
-  val playerPadding = 1
+  /** The number of players in the battle. */
+  val playerNumber: Int = 2
+
+  private val opponentNameY = 1
+  private val startY = 3
+  private val playerPadding = 1
 
   // Pokemon slots
-  val pokemonSlotNum = 5
-  val pokemonSlotWidth = 14
-  val pokemonSlotHeight = 3
+  private val pokemonSlotNum = 5
+  private val pokemonSlotWidth = 14
+  private val pokemonSlotHeight = 3
 
   // Abilities
-  val abilitySlotNum = 4
-  val abilitySlotWidth = 18
-  val abilitySlotHeight = 8
+  private val abilitySlotNum = 4
+  private val abilitySlotWidth = 18
+  private val abilitySlotHeight = 8
 
   // Battle Pokemon
-  val battlePokemonSlotNum = 1
-  val battlePokemonWidth = 46
-  val battlePokemonHeight = 3
+  private val battlePokemonSlotNum = 1
+  private val battlePokemonWidth = 46
+  private val battlePokemonHeight = 3
 
   // Layout positions (computed)
-  val p1PokemonY = startY
-  val p1AbilitiesY = p1PokemonY + pokemonSlotHeight
-  val p1BattlePokemonY = p1AbilitiesY + abilitySlotHeight
+  private val p1PokemonY = startY
+  private val p1AbilitiesY = p1PokemonY + pokemonSlotHeight
+  private val p1BattlePokemonY = p1AbilitiesY + abilitySlotHeight
 
-  val p2BattlePokemonY = p1BattlePokemonY + battlePokemonHeight + playerPadding
-  val p2AbilitiesY = p2BattlePokemonY + battlePokemonHeight
-  val p2PokemonY = p2AbilitiesY + abilitySlotHeight
+  private val p2BattlePokemonY =
+    p1BattlePokemonY + battlePokemonHeight + playerPadding
+  private val p2AbilitiesY = p2BattlePokemonY + battlePokemonHeight
+  private val p2PokemonY = p2AbilitiesY + abilitySlotHeight
 
-  val playerNameY = p2PokemonY + pokemonSlotHeight + opponentNameY
+  private val playerNameY = p2PokemonY + pokemonSlotHeight + opponentNameY
