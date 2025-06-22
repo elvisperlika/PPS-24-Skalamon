@@ -7,13 +7,9 @@ import java.awt.event.KeyEvent
 class BattleScreen(
     terminal: AsciiPanel
 ) extends Screen:
-  val playerNumber: Int = 2
-
   import BattleScreen.*
 
-  // setPlayersName(terminal, "context.player.name", "context.opponent.name")
-  // setPlayersName(terminal, context.player.name, context.opponent.name)
-  // setBattlePokemon(terminal)
+  val playerNumber: Int = 2
 
   def setPlayersName(
       player: String,
