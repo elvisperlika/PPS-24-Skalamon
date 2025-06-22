@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent
 class BattleScreen(
     terminal: AsciiPanel
 ) extends Screen:
+  val playerNumber: Int = 2
 
   import BattleScreen.*
 
