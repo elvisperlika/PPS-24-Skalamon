@@ -1,49 +1,31 @@
 package it.unibo.skalamon.view.screen
 
 import it.unibo.skalamon.view.Container.*
-import java.awt.Color
 import asciiPanel.AsciiPanel
 import java.awt.event.KeyEvent
 
-class PlayScreen(
-    private val playerName: String,
-    private val opponentName: String
+class BattleScreen(
+    terminal: AsciiPanel
 ) extends Screen:
 
-  import PlayScreen.*
+  import BattleScreen.*
 
-  private def setPlayersName(
-      terminal: AsciiPanel,
+  // setPlayersName(terminal, "context.player.name", "context.opponent.name")
+  // setPlayersName(terminal, context.player.name, context.opponent.name)
+  // setBattlePokemon(terminal)
+
+  def setPlayersName(
       player: String,
       opponent: String
   ): Unit =
     terminal.writeCenter(opponent, opponentNameY)
     terminal.writeCenter(player, playerNameY)
 
-    val abilityTextList: Seq[String] =
-      Seq("Move1", "Electric", "Physical", "50-80%", "5/10pp", "rep w button")
-
-    val pokemonTextList: Seq[String] = Seq("Pikachu")
-
-    val battlePokemonText: Seq[String] = Seq("Bulbasaur 50/120 Hp Ability: Synthesis")
-
-    val p1Pokemon = HorizontalContainer(
-      terminal,
-      pokemonTextList,
-      startY,
-      pokemonSlotNum,
-      pokemonSlotWidth,
-      pokemonSlotHeight
-    )
-
-    val p1Abilities = HorizontalContainer(
-      terminal,
-      abilityTextList,
-      p1PokemonY + pokemonSlotHeight,
-      abilitySlotNum,
-      abilitySlotWidth,
-      abilitySlotHeight
-    )
+  private def setBattlePokemon(
+      terminal: AsciiPanel
+  ): Unit =
+    val battlePokemonText: Seq[String] =
+      Seq("TODO")
 
     val p1BattlePokemon = HorizontalContainer(
       terminal,
@@ -63,13 +45,17 @@ class PlayScreen(
       battlePokemonHeight
     )
 
-    val p2Abilities = HorizontalContainer(
+  private def setPokemonPool(
+      terminal: AsciiPanel
+  ): Unit =
+    val pokemonTextList: Seq[String] = Seq("TODO")
+    val p1Pokemon = HorizontalContainer(
       terminal,
-      abilityTextList,
-      p2BattlePokemonY + battlePokemonHeight,
-      abilitySlotNum,
-      abilitySlotWidth,
-      abilitySlotHeight
+      pokemonTextList,
+      startY,
+      pokemonSlotNum,
+      pokemonSlotWidth,
+      pokemonSlotHeight
     )
 
     val p2Pokemon = HorizontalContainer(
@@ -81,13 +67,34 @@ class PlayScreen(
       pokemonSlotHeight
     )
 
-  override def displayOutput(terminal: AsciiPanel): Unit =
-    setPlayersName(terminal, playerName, opponentName)
+  private def setAbilities(
+      terminal: AsciiPanel
+  ): Unit =
+
+    val abilityTextList: Seq[String] =
+      Seq("Move1", "Electric", "Physical", "50-80%", "5/10pp", "rep w button")
+    val p1Abilities = HorizontalContainer(
+      terminal,
+      abilityTextList,
+      p1PokemonY + pokemonSlotHeight,
+      abilitySlotNum,
+      abilitySlotWidth,
+      abilitySlotHeight
+    )
+
+    val p2Abilities = HorizontalContainer(
+      terminal,
+      abilityTextList,
+      p2BattlePokemonY + battlePokemonHeight,
+      abilitySlotNum,
+      abilitySlotWidth,
+      abilitySlotHeight
+    )
 
   override def respondToUserInput(key: KeyEvent): Screen =
     this
 
-object PlayScreen:
+object BattleScreen:
   val opponentNameY = 1
   val startY = 3
   val playerPadding = 1
