@@ -1,6 +1,7 @@
 package it.unibo.skalamon.model.behavior.kind
 
 import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.behavior.visitor.BehaviorVisitor
 
 /** A [[Behavior]] that affects the health of a target.
   */
@@ -13,6 +14,8 @@ trait HealthBehavior extends Behavior:
     *   The new health after applying this behavior.
     */
   def newHealth(currentHealth: Int): Int
+
+  override def accept[T](visitor: BehaviorVisitor[T]): T = visitor.visit(this)
 
 /** A [[HealthBehavior]] that modifies health by a relative amount, compared to
   * the target's current health.

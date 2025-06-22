@@ -1,7 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.model.battle.{Battle, Turn, TurnStage, TurnState}
+import it.unibo.skalamon.model.battle.*
 import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
 import org.scalatest.BeforeAndAfterEach

@@ -1,5 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
+import it.unibo.skalamon.model.battle.Trainer
+
 enum GameState:
   case InProgress
   case GameOver(w: Trainer)
