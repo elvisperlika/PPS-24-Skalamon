@@ -1,12 +1,12 @@
 package it.unibo.skalamon.model.pokemon
 
-import it.unibo.skalamon.model.status.*
-import it.unibo.skalamon.controller.battle.Trainer
-import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.ability.*
-import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model
+import it.unibo.skalamon.model.ability.*
+import it.unibo.skalamon.model.battle.Trainer
+import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
   Fire,

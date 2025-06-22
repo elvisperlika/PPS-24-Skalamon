@@ -11,13 +11,13 @@ case class Percentage(private val value: Int):
   require(value >= MinBound && value <= MaxBound)
 
   /** Calculates the percentage of a given value.
-    * @param value
+    * @param base
     *   The value to calculate the percentage of.
     * @return
     *   The calculated percentage of the value.
     */
-  def of(value: Int): Int =
-    (value * value) / MaxBound
+  def of(base: Int): Int =
+    (value * base) / MaxBound
 
   /** Generates a random boolean based on the percentage. If the percentage is
     * 0, it always returns false. If the percentage is 100, it always returns
@@ -26,9 +26,10 @@ case class Percentage(private val value: Int):
     * @return
     *   A random boolean value based on the percentage.
     */
-  def randomBoolean(using generator: RandomGenerator = RandomGenerator()): Boolean = {
+  def randomBoolean(using
+      generator: RandomGenerator = RandomGenerator()
+  ): Boolean =
     generator.nextInt(MinBound, MaxBound + 1) < value
-  }
 
   override def toString: String = s"$value%"
 

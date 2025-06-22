@@ -1,5 +1,7 @@
 package it.unibo.skalamon.model.behavior.kind
 
+import it.unibo.skalamon.model.behavior.visitor.BehaviorVisitor
+
 /** A [[HitBehavior]] that represents a single-hit move.
   */
 trait SingleHitBehavior extends HitBehavior:
@@ -8,6 +10,8 @@ trait SingleHitBehavior extends HitBehavior:
     *   The power of the hit.
     */
   def power: Int
+
+  override def accept[T](visitor: BehaviorVisitor[T]): T = visitor.visit(this)
 
 object SingleHitBehavior:
 
