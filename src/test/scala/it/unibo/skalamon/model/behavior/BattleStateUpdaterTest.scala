@@ -4,6 +4,7 @@ import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.TargetModifier
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, PokemonTestUtils}
+import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -41,3 +42,28 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers:
     val newState = behavior(context)(state)
     getTarget(newState).currentHP shouldBe target.currentHP
     getSource(newState).currentHP shouldBe source.currentHP - damage
+
+  "StatusBehavior" should "set volatile status" in:
+    val status = Confusion
+    val behavior = StatusBehavior(status, currentTurnIndex = 1)
+    val newState = behavior(context)(state)
+    getTarget(newState).volatileStatus.map(_.status) shouldBe List(status)
+
+  it should "stack volatile status" in:
+    val status1 = Confusion
+    val status2 = Yawn
+    val newState1 = StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
+    val newState2 = StatusBehavior(status2, currentTurnIndex = 1)(context)(newState1)
+    getTarget(newState2).volatileStatus.map(_.status) shouldBe List(status1, status2)
+
+  it should "set non-volatile status" in:
+    val status = Burn
+    val newState = StatusBehavior(status, currentTurnIndex = 1)(context)(state)
+    getTarget(newState).nonVolatileStatus.map(_.status) shouldBe Some(status)
+
+  it should "not overwrite existing non-volatile status" in:
+    val status1 = Burn
+    val status2 = Paralyze
+    val newState1 = StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
+    val newState2 = StatusBehavior(status2, currentTurnIndex = 1)(context)(newState1)
+    getTarget(newState2).nonVolatileStatus.map(_.status) shouldBe Some(status1)
