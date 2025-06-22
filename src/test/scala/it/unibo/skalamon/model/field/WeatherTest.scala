@@ -1,9 +1,9 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.Stats
 import it.unibo.skalamon.model.field.weather.{Snow, Sunny}
 import it.unibo.skalamon.model.pokemon.*
-import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
   Fire,
@@ -37,7 +37,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     currentHP = 100,
     moves = Nil,
     nonVolatileStatus = None,
-    volatileStatus = Nil
+    volatileStatus = Set.empty
   )
 
   var pokemon2: BattlePokemon = BattlePokemon(
@@ -62,7 +62,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     currentHP = 80,
     moves = Nil,
     nonVolatileStatus = None,
-    volatileStatus = Nil
+    volatileStatus = Set.empty
   )
 
   "Weather" should "have types multiplier modifier" in:
@@ -94,5 +94,6 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       currentHP = 90,
       moves = Nil,
       nonVolatileStatus = None,
-      volatileStatus = Nil
+      volatileStatus = Set.empty,
+      id = pokemon1.id,
     )

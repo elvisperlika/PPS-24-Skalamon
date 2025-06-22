@@ -8,6 +8,11 @@ import it.unibo.skalamon.model.behavior.modifier.{
   TargetModifier
 }
 import it.unibo.skalamon.model.pokemon.BattlePokemon
+import it.unibo.skalamon.model.status.{
+  AssignedStatus,
+  NonVolatileStatus,
+  VolatileStatus
+}
 
 /** * A visitor that updates the battle state based on the behaviors and their
   * modifiers.
@@ -41,7 +46,7 @@ class BattleStateUpdaterBehaviorVisitor(
       trainers = current.trainers.map { trainer =>
         trainer.copy(
           team = trainer.team.map { pokemon =>
-            if (pokemon eq target) map(pokemon) else pokemon
+            if (pokemon.id == target.id) map(pokemon) else pokemon
           }
         )
       }
@@ -63,4 +68,21 @@ class BattleStateUpdaterBehaviorVisitor(
       pokemon.copy(
         currentHP = behavior.newHealth(pokemon.currentHP)
       )
+    }
+
+  override def visit(behavior: StatChangeBehavior): BattleState = ???
+
+  override def visit(behavior: StatusBehavior): BattleState =
+    updateTarget { pokemon =>
+      behavior.status match
+        case s: VolatileStatus =>
+          pokemon.copy(volatileStatus =
+            pokemon.volatileStatus +
+              AssignedStatus(s, behavior.currentTurnIndex)
+          )
+        case s: NonVolatileStatus if pokemon.nonVolatileStatus.isEmpty =>
+          pokemon.copy(nonVolatileStatus =
+            Some(AssignedStatus(s, behavior.currentTurnIndex))
+          )
+        case _ => pokemon
     }

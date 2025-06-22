@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.behavior.kind
 
+import it.unibo.skalamon.model.behavior.BehaviorTestUtils.*
 import it.unibo.skalamon.model.pokemon.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -52,8 +53,10 @@ class StatChangeBehaviorTest extends AnyFlatSpec with Matchers:
       Stat.Attack
     ) shouldBe (100.0 * StatStage.multiplier(-1)) +- 0.001
 
-  "StatChangeBehavior" should "wrap a stat change correctly" in:
-    val change = Stat.Attack + 2
-    val behavior = StatChangeBehavior(change)
-
-    behavior.change shouldBe StatChange(Stat.Attack, 2)
+  "StatChangeBehavior" should "bring stat change" in:
+    val stage = 2
+    val behavior = StatChangeBehavior(Stat.Attack + stage)
+    val result = behavior.apply(context)
+    getPlainBehaviors(result) shouldEqual List(
+      StatChangeBehavior(StatChange(Stat.Attack, stage))
+    )

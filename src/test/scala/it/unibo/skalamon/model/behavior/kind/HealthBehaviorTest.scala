@@ -1,4 +1,4 @@
-package it.unibo.skalamon.model.behavior
+package it.unibo.skalamon.model.behavior.kind
 
 import it.unibo.skalamon.model.behavior.*
 import it.unibo.skalamon.model.behavior.BehaviorTestUtils.*

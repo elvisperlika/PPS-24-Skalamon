@@ -51,7 +51,7 @@ object PokemonTestUtils:
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Burn, 1)),
-    List(
+    Set(
       AssignedStatus(PerishSong, 4),
       AssignedStatus(AquaRingIngrain, 3),
       AssignedStatus(Substitute, 8)
@@ -81,7 +81,7 @@ object PokemonTestUtils:
     startingHP,
     List(BattleMove(moveElectric, powerPoint)),
     Option.empty,
-    List()
+    Set.empty
   )
 
   private val basePokemon3 = Pokemon(
@@ -107,7 +107,7 @@ object PokemonTestUtils:
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Sleep, 4)),
-    List(
+    Set(
       AssignedStatus(Torment, 4),
       AssignedStatus(Trapped, 3),
       AssignedStatus(Encore, 8)
