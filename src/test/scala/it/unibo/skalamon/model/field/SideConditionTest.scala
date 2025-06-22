@@ -34,7 +34,7 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
     currentHP = 100,
     moves = Nil,
     nonVolatileStatus = None,
-    volatileStatus = Nil
+    volatileStatus = Set.empty
   )
 
   "Stealth rock" should "damage pokemon on switching in base of their weaknessto Rock type" in:
