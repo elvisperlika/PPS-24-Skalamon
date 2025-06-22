@@ -37,7 +37,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     currentHP = 100,
     moves = Nil,
     nonVolatileStatus = None,
-    volatileStatus = Nil
+    volatileStatus = Set.empty
   )
 
   var pokemon2: BattlePokemon = BattlePokemon(
@@ -62,7 +62,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     currentHP = 80,
     moves = Nil,
     nonVolatileStatus = None,
-    volatileStatus = Nil
+    volatileStatus = Set.empty
   )
 
   "Weather" should "have types multiplier modifier" in:
@@ -94,5 +94,5 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       currentHP = 90,
       moves = Nil,
       nonVolatileStatus = None,
-      volatileStatus = Nil
+      volatileStatus = Set.empty
     )

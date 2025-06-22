@@ -50,7 +50,7 @@ case class Pokemon(
   * @param nonVolatileStatus
   *   The non-volatile status of the Pokémon.
   * @param volatileStatus
-  *   List of volatile status of the Pokémon.
+  *   Set of volatile status of the Pokémon.
   */
 case class BattlePokemon(
     base: Pokemon,
@@ -58,7 +58,7 @@ case class BattlePokemon(
     currentHP: Int,
     moves: List[BattleMove],
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
-    volatileStatus: List[AssignedStatus[VolatileStatus]]
+    volatileStatus: Set[AssignedStatus[VolatileStatus]]
 ):
 
   /** Return the current stats of the Pokémon, updated to it's level.
