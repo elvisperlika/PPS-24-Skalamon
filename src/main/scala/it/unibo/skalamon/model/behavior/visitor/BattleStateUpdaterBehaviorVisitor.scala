@@ -77,7 +77,7 @@ class BattleStateUpdaterBehaviorVisitor(
       behavior.status match
         case s: VolatileStatus =>
           pokemon.copy(volatileStatus =
-            pokemon.volatileStatus :+
+            pokemon.volatileStatus +
               AssignedStatus(s, behavior.currentTurnIndex)
           )
         case s: NonVolatileStatus if pokemon.nonVolatileStatus.isEmpty =>

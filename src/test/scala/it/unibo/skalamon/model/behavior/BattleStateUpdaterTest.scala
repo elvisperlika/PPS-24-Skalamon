@@ -47,14 +47,14 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers:
     val status = Confusion
     val behavior = StatusBehavior(status, currentTurnIndex = 1)
     val newState = behavior(context)(state)
-    getTarget(newState).volatileStatus.map(_.status) shouldBe List(status)
+    getTarget(newState).volatileStatus.map(_.status) shouldBe Set(status)
 
   it should "stack volatile status" in:
     val status1 = Confusion
     val status2 = Yawn
     val newState1 = StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
     val newState2 = StatusBehavior(status2, currentTurnIndex = 1)(context)(newState1)
-    getTarget(newState2).volatileStatus.map(_.status) shouldBe List(status1, status2)
+    getTarget(newState2).volatileStatus.map(_.status) shouldBe Set(status1, status2)
 
   it should "set non-volatile status" in:
     val status = Burn

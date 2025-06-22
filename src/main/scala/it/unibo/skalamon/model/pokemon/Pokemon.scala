@@ -51,7 +51,7 @@ case class Pokemon(
   * @param nonVolatileStatus
   *   The non-volatile status of the Pokémon.
   * @param volatileStatus
-  *   List of volatile status of the Pokémon.
+  *   Set of volatile status of the Pokémon.
   * @param id
   *   The unique identifier of the battle Pokémon. This is useful to track the
   *   Pokémon in a battle context: even if this instance is copied, the ID
@@ -63,7 +63,7 @@ case class BattlePokemon(
     currentHP: Int,
     moves: List[BattleMove],
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
-    volatileStatus: List[AssignedStatus[VolatileStatus]],
+    volatileStatus: Set[AssignedStatus[VolatileStatus]],
     id: UUID = UUID.randomUUID()
 ):
 
