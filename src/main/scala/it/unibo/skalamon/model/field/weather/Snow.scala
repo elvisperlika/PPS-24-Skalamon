@@ -19,6 +19,6 @@ case class Snow(t: Int)
     ) :: Nil
 
 object Snow:
-  val Description: String = "Snow boosts Ice-type defense"
+  val Description: String = "Snow boosts Ice-type defense."
   val Duration: Int = 5
   def apply(t: Int, em: EventManager): Snow = new Snow(t)

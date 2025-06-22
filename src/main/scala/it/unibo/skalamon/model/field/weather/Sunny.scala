@@ -4,7 +4,6 @@ import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,
-  PokemonRules,
   TypesModifier,
   Weather
 }
@@ -20,6 +19,6 @@ case class Sunny(t: Int)
   override val description: String = Sunny.Description
 
 object Sunny:
-  val Description: String = "Sunny burn grass Pokémon"
+  val Description: String = "Sunny burn grass Pokémon."
   val Duration: Int = 5
   def apply(t: Int, em: EventManager): Sunny = new Sunny(t)

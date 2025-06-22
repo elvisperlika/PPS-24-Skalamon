@@ -19,6 +19,6 @@ case class Awakened(t: Int) extends Terrain with FieldEffect(t)
   override val typesModifier: Map[Type, Double] = Map(Psychic -> 1.5)
 
 object Awakened:
-  val Description: String = "Psychic Terrain"
+  val Description: String = "Psychic boosts Psychic Pokémon."
   val Duration: Int = 5
   def apply(t: Int): Awakened = new Awakened(t)

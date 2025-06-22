@@ -5,11 +5,9 @@ import it.unibo.skalamon.model.event.TurnStageEvents.Started
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,
-  PokemonRules,
-  TypesModifier
+  PokemonRules
 }
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
-
 import it.unibo.skalamon.model.types.TypesCollection.{Ground, Rock, Steel}
 
 case class Sandstorm(t: Int) extends FieldEffect(t) with PokemonRules
@@ -24,6 +22,6 @@ case class Sandstorm(t: Int) extends FieldEffect(t) with PokemonRules
     ) :: Nil
 
 object Sandstorm:
-  val Description: String = "Sandstorm damages non-Rock, Ground, Steel types"
+  val Description: String = "Sandstorm damages non-Rock, Ground, Steel types."
   val Duration: Int = 5
   def apply(t: Int): Sandstorm = new Sandstorm(t)

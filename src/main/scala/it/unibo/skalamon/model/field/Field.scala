@@ -68,6 +68,12 @@ class FieldBuilder:
     */
   def setWeather(w: Weather): Unit = weather = Some(w)
 
+  /** Generate a battlefield.
+    * @param sides
+    *   One Side for every player
+    * @return
+    *   Battlefield
+    */
   def build(sides: Map[Trainer, FieldSide]): Field =
     Field(sides, terrain, room, weather)
 

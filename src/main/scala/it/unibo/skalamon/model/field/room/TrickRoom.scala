@@ -1,13 +1,10 @@
 package it.unibo.skalamon.model.field.room
 
-import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateRoom
-import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.field.{FieldEffectMixin, Modify, PokemonRule}
+import it.unibo.skalamon.model.field.FieldEffectMixin
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,
-  Room,
-  PokemonRules
+  Room
 }
 
 case class TrickRoom(t: Int) extends Room with FieldEffect(t)

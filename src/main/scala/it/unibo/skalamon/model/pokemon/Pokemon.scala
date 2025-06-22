@@ -1,11 +1,10 @@
 package it.unibo.skalamon.model.pokemon
 
-import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.status.*
-import it.unibo.skalamon.model.types.PokemonType
+import it.unibo.skalamon.model.types.*
 
 sealed trait Gender
 case object Male extends Gender

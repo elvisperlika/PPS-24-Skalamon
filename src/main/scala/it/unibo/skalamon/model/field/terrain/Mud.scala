@@ -18,6 +18,6 @@ case class Mud(t: Int)
   override val description: String = Mud.Description
 
 object Mud:
-  val Description: String = "Mud"
+  val Description: String = "Mud boosts Fire and Water Pokémon."
   val Duration: Int = 5
   def apply(t: Int): Mud = new Mud(t)

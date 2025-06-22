@@ -1,9 +1,7 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.event.TurnStageEvents.Started
-import it.unibo.skalamon.model.event.{Event, EventManager, EventType}
+import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.types.Type
-import it.unibo.skalamon.model.types.TypesCollection.Ice
 
 object FieldEffectMixin:
 
@@ -25,7 +23,7 @@ object FieldEffectMixin:
 
   /** [[FieldEffect]] represent a dynamic state of the battlefield.
     */
-  trait FieldEffect(creationTurn: Int):
+  trait FieldEffect(val creationTurn: Int):
     val description: String
 
   /** [[FieldEffect]] mixin to add duration.
@@ -56,33 +54,8 @@ object FieldEffectMixin:
     * types, but can change other mechanics.
     */
   trait Room
-  
-  
+
+  /** Represent an effect that afflict only one side of the battlefield,
+    * basically only one Pokémon.
+    */
   trait SideCondition
-
-/* override val description: String = "Sunny"
-    override val rules: List[(EventType[_], PokemonRule)] =
-      (
-        Started,
-        Modify.except(Ice) { p => p.copy(currentHP = p.currentHP - 10) }
-      ) :: Nil
-    override val typesModifier: Map[Type, Double] = Nil
-    override val duration: Int =  */
-//  abstract class BaseWeather(
-//      override val description: String,
-//      override val creationTurn: Int,
-//      override val typesModifier: Map[Type, Double]
-//  ) extends Weather
-//
-//  abstract class BaseTerrain(
-//      override val description: String,
-//      override val creationTurn: Int,
-//      override val onApply: List[PokemonRule],
-//      override val onTurns: List[PokemonRule],
-//      override val typesModifier: Map[Type, Double]
-//  ) extends Terrain
-
-//  abstract class BaseRoom(
-//      override val description: String,
-//      override val creationTurn: Int
-//  ) extends Room

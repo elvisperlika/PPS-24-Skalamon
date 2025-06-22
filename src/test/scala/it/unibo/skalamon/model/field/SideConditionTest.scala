@@ -4,7 +4,6 @@ import it.unibo.skalamon.model.ability.Ability
 import it.unibo.skalamon.model.battle.turn.BattleEvents.PokemonSwitchIn
 import it.unibo.skalamon.model.behavior.kind.Stats
 import it.unibo.skalamon.model.event.EventManager
-import it.unibo.skalamon.model.field.FieldEffectMixin.SideCondition
 import it.unibo.skalamon.model.field.fieldside.kind.StealthRock
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
 import it.unibo.skalamon.model.types.TypesCollection.Ice
