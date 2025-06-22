@@ -53,4 +53,4 @@ object BattleView:
 
       screen.setPlayersName(player.name, opponent.name)
 
-      screen.setBattlePokemon(player.inField, player.inField)
+      screen.setBattlePokemon(player.inField, opponent.inField)
