@@ -42,17 +42,12 @@ class BattleScreen(
       playerBP: Option[BattlePokemon],
       opponentBP: Option[BattlePokemon]
   ): Unit =
-    val playerBPText =
-      playerBP.map(bp => Seq(bp.base.name)).getOrElse(Seq(defaultPokemonName))
-    val opponentBPText =
-      opponentBP.map(bp => Seq(bp.base.name)).getOrElse(Seq(defaultPokemonName))
-
     setBattlePokemonSlot(
-      playerBPText,
+      formatBattlePokemon(playerBP),
       BattleScreen.p1AbilitiesY + BattleScreen.abilitySlotHeight
     )
     setBattlePokemonSlot(
-      opponentBPText,
+      formatBattlePokemon(opponentBP),
       BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerPadding
     )
 
@@ -120,6 +115,22 @@ class BattleScreen(
       BattleScreen.battlePokemonWidth,
       BattleScreen.battlePokemonHeight
     )
+
+  /** Creates the text for the Battle Pokémon slot.
+    * @param bpOpt
+    *   An optional Battle Pokémon. If present, it will be formatted; otherwise,
+    *   the default Pokémon name will be used.
+    * @return
+    *   A sequence of strings representing the formatted Battle Pokémon text.
+    */
+  private def formatBattlePokemon(bpOpt: Option[BattlePokemon]): Seq[String] =
+    bpOpt
+      .map(bp =>
+        Seq(
+          s"${bp.base.name} ${bp.currentHP}HP Ability: ${bp.base.ability.name}"
+        )
+      )
+      .getOrElse(Seq(defaultPokemonName))
 
   override def respondToUserInput(key: KeyEvent): Screen =
     this

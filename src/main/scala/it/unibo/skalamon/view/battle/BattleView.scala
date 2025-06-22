@@ -42,9 +42,9 @@ object BattleView:
 
     override def updatePokemon(map: Map[Trainer, BattlePokemon]): Unit =
       val trainers = map.keys.toList
-      if (trainers.size != screen.playerNumber) {
+      if (trainers.size != BattleScreen.playerNumber) {
         throw new IllegalArgumentException(
-          s"Expected ${screen.playerNumber} trainers, but got ${trainers.size}."
+          s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
         )
       }
 
