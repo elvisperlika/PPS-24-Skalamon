@@ -1,7 +1,5 @@
 package it.unibo.skalamon.model.event
 
-import it.unibo.skalamon.model.pokemon.BattlePokemon
-
 /** An event that can be triggered and watched by an [[EventManager]].
   * @tparam T
   *   The type of data carried by the event.
