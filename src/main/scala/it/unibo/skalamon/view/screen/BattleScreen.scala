@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent
   *   The terminal where the battle screen will be displayed.
   */
 class BattleScreen(
-    terminal: AsciiPanel
+    private val terminal: AsciiPanel
 ) extends Screen:
   import BattleScreen.*
 
@@ -51,51 +51,42 @@ class BattleScreen(
       BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerPadding
     )
 
-  private def setPokemonPool(
-      terminal: AsciiPanel
+  /** Sets the Pokémon pool for both players on the screen.
+    * @param playerTeam
+    *   The list of Battle Pokémon for the player.
+    * @param opponentTeam
+    *   The list of Battle Pokémon for the opponent.
+    */
+  def setPokemonPool(
+      playerTeam: List[BattlePokemon],
+      opponentTeam: List[BattlePokemon]
   ): Unit =
-    val pokemonTextList: Seq[String] = Seq("TODO")
-    val p1Pokemon = HorizontalContainer(
-      terminal,
-      pokemonTextList,
-      startY,
-      pokemonSlotNum,
-      pokemonSlotWidth,
-      pokemonSlotHeight
-    )
+    setTeamSlots(playerTeam, p1PokemonY)
+    setTeamSlots(opponentTeam, p2PokemonY)
 
-    val p2Pokemon = HorizontalContainer(
-      terminal,
-      pokemonTextList,
-      p2AbilitiesY + abilitySlotHeight,
-      pokemonSlotNum,
-      pokemonSlotWidth,
-      pokemonSlotHeight
-    )
-
-  private def setAbilities(
-      terminal: AsciiPanel
-  ): Unit =
-
-    val abilityTextList: Seq[String] =
-      Seq("Move1", "Electric", "Physical", "50-80%", "5/10pp", "rep w button")
-    val p1Abilities = HorizontalContainer(
-      terminal,
-      abilityTextList,
-      p1PokemonY + pokemonSlotHeight,
-      abilitySlotNum,
-      abilitySlotWidth,
-      abilitySlotHeight
-    )
-
-    val p2Abilities = HorizontalContainer(
-      terminal,
-      abilityTextList,
-      p2BattlePokemonY + battlePokemonHeight,
-      abilitySlotNum,
-      abilitySlotWidth,
-      abilitySlotHeight
-    )
+//  private def setAbilities(
+//      terminal: AsciiPanel
+//  ): Unit =
+//
+//    val abilityTextList: Seq[String] =
+//      Seq("Move1", "Electric", "Physical", "50-80%", "5/10pp", "rep w button")
+//    val p1Abilities = HorizontalContainer(
+//      terminal,
+//      abilityTextList,
+//      p1PokemonY + pokemonSlotHeight,
+//      abilitySlotNum,
+//      abilitySlotWidth,
+//      abilitySlotHeight
+//    )
+//
+//    val p2Abilities = HorizontalContainer(
+//      terminal,
+//      abilityTextList,
+//      p2BattlePokemonY + battlePokemonHeight,
+//      abilitySlotNum,
+//      abilitySlotWidth,
+//      abilitySlotHeight
+//    )
 
   /** Shows the Battle Pokémon slot in a specific position on the screen.
     * @param battlePokemonText
@@ -107,13 +98,30 @@ class BattleScreen(
       battlePokemonText: Seq[String],
       y: Int
   ): Unit =
-    HorizontalContainer(
+    val centerX =
+      (terminal.getWidthInCharacters - BattleScreen.battlePokemonWidth) / 2
+    BoxContainer(
       terminal,
       battlePokemonText,
+      centerX,
       y,
-      BattleScreen.battlePokemonSlotNum,
       BattleScreen.battlePokemonWidth,
       BattleScreen.battlePokemonHeight
+    )
+
+  private def setTeamSlots(team: List[BattlePokemon], y: Int): Unit =
+    val filledTeam: Seq[Seq[String]] =
+      team.map(p => Seq(p.base.name)) ++
+        Seq.fill(
+          BattleScreen.pokemonSlotNum - team.length
+        )(Seq(defaultPokemonName))
+
+    HorizontalContainer(
+      terminal,
+      filledTeam,
+      y,
+      BattleScreen.pokemonSlotWidth,
+      BattleScreen.pokemonSlotHeight
     )
 
   /** Creates the text for the Battle Pokémon slot.
@@ -154,7 +162,6 @@ object BattleScreen:
   private val abilitySlotHeight = 8
 
   // Battle Pokemon
-  private val battlePokemonSlotNum = 1
   private val battlePokemonWidth = 46
   private val battlePokemonHeight = 3
 
