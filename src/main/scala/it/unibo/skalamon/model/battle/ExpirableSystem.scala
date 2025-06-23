@@ -3,6 +3,7 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
 import it.unibo.skalamon.model.field.fieldside.{FieldSide, SideCondition}
 import it.unibo.skalamon.model.field.{Field, FieldEffectMixin}
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object ExpirableSystem:
 
@@ -48,3 +49,12 @@ object ExpirableSystem:
           case e: FieldEffectMixin.Weather with Expirable => e
         })
       )
+
+  extension (battlePokemon: BattlePokemon)
+    /** Return the same Pokémon without volatile Status if they're expired.
+      * @param t
+      *   Current turn index
+      * @return
+      *   Pokémon without expired volatile Status.
+      */
+    def removePokemonVolatileStatus(t: Int): BattlePokemon = ???
