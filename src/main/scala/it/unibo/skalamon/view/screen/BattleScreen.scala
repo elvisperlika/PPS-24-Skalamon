@@ -18,7 +18,7 @@ class BattleScreen(
 ) extends Screen:
   import BattleScreen.*
 
-  private val defaultPokemonName = "No Pokémon"
+  private val defaultPokemonName = "No Pokemon"
 
   /** Shows the player's and opponent's names on the screen.
     * @param player
@@ -30,8 +30,8 @@ class BattleScreen(
       player: String,
       opponent: String
   ): Unit =
-    terminal.writeCenter(opponent, opponentNameY)
-    terminal.writeCenter(player, playerNameY)
+    terminal.writeCenter(opponent, opponentNameY, opponentColor)
+    terminal.writeCenter(player, playerNameY, playerColor)
 
   /** Shows the player's and opponent's Battle Pokémon on the screen.
     * @param playerBP
@@ -110,6 +110,12 @@ class BattleScreen(
       BattleScreen.battlePokemonHeight
     )
 
+  /** Sets the Pokémon slots for a team on the screen.
+    * @param team
+    *   The list of Battle Pokémon for the team.
+    * @param y
+    *   The vertical position where the Pokémon slots will be displayed.
+    */
   private def setTeamSlots(team: List[BattlePokemon], y: Int): Unit =
     val filledTeam: Seq[BoxContainerData] =
       team.map(p => BoxContainerData(Seq(p.base.name), teamColor)) ++
@@ -179,6 +185,9 @@ object BattleScreen:
   private val playerNameY = p2PokemonY + pokemonSlotHeight + opponentNameY
 
   // Colors
+  private val playerColor: Color = Color.WHITE
+  private val opponentColor: Color = Color.WHITE
+
   private val playerBPColor: Color = Color.WHITE
   private val opponentBPColor: Color = Color.WHITE
 

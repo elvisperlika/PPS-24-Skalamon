@@ -1,6 +1,5 @@
 package it.unibo.skalamon.view.battle
 
-import asciiPanel.AsciiPanel
 import it.unibo.skalamon.controller.battle.action.*
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.pokemon.BattlePokemon

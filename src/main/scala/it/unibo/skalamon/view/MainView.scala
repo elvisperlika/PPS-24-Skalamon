@@ -3,7 +3,6 @@ package it.unibo.skalamon.view
 import it.unibo.skalamon.view.screen.*
 
 import javax.swing.{JFrame, WindowConstants}
-import java.awt.event.{KeyEvent, KeyListener}
 import asciiPanel.AsciiPanel
 
 class MainView() extends JFrame:
