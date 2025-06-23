@@ -5,7 +5,6 @@ import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.status.*
-import it.unibo.skalamon.model.types.PokemonType
 
 sealed trait Gender
 case object Male extends Gender
@@ -58,7 +57,8 @@ case class BattlePokemon(
     currentHP: Int,
     moves: List[BattleMove],
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
-    volatileStatus: List[AssignedStatus[VolatileStatus]]
+    volatileStatus: List[AssignedStatus[VolatileStatus]],
+    statChanges: Map[Stat, Int] = Map.empty
 ):
 
   /** Return the current stats of the Pokémon, updated to it's level.
@@ -66,7 +66,7 @@ case class BattlePokemon(
     *   the current stats of the Pokémon.
     */
   def actualStats: Stats =
-    base.baseStats // TODO: for now, just return the base stats
+    base.baseStats.copy(stages = statChanges)
 
   /** Return true if the Pokémon is still alive.
     * @return
@@ -87,4 +87,6 @@ case class BattlePokemon(
     ) // TODO: this method is just temporary, to be removed when the battle engine is implemented
 
   def applyStatChange(change: StatChange): BattlePokemon =
-    this.copy(base = base.copy(baseStats = base.baseStats.applyChange(change)))
+    val currentStage = statChanges.getOrElse(change.stat, 0)
+    val newStage = StatStage.clamp(currentStage + change.stage)
+    this.copy(statChanges = statChanges.updated(change.stat, newStage))
