@@ -6,7 +6,7 @@ import asciiPanel.AsciiPanel
   * @param terminal
   *   The AsciiPanel that holds all the text.
   * @param boxesData
-  *   A sequence of data for each box.
+  *   A sequence of sequences of BoxContainerData.
   * @param startY
   *   The 'y' starting coordinate for the first box.
   * @param boxWidth
@@ -18,7 +18,7 @@ import asciiPanel.AsciiPanel
   */
 case class HorizontalContainer(
     terminal: AsciiPanel,
-    boxesData: Seq[Seq[String]],
+    boxesData: Seq[BoxContainerData],
     startY: Int,
     boxWidth: Int,
     boxHeight: Int,
@@ -29,7 +29,14 @@ case class HorizontalContainer(
   private val startX = (terminal.getWidthInCharacters - totalWidth) / 2
 
   val boxes: Seq[BoxContainer] =
-    boxesData.zipWithIndex.map { case (textList, i) =>
+    boxesData.zipWithIndex.map { case (boxData, i) =>
       val x = startX + i * (boxWidth + spacing)
-      new BoxContainer(terminal, textList, x, startY, boxWidth, boxHeight)
+      new BoxContainer(
+        terminal,
+        boxData,
+        x,
+        startY,
+        boxWidth,
+        boxHeight
+      )
     }

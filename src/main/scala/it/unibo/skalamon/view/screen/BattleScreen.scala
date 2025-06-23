@@ -4,6 +4,7 @@ import it.unibo.skalamon.view.Container.*
 import asciiPanel.AsciiPanel
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
+import java.awt.Color
 import java.awt.event.KeyEvent
 
 /** Represents the battle screen in the game. It displays the players' Pokémon,
@@ -43,11 +44,11 @@ class BattleScreen(
       opponentBP: Option[BattlePokemon]
   ): Unit =
     setBattlePokemonSlot(
-      formatBattlePokemon(playerBP),
+      BoxContainerData(formatBattlePokemon(playerBP), playerBPColor),
       BattleScreen.p1AbilitiesY + BattleScreen.abilitySlotHeight
     )
     setBattlePokemonSlot(
-      formatBattlePokemon(opponentBP),
+      BoxContainerData(formatBattlePokemon(opponentBP), opponentBPColor),
       BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerPadding
     )
 
@@ -89,20 +90,20 @@ class BattleScreen(
 //    )
 
   /** Shows the Battle Pokémon slot in a specific position on the screen.
-    * @param battlePokemonText
-    *   The text to display in the Battle Pokémon slot.
+    * @param battlePokemonData
+    *   * The data to be displayed in the Battle Pokémon slot.
     * @param y
     *   The vertical position where the Battle Pokémon slot will be displayed.
     */
   private def setBattlePokemonSlot(
-      battlePokemonText: Seq[String],
+      battlePokemonData: BoxContainerData,
       y: Int
   ): Unit =
     val centerX =
       (terminal.getWidthInCharacters - BattleScreen.battlePokemonWidth) / 2
     BoxContainer(
       terminal,
-      battlePokemonText,
+      battlePokemonData,
       centerX,
       y,
       BattleScreen.battlePokemonWidth,
@@ -110,11 +111,11 @@ class BattleScreen(
     )
 
   private def setTeamSlots(team: List[BattlePokemon], y: Int): Unit =
-    val filledTeam: Seq[Seq[String]] =
-      team.map(p => Seq(p.base.name)) ++
-        Seq.fill(
-          BattleScreen.pokemonSlotNum - team.length
-        )(Seq(defaultPokemonName))
+    val filledTeam: Seq[BoxContainerData] =
+      team.map(p => BoxContainerData(Seq(p.base.name), teamColor)) ++
+        Seq.fill(BattleScreen.pokemonSlotNum - team.length)(
+          BoxContainerData(Seq(defaultPokemonName), teamEmptyColor)
+        )
 
     HorizontalContainer(
       terminal,
@@ -176,3 +177,11 @@ object BattleScreen:
   private val p2PokemonY = p2AbilitiesY + abilitySlotHeight
 
   private val playerNameY = p2PokemonY + pokemonSlotHeight + opponentNameY
+
+  // Colors
+  private val playerBPColor: Color = Color.WHITE
+  private val opponentBPColor: Color = Color.WHITE
+
+  private val teamColor: Color = Color.WHITE
+  private val teamBPColor: Color = Color.BLUE
+  private val teamEmptyColor: Color = Color.GRAY

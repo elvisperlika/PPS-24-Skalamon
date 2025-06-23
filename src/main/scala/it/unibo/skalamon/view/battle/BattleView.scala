@@ -52,5 +52,5 @@ object BattleView:
       val opponent = trainers(1)
 
       screen.setPlayersName(player.name, opponent.name)
-
       screen.setBattlePokemon(player.inField, opponent.inField)
+      screen.setPokemonPool(player.team, opponent.team)
