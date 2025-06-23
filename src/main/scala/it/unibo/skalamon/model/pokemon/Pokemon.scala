@@ -93,6 +93,12 @@ case class BattlePokemon(
       math.max(0, currentHP - damage)
     ) // TODO: this method is just temporary, to be removed when the battle engine is implemented
 
+  /** Applies a stat change to the Pokémon.
+    * @param change
+    *   The stat change to be applied.
+    * @return
+    *   the copy of the Pokémon with the applied stat change.
+    */
   def applyStatChange(change: StatChange): BattlePokemon =
     val currentStage = statChanges.getOrElse(change.stat, 0)
     val newStage = StatStage.clamp(currentStage + change.stage)
