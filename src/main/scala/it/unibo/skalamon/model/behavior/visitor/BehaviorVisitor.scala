@@ -9,3 +9,5 @@ import it.unibo.skalamon.model.behavior.kind.*
 trait BehaviorVisitor[T]:
   def visit(behavior: SingleHitBehavior): T
   def visit(behavior: HealthBehavior): T
+  def visit(behavior: StatChangeBehavior): T
+  def visit(behavior: StatusBehavior): T

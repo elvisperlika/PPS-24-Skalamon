@@ -1,10 +1,12 @@
 package it.unibo.skalamon.model.pokemon
 
-import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.types.*
+
+import java.util.UUID
 
 sealed trait Gender
 case object Male extends Gender
@@ -49,7 +51,11 @@ case class Pokemon(
   * @param nonVolatileStatus
   *   The non-volatile status of the Pokémon.
   * @param volatileStatus
-  *   List of volatile status of the Pokémon.
+  *   Set of volatile status of the Pokémon.
+  * @param id
+  *   The unique identifier of the battle Pokémon. This is useful to track the
+  *   Pokémon in a battle context: even if this instance is copied, the ID
+  *   remains the same and can be tracked across different states.
   */
 case class BattlePokemon(
     base: Pokemon,
@@ -57,8 +63,9 @@ case class BattlePokemon(
     currentHP: Int,
     moves: List[BattleMove],
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
-    volatileStatus: List[AssignedStatus[VolatileStatus]],
     statChanges: Map[Stat, Int] = Map.empty
+    volatileStatus: Set[AssignedStatus[VolatileStatus]],
+    id: UUID = UUID.randomUUID()
 ):
 
   /** Return the current stats of the Pokémon, updated to it's level.
