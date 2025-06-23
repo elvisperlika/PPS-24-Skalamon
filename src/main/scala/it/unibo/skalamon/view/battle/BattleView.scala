@@ -1,8 +1,7 @@
 package it.unibo.skalamon.view.battle
 
 import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.model.battle.Trainer
-import it.unibo.skalamon.model.pokemon.BattlePokemon
+import it.unibo.skalamon.model.battle.{BattleState, Trainer}
 import it.unibo.skalamon.view.screen.BattleScreen
 
 trait BattleView:
@@ -20,10 +19,10 @@ trait BattleView:
   def showActions(map: Map[Trainer, List[Action]]): Unit
 
   /** Update Pokémon in field.
-    * @param map
-    *   Map: Trainer -> MutablePokémon
+    * @param battleState
+    *   The current state of the battle.
     */
-  def updatePokemon(map: Map[Trainer, BattlePokemon]): Unit
+  def updatePokemon(battleState: BattleState): Unit
 
 object BattleView:
   def apply(screen: BattleScreen, controllerProxy: ActionBuffer): BattleView =
@@ -39,8 +38,8 @@ object BattleView:
 
     override def showActions(map: Map[Trainer, List[Action]]): Unit = ???
 
-    override def updatePokemon(map: Map[Trainer, BattlePokemon]): Unit =
-      val trainers = map.keys.toList
+    override def updatePokemon(battleState: BattleState): Unit =
+      val trainers = battleState.trainers
       if (trainers.size != BattleScreen.playerNumber) {
         throw new IllegalArgumentException(
           s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."

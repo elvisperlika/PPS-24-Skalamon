@@ -6,6 +6,7 @@ import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
 import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.controller.battle.action.*
 import it.unibo.skalamon.model.types.TypesCollection.*
 import it.unibo.skalamon.view.*
@@ -104,9 +105,9 @@ def main(): Unit =
   val mainView: MainView = MainView()
   mainView.setupView()
 
-  val pokemonMap = Map(trainer1 -> pokemon1, trainer2 -> pokemon2)
+  val battleState = BattleState(List(trainer1, trainer2))
   val actionBuffer = ActionBuffer(2)
 
   val battleView = BattleView(mainView.getPlayScreen(), actionBuffer)
 
-  battleView.updatePokemon(pokemonMap)
+  battleView.updatePokemon(battleState)
