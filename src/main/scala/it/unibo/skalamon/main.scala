@@ -69,9 +69,37 @@ def main(): Unit =
       AssignedStatus(Encore, 8)
     )
   )
+  val pokemon3 = BattlePokemon(
+    Pokemon(
+      "Bulbasaur",
+      Male,
+      Water,
+      baseStats = Stats(
+        base = Map(
+          Stat.Attack -> 49,
+          Stat.Defense -> 49,
+          Stat.SpecialAttack -> 65,
+          Stat.SpecialDefense -> 65,
+          Stat.Speed -> 45
+        )
+      ),
+      ability = Ability("Overgrow", Map.empty),
+      weightKg = 6.9,
+      possibleMoves = List(Move("Vine Whip"), Move("Razor Leaf"))
+    ),
+    50,
+    40,
+    List(BattleMove(Move("Vine Whip"), 3)),
+    Option(AssignedStatus(Paralyze, 2)),
+    Set(
+      AssignedStatus(Confusion, 5),
+      AssignedStatus(LeechSeed, 6),
+      AssignedStatus(Flinch, 1)
+    )
+  )
 
-  val trainer1 = Trainer("Bob", List.empty)
-  val trainer2 = Trainer("Alice", List(pokemon2), Option(pokemon2))
+  val trainer1 = Trainer("Bob", List(pokemon1), Option(pokemon1))
+  val trainer2 = Trainer("Alice", List(pokemon2, pokemon3), Option(pokemon2))
 
   val mainView: MainView = MainView()
   mainView.setupView()
