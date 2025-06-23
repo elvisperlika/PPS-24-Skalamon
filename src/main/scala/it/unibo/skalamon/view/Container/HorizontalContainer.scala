@@ -2,33 +2,34 @@ package it.unibo.skalamon.view.Container
 
 import asciiPanel.AsciiPanel
 
-/** A row container where boxes are centered.
+/** Represents a horizontal container that holds multiple boxes in a row.
   * @param terminal
   *   The AsciiPanel that holds all the text.
+  * @param boxesData
+  *   A sequence of data for each box.
   * @param startY
-  *   The vertical position of the container.
-  * @param numBoxes
-  *   The number of boxes.
+  *   The 'y' starting coordinate for the first box.
   * @param boxWidth
-  *   The width of the boxes.
+  *   The width of each box.
   * @param boxHeight
-  *   The height of the boxes.
+  *   The height of each box.
   * @param spacing
-  *   The spacing between each box.
+  *   The spacing between each box (default is 2).
   */
 case class HorizontalContainer(
     terminal: AsciiPanel,
-    textList: Seq[String] = Seq(), // TODO: documentare
+    boxesData: Seq[Seq[String]],
     startY: Int,
-    numBoxes: Int,
     boxWidth: Int,
     boxHeight: Int,
     spacing: Int = 2
 ):
+  private val numBoxes = boxesData.length
   private val totalWidth = numBoxes * boxWidth + spacing * (numBoxes - 1)
   private val startX = (terminal.getWidthInCharacters - totalWidth) / 2
 
-  val boxes: Seq[BoxContainer] = (0 until numBoxes).map { i =>
-    val x = startX + i * (boxWidth + spacing)
-    BoxContainer(terminal, textList, x, startY, boxWidth, boxHeight)
-  }
+  val boxes: Seq[BoxContainer] =
+    boxesData.zipWithIndex.map { case (textList, i) =>
+      val x = startX + i * (boxWidth + spacing)
+      new BoxContainer(terminal, textList, x, startY, boxWidth, boxHeight)
+    }
