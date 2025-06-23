@@ -63,8 +63,8 @@ case class BattlePokemon(
     currentHP: Int,
     moves: List[BattleMove],
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
-    statChanges: Map[Stat, Int] = Map.empty
     volatileStatus: Set[AssignedStatus[VolatileStatus]],
+    statChanges: Map[Stat, Int] = Map.empty,
     id: UUID = UUID.randomUUID()
 ):
 
