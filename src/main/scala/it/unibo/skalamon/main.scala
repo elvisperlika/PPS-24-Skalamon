@@ -34,11 +34,13 @@ def main(): Unit =
     ),
     100,
     70,
-    List(BattleMove(Move("Thunder Shock"), 2)),
+    List(
+      BattleMove(Move("Thunder Shock"), 5),
+      BattleMove(Move("Electric"), 3),
+      BattleMove(Move("Quick Attack"), 2)
+    ),
     Option(AssignedStatus(Burn, 1)),
     Set(
-      AssignedStatus(PerishSong, 4),
-      AssignedStatus(AquaRingIngrain, 3),
       AssignedStatus(Substitute, 8)
     )
   )
@@ -65,9 +67,9 @@ def main(): Unit =
     List(BattleMove(Move("Thunder Shock"), 4)),
     Option(AssignedStatus(Sleep, 4)),
     Set(
-      AssignedStatus(Torment, 4),
-      AssignedStatus(Trapped, 3),
-      AssignedStatus(Encore, 8)
+      AssignedStatus(Confusion, 5),
+      AssignedStatus(Flinch, 1),
+      AssignedStatus(Substitute, 8)
     )
   )
   val pokemon3 = BattlePokemon(
@@ -94,12 +96,12 @@ def main(): Unit =
     Option(AssignedStatus(Paralyze, 2)),
     Set(
       AssignedStatus(Confusion, 5),
-      AssignedStatus(LeechSeed, 6),
       AssignedStatus(Flinch, 1)
     )
   )
 
   val trainer1 = Trainer("Bob", List(pokemon1), Option(pokemon1))
+  //val trainer1 = Trainer("Bob", List(pokemon1))
   val trainer2 = Trainer("Alice", List(pokemon2, pokemon3), Option(pokemon2))
 
   val mainView: MainView = MainView()

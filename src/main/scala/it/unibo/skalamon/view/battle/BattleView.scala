@@ -2,6 +2,8 @@ package it.unibo.skalamon.view.battle
 
 import it.unibo.skalamon.controller.battle.action.*
 import it.unibo.skalamon.model.battle.{BattleState, Trainer}
+import it.unibo.skalamon.model.move.BattleMove
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.screen.BattleScreen
 
 trait BattleView:
@@ -45,14 +47,21 @@ object BattleView:
 
       val Seq(player, opponent) = trainers
 
-      def teamWithoutInField(trainer: Trainer) =
-        trainer.team.filterNot(
-          _.base.name == trainer.inField.map(_.base.name).getOrElse("")
-        )
+      def teamWithoutInField(trainer: Trainer): List[BattlePokemon] =
+        trainer.inField.map(p => trainer.team.filterNot(_.id == p.id))
+          .getOrElse(trainer.team)
 
       val pTeam = teamWithoutInField(player)
       val oTeam = teamWithoutInField(opponent)
 
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
-      screen.setPokemonPool(pTeam, oTeam)
+      screen.setPokemonTeam(pTeam, oTeam)
+
+      val pMoves: List[BattleMove] =
+        player.inField.map(_.moves).getOrElse(List.empty)
+        
+      val oMoves: List[BattleMove] =
+        opponent.inField.map(_.moves).getOrElse(List.empty)
+
+      screen.setMoves(pMoves, oMoves)

@@ -2,6 +2,7 @@ package it.unibo.skalamon.view.screen
 
 import it.unibo.skalamon.view.Container.*
 import asciiPanel.AsciiPanel
+import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 import java.awt.Color
@@ -19,6 +20,7 @@ class BattleScreen(
   import BattleScreen.*
 
   private val defaultPokemonName = "No Pokemon"
+  private val defaultAbilityName = "No Ability"
 
   /** Shows the player's and opponent's names on the screen.
     * @param player
@@ -58,36 +60,25 @@ class BattleScreen(
     * @param opponentTeam
     *   The list of Battle Pokémon for the opponent.
     */
-  def setPokemonPool(
+  def setPokemonTeam(
       playerTeam: List[BattlePokemon],
       opponentTeam: List[BattlePokemon]
   ): Unit =
     setTeamSlots(playerTeam, p1PokemonY)
     setTeamSlots(opponentTeam, p2PokemonY)
 
-//  private def setAbilities(
-//      terminal: AsciiPanel
-//  ): Unit =
-//
-//    val abilityTextList: Seq[String] =
-//      Seq("Move1", "Electric", "Physical", "50-80%", "5/10pp", "rep w button")
-//    val p1Abilities = HorizontalContainer(
-//      terminal,
-//      abilityTextList,
-//      p1PokemonY + pokemonSlotHeight,
-//      abilitySlotNum,
-//      abilitySlotWidth,
-//      abilitySlotHeight
-//    )
-//
-//    val p2Abilities = HorizontalContainer(
-//      terminal,
-//      abilityTextList,
-//      p2BattlePokemonY + battlePokemonHeight,
-//      abilitySlotNum,
-//      abilitySlotWidth,
-//      abilitySlotHeight
-//    )
+  /** Sets the moves for both players on the screen.
+    * @param playerMoves
+    *   The list of Battle Moves for the player.
+    * @param opponentMoves
+    *   The list of Battle Moves for the opponent.
+    */
+  def setMoves(
+      playerMoves: List[BattleMove],
+      opponentMoves: List[BattleMove]
+  ): Unit =
+    setMovesSlots(playerMoves, p1AbilitiesY)
+    setMovesSlots(opponentMoves, p2AbilitiesY)
 
   /** Shows the Battle Pokémon slot in a specific position on the screen.
     * @param battlePokemonData
@@ -131,6 +122,27 @@ class BattleScreen(
       BattleScreen.pokemonSlotHeight
     )
 
+  /** Sets the moves slots for a team on the screen.
+    * @param moves
+    *   The list of Battle Moves for the team.
+    * @param y
+    *   The vertical position where the moves slots will be displayed.
+    */
+  private def setMovesSlots(moves: List[BattleMove], y: Int): Unit =
+    val filledMoves: Seq[BoxContainerData] =
+      moves.map(m => BoxContainerData(formatMove(m), teamColor)) ++
+        Seq.fill(BattleScreen.abilitySlotNum - moves.length)(
+          BoxContainerData(Seq(defaultAbilityName), teamEmptyColor)
+        )
+
+    HorizontalContainer(
+      terminal,
+      filledMoves,
+      y,
+      BattleScreen.abilitySlotWidth,
+      BattleScreen.abilitySlotHeight
+    )
+
   /** Creates the text for the Battle Pokémon slot.
     * @param bpOpt
     *   An optional Battle Pokémon. If present, it will be formatted; otherwise,
@@ -146,6 +158,18 @@ class BattleScreen(
         )
       )
       .getOrElse(Seq(defaultPokemonName))
+
+  /** Creates the text for a Battle Move.
+    * @param move
+    *   The Battle Move to be formatted.
+    * @return
+    *   A sequence of strings representing the formatted move text.
+    */
+  private def formatMove(move: BattleMove): Seq[String] =
+    Seq(
+      s"${move.move.name}",
+      s"PP: ${move.pp}"
+    )
 
   override def respondToUserInput(key: KeyEvent): Screen =
     this
@@ -192,5 +216,4 @@ object BattleScreen:
   private val opponentBPColor: Color = Color.WHITE
 
   private val teamColor: Color = Color.WHITE
-  private val teamBPColor: Color = Color.BLUE
   private val teamEmptyColor: Color = Color.GRAY
