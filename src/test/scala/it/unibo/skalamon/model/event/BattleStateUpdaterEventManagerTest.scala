@@ -33,7 +33,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
     battle.start()
     notified shouldBe true
 
-  "EventManager" should "be able to update the current battle state" in:
+  it should "be able to update the current battle state" in:
     var notified = false
 
     battle.eventManager.hookBattleStateUpdate(TurnStageEvents.WaitingForActions): (battleState, _) =>
@@ -48,4 +48,18 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
     notified shouldBe true
     battle.currentTurn.get.state.stage shouldBe TurnStage.WaitingForActions
     battle.currentTurn.get.state.snapshot.trainers shouldBe List.empty
+
+  it should "trigger a state changed event after updating" in:
+    var notified = false
+
+    battle.eventManager.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
+      battleState.copy(trainers = List.empty)
+
+    battle.eventManager.watch(BattleStateEvents.Changed): (previous, current) =>
+      notified = true
+      previous.trainers shouldBe battle.trainers
+      current.trainers shouldBe List.empty
+
+    battle.start()
+    notified shouldBe true
 

@@ -1,6 +1,10 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.model.event.{EventManager, EventType}
+import it.unibo.skalamon.model.event.{
+  BattleStateEvents,
+  EventManager,
+  EventType
+}
 
 /** A container that allows access and manipulation of the current
   * [[BattleState]].
@@ -30,10 +34,17 @@ def extractBattleState(t: BattleStateContainer): BattleState =
   *   The container in which to set the battle state.
   * @param state
   *   The new battle state to set.
+  * @param eventManager
+  *   The event manager to notify about the state change through a
+  *   [[BattleStateEvents.Changed]] event.
   */
-def setBattleState(t: BattleStateContainer, state: BattleState): Unit =
+def setBattleState(t: BattleStateContainer, state: BattleState)(using
+    eventManager: EventManager
+): Unit =
   val turn = currentTurn(t)
+  val previousState = turn.state.snapshot
   turn.state = turn.state.copy(snapshot = state)
+  eventManager.notify(BattleStateEvents.Changed of (previousState, state))
 
 extension (eventManager: EventManager)
   /** Hooks a callback to be executed whenever the battle state is updated
@@ -52,6 +63,7 @@ extension (eventManager: EventManager)
   def hookBattleStateUpdate[T <: BattleStateContainer](eventType: EventType[T])(
       callback: (BattleState, T) => BattleState
   ): Unit =
+    given EventManager = eventManager
     eventManager.watch(eventType) { data =>
       val currentState = extractBattleState(data)
       val updatedState = callback(currentState, data)
