@@ -17,7 +17,7 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
   "Battle Event Manager" should "set game state as InProgress if there isn't a winner or a draw" in:
     val battleInProgress: Battle = Battle(trainerAlice :: trainerAlice :: Nil)
     battleInProgress.start()
-    battleInProgress.battleEventManager.notify(
+    battleInProgress.eventManager.notify(
       TurnEnded of battleInProgress.currentTurn.get
     )
     battleInProgress.gameState shouldEqual InProgress
@@ -26,7 +26,7 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
     val battleFinishedWithWinner: Battle =
       Battle(trainerAlice :: trainerGio :: Nil)
     battleFinishedWithWinner.start()
-    battleFinishedWithWinner.battleEventManager.notify(
+    battleFinishedWithWinner.eventManager.notify(
       TurnEnded of battleFinishedWithWinner.currentTurn.get
     )
     battleFinishedWithWinner.gameState shouldEqual GameOver(Some(trainerAlice))
@@ -35,7 +35,7 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
     val battleFinishedWithDraw: Battle =
       Battle(trainerGio :: trainerGio :: Nil)
     battleFinishedWithDraw.start()
-    battleFinishedWithDraw.battleEventManager.notify(
+    battleFinishedWithDraw.eventManager.notify(
       TurnEnded of battleFinishedWithDraw.currentTurn.get
     )
     battleFinishedWithDraw.gameState shouldEqual GameOver(None)

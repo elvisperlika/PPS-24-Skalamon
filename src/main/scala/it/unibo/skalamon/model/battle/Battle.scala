@@ -29,10 +29,10 @@ case class Battle(trainers: List[Trainer]):
 
   /** The event manager for handling battle/turn events.
     */
-  val battleEventManager: EventManager =
+  val eventManager: EventManager =
     new EventManager with BattleConfiguration
 
-  battleEventManager.watch(Finished) { maybeWinner =>
+  eventManager.watch(Finished) { maybeWinner =>
     gameState = GameOver(maybeWinner)
   }
 
@@ -70,6 +70,6 @@ case class Battle(trainers: List[Trainer]):
       case Some(turn) =>
         turn.state = turn.state.copy(stage = stage)
         given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
-        battleEventManager.notify(turn.state.stage of turn)
+        eventManager.notify(turn.state.stage of turn)
       case None =>
         throw new IllegalStateException("No active turn to set stage")
