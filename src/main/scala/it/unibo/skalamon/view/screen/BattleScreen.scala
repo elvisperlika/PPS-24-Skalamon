@@ -45,11 +45,11 @@ class BattleScreen(
       playerBP: Option[BattlePokemon],
       opponentBP: Option[BattlePokemon]
   ): Unit =
-    setBattlePokemonSlot(
+    drawBattlePokemonSlot(
       BoxContainerData(formatBattlePokemon(playerBP), playerBPColor),
       BattleScreen.p1AbilitiesY + BattleScreen.abilitySlotHeight
     )
-    setBattlePokemonSlot(
+    drawBattlePokemonSlot(
       BoxContainerData(formatBattlePokemon(opponentBP), opponentBPColor),
       BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerPadding
     )
@@ -64,8 +64,8 @@ class BattleScreen(
       playerTeam: List[BattlePokemon],
       opponentTeam: List[BattlePokemon]
   ): Unit =
-    setTeamSlots(playerTeam, p1PokemonY)
-    setTeamSlots(opponentTeam, p2PokemonY)
+    drawTeamSlots(playerTeam, p1PokemonY)
+    drawTeamSlots(opponentTeam, p2PokemonY)
 
   /** Sets the moves for both players on the screen.
     * @param playerMoves
@@ -77,8 +77,8 @@ class BattleScreen(
       playerMoves: List[BattleMove],
       opponentMoves: List[BattleMove]
   ): Unit =
-    setMovesSlots(playerMoves, p1AbilitiesY)
-    setMovesSlots(opponentMoves, p2AbilitiesY)
+    drawMovesSlots(playerMoves, p1AbilitiesY)
+    drawMovesSlots(opponentMoves, p2AbilitiesY)
 
   /** Shows the Battle Pokémon slot in a specific position on the screen.
     * @param battlePokemonData
@@ -86,7 +86,7 @@ class BattleScreen(
     * @param y
     *   The vertical position where the Battle Pokémon slot will be displayed.
     */
-  private def setBattlePokemonSlot(
+  private def drawBattlePokemonSlot(
       battlePokemonData: BoxContainerData,
       y: Int
   ): Unit =
@@ -107,7 +107,7 @@ class BattleScreen(
     * @param y
     *   The vertical position where the Pokémon slots will be displayed.
     */
-  private def setTeamSlots(team: List[BattlePokemon], y: Int): Unit =
+  private def drawTeamSlots(team: List[BattlePokemon], y: Int): Unit =
     val filledTeam: Seq[BoxContainerData] =
       team.map(p => BoxContainerData(Seq(p.base.name), teamColor)) ++
         Seq.fill(BattleScreen.pokemonSlotNum - team.length)(
@@ -128,7 +128,7 @@ class BattleScreen(
     * @param y
     *   The vertical position where the moves slots will be displayed.
     */
-  private def setMovesSlots(moves: List[BattleMove], y: Int): Unit =
+  private def drawMovesSlots(moves: List[BattleMove], y: Int): Unit =
     val filledMoves: Seq[BoxContainerData] =
       moves.map(m => BoxContainerData(formatMove(m), teamColor)) ++
         Seq.fill(BattleScreen.abilitySlotNum - moves.length)(
