@@ -79,7 +79,7 @@ class FieldBuilder:
   * @param trainers
   *   Trainers list
   * @param init
-  *   FieldBuilder configuration
+  *   FieldBuilder configuration - by default is empty
   * @return
   *   Field without [[FieldSide]]s
   */

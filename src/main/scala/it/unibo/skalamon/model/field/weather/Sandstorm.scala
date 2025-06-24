@@ -1,7 +1,7 @@
 package it.unibo.skalamon.model.field.weather
 
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.event.TurnStageEvents.Started
+import it.unibo.skalamon.model.event.TurnStageEvents.TurnStarted
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,
@@ -15,7 +15,7 @@ case class Sandstorm(t: Int) extends FieldEffect(t) with PokemonRules
   override val description: String = Sandstorm.Description
   override val rules: List[(EventType[_], PokemonRule)] =
     (
-      Started,
+      TurnStarted,
       Modify.except(Rock, Steel, Ground) { p =>
         p.copy(currentHP = p.currentHP - 10)
       }

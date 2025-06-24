@@ -64,7 +64,7 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
 
   it should "trigger start events" in:
     var eventTriggered = false
-    controller.battle.eventManager.watch(TurnStageEvents.Started) { turn =>
+    controller.battle.battleEventManager.watch(TurnStageEvents.TurnStarted) { turn =>
       eventTriggered = true
     }
 
@@ -76,7 +76,7 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
   it should "trigger action received events" in:
     controller.start()
     var eventTriggered = false
-    controller.battle.eventManager.watch(TurnStageEvents.ActionsReceived) {
+    controller.battle.battleEventManager.watch(TurnStageEvents.ActionsReceived) {
       turn =>
         eventTriggered = true
     }

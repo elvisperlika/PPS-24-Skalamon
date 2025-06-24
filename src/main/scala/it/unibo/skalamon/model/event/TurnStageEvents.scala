@@ -9,16 +9,16 @@ import it.unibo.skalamon.model.battle.{Turn, TurnStage}
   *   [[TurnStage]]
   */
 object TurnStageEvents:
-  object Started extends EventType[Turn]
+  object TurnStarted extends EventType[Turn]
   object WaitingForActions extends EventType[Turn]
   object ActionsReceived extends EventType[Turn]
   object ExecutingActions extends EventType[Turn]
-  object Ended extends EventType[Turn]
+  object TurnEnded extends EventType[Turn]
 
   def from(stage: TurnStage): EventType[Turn] =
     stage match
-      case TurnStage.Started            => Started
+      case TurnStage.Started            => TurnStarted
       case TurnStage.WaitingForActions  => WaitingForActions
       case TurnStage.ActionsReceived(_) => ActionsReceived
       case TurnStage.ExecutingActions   => ExecutingActions
-      case TurnStage.Ended              => Ended
+      case TurnStage.Ended              => TurnEnded
