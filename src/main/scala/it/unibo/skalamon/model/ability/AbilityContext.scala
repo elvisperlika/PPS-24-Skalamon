@@ -1,11 +1,13 @@
 package it.unibo.skalamon.model.ability
 
+import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.behavior.{
   Behavior,
   BehaviorsContext,
   WithBehaviors
 }
+import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** Represents the context of an ability that can be triggered in a battle.
@@ -17,8 +19,8 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
   * @param source
   *   The source Pokémon that is triggering the ability.
   * @param behaviors
-  *   Ordered behaviors that will be applied during the execution of the ability,
-  *   associated with their modifiers.
+  *   Ordered behaviors that will be applied during the execution of the
+  *   ability, associated with their modifiers.
   */
 case class AbilityContext(
     override val origin: Ability,
@@ -33,7 +35,8 @@ case class AbilityContext(
     this.copy(behaviors = behaviors ++ newBehaviors).asInstanceOf[T]
 
 extension (ability: Ability)
-  /** Creates an [[AbilityContext]] for the given ability, target, and source Pokémon.
+  /** Creates an [[AbilityContext]] for the given ability, target, and source
+    * Pokémon.
     *
     * @param behavior
     *   Supplier of the behavior of the ability execution.
@@ -50,3 +53,28 @@ extension (ability: Ability)
       source: BattlePokemon
   ): AbilityContext =
     behavior(ability)(AbilityContext(ability, target, source))
+
+  /** Hooks all hooks of the ability to an event manager, allowing it to execute
+    * behaviors when specific events occur in the battle.
+    *
+    * @param eventManager
+    *   The event manager that will handle the events.
+    * @param target
+    *   The target Pokémon of the ability.
+    * @param source
+    *   The source Pokémon that owns the ability.
+    */
+  def hookAll(
+      eventManager: EventManager,
+      target: BattlePokemon,
+      source: BattlePokemon
+  ): Unit =
+    ability.hooks.foreach { case (eventType, behavior) =>
+      eventManager.hookBattleStateUpdate(eventType): (battleState, _) =>
+        val context = createContext(
+          _.hooks(eventType),
+          target,
+          source
+        )
+        context(battleState)
+    }

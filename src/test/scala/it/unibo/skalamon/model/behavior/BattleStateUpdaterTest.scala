@@ -4,31 +4,19 @@ import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
 import it.unibo.skalamon.model.event.{BattleStateEvents, EventManager}
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, PokemonTestUtils}
 import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
+import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 /** */
-class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers:
-  private val alice = PokemonTestUtils.trainerAlice
-  private val bob = PokemonTestUtils.trainerBob
-
-  private val source = alice.team.head
-  private val target = bob.team.head
-
+class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers with MockTrainers:
   private val state = BattleState(alice :: bob :: Nil)
 
   private val context = BehaviorTestUtils.context(
     target = target,
     source = source
   )
-
-  private def getSource(state: BattleState): BattlePokemon =
-    state.trainers.find(_.name == alice.name).get.team.head
-
-  private def getTarget(state: BattleState): BattlePokemon =
-    state.trainers.find(_.name == bob.name).get.team.head
 
   private val damage = 10
 
