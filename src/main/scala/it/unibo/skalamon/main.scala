@@ -110,4 +110,4 @@ def main(): Unit =
 
   val battleView = BattleView(mainView.getPlayScreen(), actionBuffer)
 
-  battleView.updatePokemon(battleState)
+  battleView.update(battleState)
