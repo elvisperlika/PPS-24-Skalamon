@@ -2,10 +2,10 @@ package it.unibo.skalamon.model.event
 
 import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
-import it.unibo.skalamon.model.event.TurnStageEvents.TurnEnded
+import it.unibo.skalamon.model.event.TurnStageEvents.Ended
 
 trait BattleConfiguration extends EventManager:
-  watch(TurnEnded) { t =>
+  watch(Ended) { t =>
     checkGameOver(t)
   }
 

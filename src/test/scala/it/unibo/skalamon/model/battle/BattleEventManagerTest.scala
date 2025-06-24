@@ -1,7 +1,7 @@
 package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
-import it.unibo.skalamon.model.event.TurnStageEvents.TurnEnded
+import it.unibo.skalamon.model.event.TurnStageEvents.Ended
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.{
   trainerAlice,
   trainerGio
@@ -18,7 +18,7 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
     val battleInProgress: Battle = Battle(trainerAlice :: trainerAlice :: Nil)
     battleInProgress.start()
     battleInProgress.eventManager.notify(
-      TurnEnded of battleInProgress.currentTurn.get
+      Ended of battleInProgress.currentTurn.get
     )
     battleInProgress.gameState shouldEqual InProgress
 
@@ -27,7 +27,7 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
       Battle(trainerAlice :: trainerGio :: Nil)
     battleFinishedWithWinner.start()
     battleFinishedWithWinner.eventManager.notify(
-      TurnEnded of battleFinishedWithWinner.currentTurn.get
+      Ended of battleFinishedWithWinner.currentTurn.get
     )
     battleFinishedWithWinner.gameState shouldEqual GameOver(Some(trainerAlice))
 
@@ -36,6 +36,6 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
       Battle(trainerGio :: trainerGio :: Nil)
     battleFinishedWithDraw.start()
     battleFinishedWithDraw.eventManager.notify(
-      TurnEnded of battleFinishedWithDraw.currentTurn.get
+      Ended of battleFinishedWithDraw.currentTurn.get
     )
     battleFinishedWithDraw.gameState shouldEqual GameOver(None)
