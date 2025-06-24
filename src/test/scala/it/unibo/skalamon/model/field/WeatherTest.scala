@@ -1,16 +1,11 @@
 package it.unibo.skalamon.model.field
 
 import it.unibo.skalamon.model.ability.*
+import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateWeather
 import it.unibo.skalamon.model.behavior.kind.Stats
+import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.field.weather.{Snow, Sunny}
 import it.unibo.skalamon.model.pokemon.*
-
-import it.unibo.skalamon.model.ability.*
-import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateWeather
-import it.unibo.skalamon.model.battle.{Turn, TurnState}
-import it.unibo.skalamon.model.event.EventManager
-import it.unibo.skalamon.model.event.TurnStageEvents.Started
-
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
   Fire,
@@ -85,7 +80,6 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       fieldEvents.watch(e)(_ =>
         pokemonInBattle = pokemonInBattle.map(r(_))
       )
-
     )
     fieldEvents.notify(CreateWeather of snow)
     pokemonInBattle shouldEqual pikachu.copy(currentHP = 90) :: snowsaur :: Nil
