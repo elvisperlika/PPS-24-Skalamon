@@ -101,10 +101,13 @@ object PokemonTestUtils:
     weightKg = 8.5,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
+
+  /** This Pokémon is dead.
+    */
   private val simplePokemon3: BattlePokemon = BattlePokemon(
     basePokemon3,
     levelPokemon1,
-    startingHP,
+    0,
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Sleep, 4)),
     Set(
