@@ -1,7 +1,7 @@
 package it.unibo.skalamon.view.battle
 
 import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.model.battle.BattleState
+import it.unibo.skalamon.model.battle.{BattleState, Trainer}
 import it.unibo.skalamon.view.screen.BattleScreen
 
 trait BattleView:
@@ -38,15 +38,21 @@ object BattleView:
       */
     override def update(battleState: BattleState): Unit =
       val trainers = battleState.trainers
-      if (trainers.size != BattleScreen.playerNumber) {
+      if (trainers.size != BattleScreen.playerNumber) then
         throw new IllegalArgumentException(
           s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
         )
-      }
 
-      val player = trainers(0)
-      val opponent = trainers(1)
+      val Seq(player, opponent) = trainers
+
+      def teamWithoutInField(trainer: Trainer) =
+        trainer.team.filterNot(
+          _.base.name == trainer.inField.map(_.base.name).getOrElse("")
+        )
+
+      val pTeam = teamWithoutInField(player)
+      val oTeam = teamWithoutInField(opponent)
 
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
-      screen.setPokemonPool(player.team, opponent.team)
+      screen.setPokemonPool(pTeam, oTeam)
