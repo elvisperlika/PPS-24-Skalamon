@@ -52,8 +52,8 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Burn, 1)),
     Set(
-      AssignedStatus(PerishSong, 4),
-      AssignedStatus(AquaRingIngrain, 3),
+      AssignedStatus(Substitute, 4),
+      AssignedStatus(ProtectEndure, 3),
       AssignedStatus(Substitute, 8)
     )
   )
@@ -108,9 +108,9 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Sleep, 4)),
     Set(
-      AssignedStatus(Torment, 4),
-      AssignedStatus(Trapped, 3),
-      AssignedStatus(Encore, 8)
+      AssignedStatus(Flinch, 4),
+      AssignedStatus(ProtectEndure, 3),
+      AssignedStatus(Yawn, 8)
     )
   )
 
