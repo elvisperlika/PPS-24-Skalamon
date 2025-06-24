@@ -27,8 +27,7 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
       hooks = Map(TurnStageEvents.Started -> behavior)
     )
 
-    ability.hookAll(
-      battle.eventManager,
+    ability.hookAll(battle)(
       target,
       source,
     )

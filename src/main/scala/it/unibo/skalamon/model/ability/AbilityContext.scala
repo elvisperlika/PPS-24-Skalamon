@@ -1,13 +1,12 @@
 package it.unibo.skalamon.model.ability
 
-import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+import it.unibo.skalamon.model.battle.{Battle, hookBattleStateUpdate}
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.behavior.{
   Behavior,
   BehaviorsContext,
   WithBehaviors
 }
-import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** Represents the context of an ability that can be triggered in a battle.
@@ -57,20 +56,20 @@ extension (ability: Ability)
   /** Hooks all hooks of the ability to an event manager, allowing it to execute
     * behaviors when specific events occur in the battle.
     *
-    * @param eventManager
-    *   The event manager that will handle the events.
+    * @param battle
+    *   The battle in which the ability is being used. Its event manager will be
+    *   used to register the hooks.
     * @param target
     *   The target Pokémon of the ability.
     * @param source
     *   The source Pokémon that owns the ability.
     */
-  def hookAll(
-      eventManager: EventManager,
+  def hookAll(battle: Battle)(
       target: BattlePokemon,
       source: BattlePokemon
   ): Unit =
     ability.hooks.foreach { case (eventType, behavior) =>
-      eventManager.hookBattleStateUpdate(eventType): (battleState, _) =>
+      battle.hookBattleStateUpdate(eventType): (battleState, _) =>
         val context = createContext(
           _.hooks(eventType),
           target,

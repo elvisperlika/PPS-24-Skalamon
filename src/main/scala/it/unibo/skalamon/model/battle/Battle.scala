@@ -1,13 +1,18 @@
 package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.model.data.Stacks.Stack
-import it.unibo.skalamon.model.event.{EventManager, EventType, TurnStageEvents}
+import it.unibo.skalamon.model.event.{
+  EventManager,
+  EventManagerProvider,
+  EventType,
+  TurnStageEvents
+}
 
 /** A battle between trainers.
   * @param trainers
   *   The trainers participating in the battle.
   */
-case class Battle(trainers: List[Trainer]):
+case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
 
   /* Stack to maintain battle's turn history */
   private var turnHistory: Stack[Turn] = Stack.empty
@@ -16,7 +21,7 @@ case class Battle(trainers: List[Trainer]):
   def currentTurn: Option[Turn] = turnHistory.peek
 
   /** The event manager for handling battle/turn events. */
-  val eventManager = EventManager()
+  override val eventManager = EventManager()
 
   /** Starts the battle by initializing the first turn.
     */

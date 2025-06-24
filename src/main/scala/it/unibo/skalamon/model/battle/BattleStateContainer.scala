@@ -3,6 +3,7 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.model.event.{
   BattleStateEvents,
   EventManager,
+  EventManagerProvider,
   EventType
 }
 
@@ -46,26 +47,26 @@ def setBattleState(t: BattleStateContainer, state: BattleState)(using
   turn.state = turn.state.copy(snapshot = state)
   eventManager.notify(BattleStateEvents.Changed of (previousState, state))
 
-extension (eventManager: EventManager)
+extension (container: BattleStateContainer with EventManagerProvider)
   /** Hooks a callback to be executed whenever the battle state is updated
-    * through the specified event type.
-    *
-    * When the event is triggered, the callback will receive the current battle
-    * state, which can be altered (through an immutable copy) and returned to
-    * mutate the battle state within the container.
-    *
-    * @param eventType
-    *   The type of event to watch for.
-    * @param callback
-    *   The function to execute with the current battle state and the data
-    *   associated with the event.
-    */
-  def hookBattleStateUpdate[T <: BattleStateContainer](eventType: EventType[T])(
-      callback: (BattleState, T) => BattleState
+   * through the specified event type.
+   *
+   * When the event is triggered, the callback will receive the current battle
+   * state, which can be altered (through an immutable copy) and returned to
+   * mutate the battle state within the container.
+   *
+   * @param eventType
+   *   The type of event to watch for.
+   * @param callback
+   *   The function to execute with the current battle state and the data
+   *   associated with the event.
+   */
+  def hookBattleStateUpdate[T](eventType: EventType[T])(
+    callback: (BattleState, T) => BattleState
   ): Unit =
-    given EventManager = eventManager
-    eventManager.watch(eventType) { data =>
-      val currentState = extractBattleState(data)
+    given EventManager = container.eventManager
+    container.eventManager.watch(eventType) { data =>
+      val currentState = extractBattleState(container)
       val updatedState = callback(currentState, data)
-      setBattleState(data, updatedState)
+      setBattleState(container, updatedState)
     }
