@@ -1,44 +1,42 @@
 package it.unibo.skalamon.view.battle
 
 import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.model.battle.{BattleState, Trainer}
+import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.view.screen.BattleScreen
 
 trait BattleView:
 
-  /** Update turn index.
-    * @param i
-    *   Is the Turn's index.
-    */
-  def updateTurn(i: Int): Unit
-
-  /** Show users available actions.
-    * @param map
-    *   Map: Trainer -> Pokémon's in Field actions
-    */
-  def showActions(map: Map[Trainer, List[Action]]): Unit
-
-  /** Update Pokémon in field.
+  /** Update the whole battle view.
     * @param battleState
     *   The current state of the battle.
     */
-  def updatePokemon(battleState: BattleState): Unit
+  def update(battleState: BattleState): Unit
 
+/** Provides a factory method to create a new BattleView instance.
+  */
 object BattleView:
   def apply(screen: BattleScreen, controllerProxy: ActionBuffer): BattleView =
     new BattleViewImpl(screen, controllerProxy)
 
+  /** Create a new BattleView.
+    * @param screen
+    *   The screen to be used for the battle view.
+    * @param controllerProxy
+    *   The action buffer to be used for the battle view.
+    * @return
+    *   A new instance of BattleView.
+    */
   private class BattleViewImpl(
       screen: BattleScreen,
       _controllerProxy: ActionBuffer
   ) extends BattleView:
     private val controllerProxy = _controllerProxy
 
-    override def updateTurn(i: Int): Unit = ???
-
-    override def showActions(map: Map[Trainer, List[Action]]): Unit = ???
-
-    override def updatePokemon(battleState: BattleState): Unit =
+    /** Update the whole battle view.
+      * @param battleState
+      *   The current state of the battle.
+      */
+    override def update(battleState: BattleState): Unit =
       val trainers = battleState.trainers
       if (trainers.size != BattleScreen.playerNumber) {
         throw new IllegalArgumentException(
