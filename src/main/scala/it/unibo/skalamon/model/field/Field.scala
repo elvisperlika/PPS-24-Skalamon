@@ -1,16 +1,14 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.field.FieldEffectMixin.{Room, Terrain, Weather}
 import it.unibo.skalamon.model.field.fieldside.FieldSide
 
-/* temporary classes start */
-case class Trainer(name: String)
-/* temporary classes end */
-
 /** Immutable [[Field]] is the zone Pokémon battle. [[Field]] has as many
   * [[FieldSide]] as Pokémon in battle, and it's dynamic environment with
-  * dynamic creation of [[Room]], [[Terrain]] or [[Weather]] caused by Pokémon
+  * dynamic creation of [[Room]], [[Terrain]] or [[Weather2]] caused by Pokémon
   * moves.
+  *
   * @param sides
   *   Specific piece of the battlefield where Pokémon in battle is located
   * @param terrain
@@ -18,7 +16,7 @@ case class Trainer(name: String)
   * @param room
   *   The active [[Room]], if any
   * @param weather
-  *   The active [[Weather]], if any
+  *   The active [[Weather2]], if any
   */
 case class Field(
     sides: Map[Trainer, FieldSide],
@@ -60,12 +58,19 @@ class FieldBuilder:
     */
   def setRoom(r: Room): Unit = room = Some(r)
 
-  /** [[Weather]] setter.
+  /** [[Weather2]] setter.
+    *
     * @param w
     *   Weather to apply
     */
   def setWeather(w: Weather): Unit = weather = Some(w)
 
+  /** Generate a battlefield.
+    * @param sides
+    *   One Side for every player
+    * @return
+    *   Battlefield
+    */
   def build(sides: Map[Trainer, FieldSide]): Field =
     Field(sides, terrain, room, weather)
 

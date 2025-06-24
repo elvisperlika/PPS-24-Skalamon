@@ -1,21 +1,17 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.types.Type
 
 object FieldEffectMixin:
 
-  /** [[FieldEffect]] mixin to add [[PokemonRule]]s to execute on applying of
-    * the [[FieldEffect]] and to execute at every turn until the [[FieldEffect]]
-    * is expired.
+  /** [[FieldEffect]] mixin to add [[PokemonRule]]s to execute when an event is
+    * triggered.
     */
-  trait Rules:
-    /** [[PokemonRule]]s to be executed on [[FieldEffect]] creation turn.
+  trait PokemonRules:
+    /** List of [[Event]]s that trigger [[PokemonRule]]s.
       */
-    val onApply: List[PokemonRule]
-
-    /** [[PokemonRule]]s to be executed untile [[FieldEffect]] is expired.
-      */
-    val onTurns: List[PokemonRule]
+    val rules: List[(EventType[_], PokemonRule)]
 
   /** [[FieldEffect]] mixin to add [[Type]] modifiers that have to be applied to
     * Pokémon moves with defined types.
@@ -27,14 +23,12 @@ object FieldEffectMixin:
 
   /** [[FieldEffect]] represent a dynamic state of the battlefield.
     */
-  trait FieldEffect:
+  trait FieldEffect(val creationTurn: Int):
     val description: String
-    val creationTurn: Int
 
   /** [[FieldEffect]] mixin to add duration.
     */
-  trait Expirable(creationTurn: Int):
-    val duration: Int
+  trait Expirable(creationTurn: Int, duration: Int):
 
     /** Checks if the field effect has expired based on the current turn.
       *
@@ -49,35 +43,19 @@ object FieldEffectMixin:
   /** Represents a weather condition affecting the battlefield. Influences rules
     * and type effectiveness.
     */
-  trait Weather extends FieldEffect with Rules with TypesModifier
+  trait Weather
 
   /** Represents a terrain effect that alters the battlefield. Can modify type
     * interactions and apply rules over time.
     */
-  trait Terrain extends FieldEffect with Rules with TypesModifier
+  trait Terrain
 
   /** Represents a special room effect on the battlefield. Does not influence
     * types, but can change other mechanics.
     */
-  trait Room extends FieldEffect
+  trait Room
 
-  abstract class BaseWeather(
-      override val description: String,
-      override val creationTurn: Int,
-      override val onApply: List[PokemonRule],
-      override val onTurns: List[PokemonRule],
-      override val typesModifier: Map[Type, Double]
-  ) extends Weather
-
-  abstract class BaseTerrain(
-      override val description: String,
-      override val creationTurn: Int,
-      override val onApply: List[PokemonRule],
-      override val onTurns: List[PokemonRule],
-      override val typesModifier: Map[Type, Double]
-  ) extends Terrain
-
-  abstract class BaseRoom(
-      override val description: String,
-      override val creationTurn: Int
-  ) extends Room
+  /** Represent an effect that afflict only one side of the battlefield,
+    * basically only one Pokémon.
+    */
+  trait SideCondition
