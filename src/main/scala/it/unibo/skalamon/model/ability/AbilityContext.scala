@@ -8,16 +8,16 @@ import it.unibo.skalamon.model.behavior.{
 }
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
-/** Represents the context of a move that can be executed in a battle.
+/** Represents the context of an ability that can be triggered in a battle.
   *
   * @param origin
-  *   The move this context is associated with.
+  *   The ability this context is associated with.
   * @param target
-  *   The target Pokémon of the move.
+  *   The target Pokémon of the ability.
   * @param source
-  *   The source Pokémon that is executing the move.
+  *   The source Pokémon that is triggering the ability.
   * @param behaviors
-  *   Ordered behaviors that will be applied during the execution of the move,
+  *   Ordered behaviors that will be applied during the execution of the ability,
   *   associated with their modifiers.
   */
 case class AbilityContext(
