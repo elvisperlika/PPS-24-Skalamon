@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.behavior
 
 import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.visitor.BattleStateUpdaterBehaviorVisitor
-import it.unibo.skalamon.model.event.{BattleStateEvents, EventManager}
+import it.unibo.skalamon.model.event.{BattleStateEvents, EventManager, event}
 import it.unibo.skalamon.model.pokemon.*
 
 /** Represents the context of an executable procedure in a battle.
@@ -32,7 +32,8 @@ trait BehaviorsContext[O] extends WithBehaviors:
     * @param eventManager
     *   The event manager to notify about changes in the battle state.
     * @return
-    *   A new battle state with the behaviors applied.
+    *   A new battle state with the behaviors applied, and each behavior's event
+    *   queued into the battle state's event queue.
     */
   def apply(state: BattleState)(using
       eventManager: EventManager = EventManager()
@@ -40,10 +41,15 @@ trait BehaviorsContext[O] extends WithBehaviors:
     behaviors.foldLeft(state) { case (currentState, (behavior, modifiers)) =>
       val visitor =
         BattleStateUpdaterBehaviorVisitor(currentState, this, modifiers)
-      val newState = behavior.accept(visitor)
+
+      val newState =
+        behavior.accept(visitor)
+          .copy(eventQueue = currentState.eventQueue.enqueue(behavior.event))
+
       eventManager.notify(BattleStateEvents.Changed of (
         currentState,
         newState
       ))
+
       newState
     }
