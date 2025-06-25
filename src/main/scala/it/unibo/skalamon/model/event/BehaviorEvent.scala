@@ -11,6 +11,13 @@ class BehaviorEvent[B <: Behavior: ClassTag] extends EventType[B]:
   /** The type of the event. */
   val tag: ClassTag[B] = classTag[B]
 
+  override def equals(obj: Any): Boolean =
+    obj match
+      case that: BehaviorEvent[_] => this.tag == that.tag
+      case _                      => false
+
+  override def hashCode(): Int = tag.hashCode()
+
 extension [T <: Behavior: ClassTag](behavior: T)
 
   /** Creates an event of this behavior type.
