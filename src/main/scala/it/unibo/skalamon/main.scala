@@ -2,12 +2,11 @@ package it.unibo.skalamon
 
 import it.unibo.skalamon.model.ability.Ability
 import it.unibo.skalamon.model.behavior.kind.Stats
-import it.unibo.skalamon.model.battle.Trainer
+import it.unibo.skalamon.model.battle.*
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
 import it.unibo.skalamon.model.status.*
-import it.unibo.skalamon.model.battle.BattleState
-import it.unibo.skalamon.controller.battle.action.*
+import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.types.TypesCollection.*
 import it.unibo.skalamon.view.*
 import it.unibo.skalamon.view.battle.BattleView
@@ -101,15 +100,18 @@ def main(): Unit =
   )
 
   val trainer1 = Trainer("Bob", List(pokemon1), Option(pokemon1))
-  //val trainer1 = Trainer("Bob", List(pokemon1))
+  // val trainer1 = Trainer("Bob", List(pokemon1))
   val trainer2 = Trainer("Alice", List(pokemon2, pokemon3), Option(pokemon2))
 
   val mainView: MainView = MainView()
   mainView.setupView()
 
-  val battleState = BattleState(List(trainer1, trainer2))
-  val actionBuffer = ActionBuffer(2)
+  val battle: Battle = Battle(List(trainer1, trainer2))
 
-  val battleView = BattleView(mainView.getPlayScreen(), actionBuffer)
+  val battleView = BattleView(mainView.getPlayScreen())
 
-  battleView.update(battleState)
+  battle.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
+    battleView.update(battleState)
+    battleState
+
+  battle.start()
