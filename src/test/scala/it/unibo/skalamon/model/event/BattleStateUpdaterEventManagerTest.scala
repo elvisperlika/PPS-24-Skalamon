@@ -11,10 +11,10 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-/**
- * Tests for [[EventManager]] updating the current [[BattleState]].
- */
-class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matchers with BeforeAndAfterEach:
+/** Tests for [[EventManager]] updating the current [[BattleState]].
+  */
+class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
+    with should.Matchers with BeforeAndAfterEach:
   private var battle = Battle(List(trainerAlice, trainerBob))
 
   override def beforeEach(): Unit =
@@ -23,7 +23,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
   "EventManager" should "be able to read the current battle state" in:
     var notified = false
 
-    battle.eventManager.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
+    battle.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
       notified = true
       battleState.trainers shouldBe battle.trainers
       battleState
@@ -36,9 +36,10 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
   it should "be able to update the current battle state" in:
     var notified = false
 
-    battle.eventManager.hookBattleStateUpdate(TurnStageEvents.WaitingForActions): (battleState, _) =>
-      notified = true
-      battleState.copy(trainers = List.empty)
+    battle.hookBattleStateUpdate(TurnStageEvents.WaitingForActions):
+      (battleState, _) =>
+        notified = true
+        battleState.copy(trainers = List.empty)
 
     battle.start()
     battle.currentTurn.get.state.stage shouldBe TurnStage.Started
@@ -52,7 +53,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
   it should "trigger a state changed event after updating" in:
     var notified = false
 
-    battle.eventManager.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
+    battle.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
       battleState.copy(trainers = List.empty)
 
     battle.eventManager.watch(BattleStateEvents.Changed): (previous, current) =>
@@ -62,4 +63,3 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
 
     battle.start()
     notified shouldBe true
-

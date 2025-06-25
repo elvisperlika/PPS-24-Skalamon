@@ -4,18 +4,13 @@ import it.unibo.skalamon.controller.battle.GameState
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
-import it.unibo.skalamon.model.event.{
-  BattleConfiguration,
-  EventManager,
-  EventType,
-  TurnStageEvents
-}
+import it.unibo.skalamon.model.event.*
 
 /** A battle between trainers.
   * @param trainers
   *   The trainers participating in the battle.
   */
-case class Battle(trainers: List[Trainer]):
+case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
 
   var gameState: GameState = InProgress
 
@@ -29,7 +24,7 @@ case class Battle(trainers: List[Trainer]):
 
   /** The event manager for handling battle/turn events.
     */
-  val eventManager: EventManager =
+  override val eventManager: EventManager =
     new EventManager with BattleConfiguration
 
   eventManager.watch(Finished) { maybeWinner =>
