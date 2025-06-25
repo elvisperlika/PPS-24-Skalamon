@@ -3,6 +3,7 @@ package it.unibo.skalamon.model.event
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.battle.TurnStage.ActionsReceived
+import it.unibo.skalamon.model.behavior.kind.HealthBehavior
 import it.unibo.skalamon.model.behavior.visitor.BattleStateUpdaterBehaviorVisitor
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
 import it.unibo.skalamon.model.event.TurnStageEvents.{Ended, ExecutingActions}
@@ -24,7 +25,7 @@ trait BattleConfiguration extends EventManager:
     t.state.stage match
       case ActionsReceived(actionBuffer) =>
         val actions = t.state.snapshot.trainers.flatMap(actionBuffer.getAction)
-        val switchMoves = actions.collect { case SwitchAction() =>
+        val switches = actions.collect { case SwitchAction() =>
           SwitchAction()
         }
         val moveActions = actions.collect { case MoveAction(m) => m }
@@ -32,21 +33,18 @@ trait BattleConfiguration extends EventManager:
         import it.unibo.skalamon.model.move.MoveContext
         implicit val moveOrdering: Ordering[MoveContext] =
           Ordering.by(_.origin.move.priority)
-        val sortedMoveContexts = moveActions.sorted
+        val sortedMoves = moveActions.sorted
 
         // TODO: execute all switches
 
-        // next, execute moves
-        var newBattleState = t.state.snapshot
-        sortedMoveContexts.foreach { moveContext =>
-          val bsv = BattleStateUpdaterBehaviorVisitor(
-            current = t.state.snapshot,
-            context = ???,
-            modifiers = ???
+        var newState = t.state.snapshot
+        for move <- sortedMoves; (behavior, mod) <- move.behaviors do
+          val visitor = BattleStateUpdaterBehaviorVisitor(
+            current = newState,
+            context = move,
+            modifiers = mod
           )
-          moveContext.behaviors.foreach { (behavior, modifier) =>
-            
-          }
-        }
+          newState = behavior.accept(visitor)
+
       case _ => ()
   }
