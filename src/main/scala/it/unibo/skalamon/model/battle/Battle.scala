@@ -1,12 +1,10 @@
 package it.unibo.skalamon.model.battle
 
+import it.unibo.skalamon.controller.battle.GameState
+import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.model.data.Stacks.Stack
-import it.unibo.skalamon.model.event.{
-  EventManager,
-  EventManagerProvider,
-  EventType,
-  TurnStageEvents
-}
+import it.unibo.skalamon.model.event.BattleStateEvents.Finished
+import it.unibo.skalamon.model.event.*
 
 /** A battle between trainers.
   * @param trainers
@@ -14,14 +12,24 @@ import it.unibo.skalamon.model.event.{
   */
 case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
 
-  /* Stack to maintain battle's turn history */
+  var gameState: GameState = InProgress
+
+  /** Stack to maintain battle's turn history
+    */
   private var turnHistory: Stack[Turn] = Stack.empty
 
-  /** The current turn of the battle. */
+  /** The current turn of the battle.
+    */
   def currentTurn: Option[Turn] = turnHistory.peek
 
-  /** The event manager for handling battle/turn events. */
-  override val eventManager = EventManager()
+  /** The event manager for handling battle/turn events.
+    */
+  override val eventManager: EventManager =
+    new EventManager with BattleConfiguration
+
+  eventManager.watch(Finished) { maybeWinner =>
+    gameState = GameOver(maybeWinner)
+  }
 
   /** Starts the battle by initializing the first turn.
     */
@@ -47,7 +55,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
         turnHistory = turnHistory push Turn(turn.state.copy(stage = Started))
 
   /** Sets the stage of the current turn, and notifies the event manager of the
-    * change via the approriate [[TurnStageEvents]].
+    * change via the appropriate [[TurnStageEvents]].
     *
     * @param stage
     *   The new stage to set for the turn.

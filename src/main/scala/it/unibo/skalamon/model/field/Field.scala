@@ -79,11 +79,12 @@ class FieldBuilder:
   * @param trainers
   *   Trainers list
   * @param init
-  *   FieldBuilder configuration
+  *   FieldBuilder configuration - by default is empty
   * @return
   *   Field without [[FieldSide]]s
   */
-def field(trainers: List[Trainer])(init: FieldBuilder => Unit): Field =
+def field(trainers: List[Trainer])(init: FieldBuilder => Unit =
+  _ => ()): Field =
   val builder = new FieldBuilder
   init(builder)
   builder.build(trainers.map(t => t -> FieldSide()).toMap)
