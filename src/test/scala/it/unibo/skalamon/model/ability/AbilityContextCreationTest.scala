@@ -1,6 +1,7 @@
 package it.unibo.skalamon.model.ability
 
 import it.unibo.skalamon.model.ability.createContext
+import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.behavior.BehaviorTestUtils.getPlainBehaviors
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.*
@@ -15,7 +16,7 @@ class AbilityContextCreationTest extends AnyFlatSpec with should.Matchers:
   private val target = PokemonTestUtils.simplePokemon1
   private val source = PokemonTestUtils.simplePokemon2
 
-  private object TestEventType extends EventType[Int]
+  private object TestEventType extends EventType[Turn]
 
   "Ability with one hook" should "create a context with that behavior" in:
     val behavior = SingleHitBehavior(10)

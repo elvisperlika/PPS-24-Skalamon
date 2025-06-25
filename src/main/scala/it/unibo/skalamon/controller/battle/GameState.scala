@@ -2,22 +2,17 @@ package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.model.battle.Trainer
 
+/** Represents the current state of a battle.
+  */
 enum GameState:
+
+  /** The battle is still ongoing.
+    */
   case InProgress
-  case GameOver(w: Trainer)
 
-  /** Check if battle is finished.
-    * @return
-    *   True if battle is finished
+  /** The battle has ended.
+    *
+    * @param w
+    *   An optional winning [[Trainer]]. It is `None` in case of a draw.
     */
-  def isGameOver: Boolean = this match
-    case GameOver(w) => true
-    case _           => false
-
-  /** Winner getter.
-    * @return
-    *   Optionally the Winner if battle is finished.
-    */
-  def getWinner: Option[Trainer] = this match
-    case GameOver(w) => Some(w)
-    case _           => None
+  case GameOver(w: Option[Trainer])

@@ -28,3 +28,8 @@ class EventManager:
   def notify[T](event: Event[T]): Unit =
     watchers.get(event.eventType) foreach:
       _.foreach(callback => callback(event.data))
+
+/** A provider of a constant [[EventManager]] instance. */
+trait EventManagerProvider:
+  /** The event manager instance to use for event handling. */
+  val eventManager: EventManager

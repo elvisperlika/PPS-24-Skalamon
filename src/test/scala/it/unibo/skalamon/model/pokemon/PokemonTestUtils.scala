@@ -58,6 +58,21 @@ object PokemonTestUtils:
     )
   )
 
+  /** This Pokémon is KO.
+    */
+  val simplePokemon1ko: BattlePokemon = BattlePokemon(
+    basePokemon1,
+    levelPokemon1,
+    currentHP = 0,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option(AssignedStatus(Burn, 1)),
+    Set(
+      AssignedStatus(Substitute, 4),
+      AssignedStatus(ProtectEndure, 3),
+      AssignedStatus(Substitute, 8)
+    )
+  )
+
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
@@ -101,6 +116,7 @@ object PokemonTestUtils:
     weightKg = 8.5,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
+
   private val simplePokemon3: BattlePokemon = BattlePokemon(
     basePokemon3,
     levelPokemon1,
