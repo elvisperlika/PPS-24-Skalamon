@@ -6,10 +6,17 @@ import scala.reflect.{ClassTag, classTag}
 
 /** An [[EventType]] that represents the application of a specific behavior onto
   * a [[it.unibo.skalamon.model.behavior.BehaviorsContext]].
+  * @param runtimeClass
+  *   Optional runtime class of the behavior type to override the
+  *   statically-defined type [[B]].
+  * @tparam B
+  *   The type of the behavior that this event represents.
   */
-class BehaviorEvent[B <: Behavior: ClassTag] extends EventType[B]:
+class BehaviorEvent[B <: Behavior: ClassTag](
+    runtimeClass: Option[Class[? <: B]] = None
+) extends EventType[B]:
   /** The type of the event. */
-  val tag: ClassTag[B] = classTag[B]
+  val tag: ClassTag[B] = runtimeClass.map(ClassTag(_)).getOrElse(classTag[B])
 
   override def equals(obj: Any): Boolean =
     obj match
@@ -28,4 +35,4 @@ extension [T <: Behavior: ClassTag](behavior: T)
     * @return
     *   An event of the behavior type.
     */
-  def event: Event[T] = BehaviorEvent[T] of behavior
+  def event: Event[T] = BehaviorEvent[T](Some(behavior.getClass)) of behavior

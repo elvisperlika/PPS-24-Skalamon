@@ -18,7 +18,7 @@ class BehaviorEventsTest extends AnyFlatSpec with should.Matchers with BeforeAnd
     notified = false
 
   "Behaviors" should "trigger their own event" in:
-    eventManager.watch(BehaviorEvent[SingleHitBehavior]) { behavior =>
+    eventManager.watch(BehaviorEvent[SingleHitBehavior]()) { behavior =>
       notified = true
       behavior.power shouldBe hitBehavior.power
     }
@@ -26,7 +26,7 @@ class BehaviorEventsTest extends AnyFlatSpec with should.Matchers with BeforeAnd
     notified shouldBe true
 
   "EventManager" should "not notify for different behavior types" in:
-    eventManager.watch(BehaviorEvent[StatusBehavior]) { _ =>
+    eventManager.watch(BehaviorEvent[StatusBehavior]()) { _ =>
       notified = true
     }
     eventManager.notify(hitBehavior.event)

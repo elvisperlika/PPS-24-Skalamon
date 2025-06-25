@@ -71,7 +71,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
     val behavior = DamageBehavior(10)
     var notified = false
 
-    battle.eventManager.watch(BehaviorEvent[DamageBehavior]): _ =>
+    battle.eventManager.watch(BehaviorEvent[DamageBehavior]()): _ =>
       notified = true
 
     val move =
@@ -89,7 +89,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
 
     val newState = context(battle.currentTurn.get.state.snapshot)
     newState.eventQueue.size shouldBe 1
-    newState.eventQueue.dequeue._1.eventType shouldEqual BehaviorEvent[DamageBehavior]
+    newState.eventQueue.dequeue._1.eventType shouldEqual BehaviorEvent[DamageBehavior]()
 
     newState.notifyEventQueue(battle.eventManager).eventQueue shouldBe empty
     notified shouldBe true
