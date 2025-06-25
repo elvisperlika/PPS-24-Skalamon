@@ -3,15 +3,18 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.model.event.TurnStageEvents.Ended
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.{
-  trainerAlice,
-  trainerGio
+  simplePokemon1ko,
+  trainerAlice
 }
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
 
-  /** NB: trainerGio has all team KO, trainerAlice not
+  def trainerAsh: Trainer =
+    Trainer("Ash", simplePokemon1ko :: Nil)
+
+  /** NB: trainerAsh has all team KO, trainerAlice not
     */
 
   "Battle Event Manager" should "set game state as InProgress if there isn't a winner or a draw" in:
@@ -24,7 +27,7 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
 
   it should "set game state as GameOver when there is only on trainer with at least a Pokémon alive" in:
     val battleFinishedWithWinner: Battle =
-      Battle(trainerAlice :: trainerGio :: Nil)
+      Battle(trainerAlice :: trainerAsh :: Nil)
     battleFinishedWithWinner.start()
     battleFinishedWithWinner.eventManager.notify(
       Ended of battleFinishedWithWinner.currentTurn.get
@@ -33,7 +36,7 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
 
   it should "set game state as GameOver when there is a draw" in:
     val battleFinishedWithDraw: Battle =
-      Battle(trainerGio :: trainerGio :: Nil)
+      Battle(trainerAsh :: trainerAsh :: Nil)
     battleFinishedWithDraw.start()
     battleFinishedWithDraw.eventManager.notify(
       Ended of battleFinishedWithDraw.currentTurn.get
