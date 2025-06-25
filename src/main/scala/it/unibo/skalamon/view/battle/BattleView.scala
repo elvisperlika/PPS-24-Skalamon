@@ -17,8 +17,8 @@ trait BattleView:
 /** Provides a factory method to create a new BattleView instance.
   */
 object BattleView:
-  def apply(screen: BattleScreen, controllerProxy: ActionBuffer): BattleView =
-    new BattleViewImpl(screen, controllerProxy)
+  def apply(screen: BattleScreen): BattleView =
+    new BattleViewImpl(screen)
 
   /** Create a new BattleView.
     * @param screen
@@ -29,11 +29,8 @@ object BattleView:
     *   A new instance of BattleView.
     */
   private class BattleViewImpl(
-      screen: BattleScreen,
-      _controllerProxy: ActionBuffer
+      screen: BattleScreen
   ) extends BattleView:
-    private val controllerProxy = _controllerProxy
-
     /** Update the whole battle view.
       * @param battleState
       *   The current state of the battle.
@@ -60,7 +57,7 @@ object BattleView:
 
       val pMoves: List[BattleMove] =
         player.inField.map(_.moves).getOrElse(List.empty)
-        
+
       val oMoves: List[BattleMove] =
         opponent.inField.map(_.moves).getOrElse(List.empty)
 
