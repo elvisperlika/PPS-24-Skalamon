@@ -8,6 +8,7 @@ import it.unibo.skalamon.model.pokemon.{BattlePokemon, PokemonTestUtils}
 import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
+import it.unibo.skalamon.model.field.field
 
 /** */
 class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers:
@@ -17,7 +18,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers:
   private val source = alice.team.head
   private val target = bob.team.head
 
-  private val state = BattleState(alice :: bob :: Nil)
+  private val state = BattleState(trainers = alice :: bob :: Nil, field(alice :: bob :: Nil)())
 
   private val context = BehaviorTestUtils.context(
     target = target,
