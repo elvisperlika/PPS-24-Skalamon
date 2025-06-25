@@ -20,7 +20,7 @@ class BehaviorEvent[B <: Behavior: ClassTag](
 
   override def equals(obj: Any): Boolean =
     obj match
-      case that: BehaviorEvent[_] => this.tag == that.tag
+      case that: BehaviorEvent[_] => that.tag.runtimeClass.isAssignableFrom(this.tag.runtimeClass)
       case _                      => false
 
   override def hashCode(): Int = tag.hashCode()
