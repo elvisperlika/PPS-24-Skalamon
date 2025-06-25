@@ -6,6 +6,9 @@ import it.unibo.skalamon.model.battle.{
   TurnStage,
   hookBattleStateUpdate
 }
+import it.unibo.skalamon.model.behavior.kind.DamageBehavior
+import it.unibo.skalamon.model.move.{BattleMove, Move, createContext}
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
@@ -62,4 +65,31 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
       current.trainers shouldBe List.empty
 
     battle.start()
+    notified shouldBe true
+
+  it should "enqueue behavior events" in:
+    val behavior = DamageBehavior(10)
+    var notified = false
+
+    battle.eventManager.watch(BehaviorEvent[DamageBehavior]): _ =>
+      notified = true
+
+    val move =
+      Move(
+        "TestMove",
+        success = behavior
+      )
+    val context = BattleMove(move, pp = 10).createContext(
+      _.success,
+      PokemonTestUtils.simplePokemon1,
+      PokemonTestUtils.simplePokemon2
+    )
+
+    battle.start()
+
+    val newState = context(battle.currentTurn.get.state.snapshot)
+    newState.eventQueue.size shouldBe 1
+    newState.eventQueue.dequeue._1.eventType shouldEqual BehaviorEvent[DamageBehavior]
+
+    newState.notifyEventQueue(battle.eventManager).eventQueue shouldBe empty
     notified shouldBe true

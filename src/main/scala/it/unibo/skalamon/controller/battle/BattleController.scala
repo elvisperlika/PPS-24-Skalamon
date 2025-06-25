@@ -57,6 +57,7 @@ private class BattleControllerImpl(override val battle: Battle)
       case Some(turn) if turn.state.stage == WaitingForActions =>
         this.actionBuffer = actionBuffer.register(trainer, action)
         if actionBuffer.isFull then
+          given Turn = turn
           battle.setStage(ActionsReceived(actionBuffer))
           this.actionBuffer = actionBuffer.clear()
       case _ => throw new IllegalStateException(

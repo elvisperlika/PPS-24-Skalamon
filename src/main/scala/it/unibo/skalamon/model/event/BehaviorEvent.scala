@@ -18,6 +18,9 @@ class BehaviorEvent[B <: Behavior: ClassTag] extends EventType[B]:
 
   override def hashCode(): Int = tag.hashCode()
 
+  override def toString: String =
+    s"BehaviorEvent(${tag.runtimeClass.getSimpleName})"
+
 extension [T <: Behavior: ClassTag](behavior: T)
 
   /** Creates an event of this behavior type.
