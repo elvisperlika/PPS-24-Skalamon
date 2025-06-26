@@ -16,8 +16,6 @@ import java.util.UUID
   *   The base attributes of the Pokémon.
   * @param gender
   *   The gender of the Pokémon.
-  * @param level
-  *   The level of the Pokémon.
   * @param currentHP
   *   Current Health Points of the Pokémon.
   * @param moves
@@ -34,21 +32,12 @@ import java.util.UUID
 case class BattlePokemon(
     base: Pokemon,
     gender: Gender,
-    level: Int,
     currentHP: Int,
     moves: List[BattleMove],
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
     volatileStatus: Set[AssignedStatus[VolatileStatus]],
     id: UUID = UUID.randomUUID()
 ):
-
-  /** Return the current stats of the Pokémon, updated to it's level.
-    * @return
-    *   the current stats of the Pokémon.
-    */
-  def actualStats: Stats =
-    base.baseStats // TODO: for now, just return the base stats
-
   /** Return true if the Pokémon is still alive.
     * @return
     *   true if the Pokémon is still alive.

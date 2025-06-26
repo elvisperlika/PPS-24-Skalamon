@@ -30,7 +30,6 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
       possibleMoves = Nil
     ),
     gender = Male,
-    level = 1,
     currentHP = 100,
     moves = Nil,
     nonVolatileStatus = None,

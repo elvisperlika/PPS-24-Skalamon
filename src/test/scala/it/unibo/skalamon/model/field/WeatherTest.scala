@@ -35,7 +35,6 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       possibleMoves = Nil
     ),
     gender = Male,
-    level = 1,
     currentHP = 100,
     moves = Nil,
     nonVolatileStatus = None,
@@ -60,7 +59,6 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       possibleMoves = Nil
     ),
     gender = Female,
-    level = 5,
     currentHP = 80,
     moves = Nil,
     nonVolatileStatus = None,
