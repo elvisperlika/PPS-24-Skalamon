@@ -4,8 +4,8 @@ import it.unibo.skalamon.controller.battle.GameState
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
+import it.unibo.skalamon.model.event.config.BattleConfiguration
 import it.unibo.skalamon.model.event.{
-  BattleConfiguration,
   EventManager,
   EventType,
   TurnStageEvents
