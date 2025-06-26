@@ -49,12 +49,3 @@ object ExpirableSystem:
           case e: FieldEffectMixin.Weather with Expirable => e
         })
       )
-
-  extension (battlePokemon: BattlePokemon)
-    /** Return the same Pokémon without volatile Status if they're expired.
-      * @param t
-      *   Current turn index
-      * @return
-      *   Pokémon without expired volatile Status.
-      */
-    def removePokemonVolatileStatus(t: Int): BattlePokemon = ???
