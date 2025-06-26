@@ -6,15 +6,18 @@ import it.unibo.skalamon.model.battle.{
   TurnStage,
   hookBattleStateUpdate
 }
+import it.unibo.skalamon.model.behavior.kind.DamageBehavior
+import it.unibo.skalamon.model.move.{BattleMove, Move, createContext}
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-/**
- * Tests for [[EventManager]] updating the current [[BattleState]].
- */
-class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matchers with BeforeAndAfterEach:
+/** Tests for [[EventManager]] updating the current [[BattleState]].
+  */
+class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
+    with should.Matchers with BeforeAndAfterEach:
   private var battle = Battle(List(trainerAlice, trainerBob))
 
   override def beforeEach(): Unit =
@@ -23,7 +26,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
   "EventManager" should "be able to read the current battle state" in:
     var notified = false
 
-    battle.eventManager.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
+    battle.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
       notified = true
       battleState.trainers shouldBe battle.trainers
       battleState
@@ -36,9 +39,10 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
   it should "be able to update the current battle state" in:
     var notified = false
 
-    battle.eventManager.hookBattleStateUpdate(TurnStageEvents.WaitingForActions): (battleState, _) =>
-      notified = true
-      battleState.copy(trainers = List.empty)
+    battle.hookBattleStateUpdate(TurnStageEvents.WaitingForActions):
+      (battleState, _) =>
+        notified = true
+        battleState.copy(trainers = List.empty)
 
     battle.start()
     battle.currentTurn.get.state.stage shouldBe TurnStage.Started
@@ -52,7 +56,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
   it should "trigger a state changed event after updating" in:
     var notified = false
 
-    battle.eventManager.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
+    battle.hookBattleStateUpdate(TurnStageEvents.Started): (battleState, _) =>
       battleState.copy(trainers = List.empty)
 
     battle.eventManager.watch(BattleStateEvents.Changed): (previous, current) =>
@@ -63,3 +67,29 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec with should.Matcher
     battle.start()
     notified shouldBe true
 
+  it should "enqueue behavior events" in:
+    val behavior = DamageBehavior(10)
+    var notified = false
+
+    battle.eventManager.watch(BehaviorEvent[DamageBehavior]()): _ =>
+      notified = true
+
+    val move =
+      Move(
+        "TestMove",
+        success = behavior
+      )
+    val context = BattleMove(move, pp = 10).createContext(
+      _.success,
+      PokemonTestUtils.simplePokemon1,
+      PokemonTestUtils.simplePokemon2
+    )
+
+    battle.start()
+
+    val newState = context(battle.currentTurn.get.state.snapshot)
+    newState.eventQueue.size shouldBe 1
+    newState.eventQueue.dequeue._1.eventType shouldEqual BehaviorEvent[DamageBehavior]()
+
+    newState.notifyEventQueue(battle.eventManager).eventQueue shouldBe empty
+    notified shouldBe true
