@@ -20,7 +20,6 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
   var pikachu: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Pikachu",
-      gender = Male,
       types = Electric,
       baseStats = Stats(
         base = Map(
@@ -35,6 +34,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       weightKg = 10,
       possibleMoves = Nil
     ),
+    gender = Male,
     level = 1,
     currentHP = 100,
     moves = Nil,
@@ -45,7 +45,6 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
   var snowsaur: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Snowsaur",
-      gender = Female,
       types = Ice,
       baseStats = Stats(
         base = Map(
@@ -60,6 +59,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       weightKg = 85,
       possibleMoves = Nil
     ),
+    gender = Female,
     level = 5,
     currentHP = 80,
     moves = Nil,

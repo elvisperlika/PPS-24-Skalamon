@@ -30,7 +30,6 @@ object PokemonTestUtils:
 
   private val basePokemon1 = Pokemon(
     "Pikachu",
-    Male,
     List(Electric),
     baseStats = Stats(
       base = Map(
@@ -47,6 +46,7 @@ object PokemonTestUtils:
   )
   val simplePokemon1: BattlePokemon = BattlePokemon(
     basePokemon1,
+    Male,
     levelPokemon1,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
@@ -62,6 +62,7 @@ object PokemonTestUtils:
     */
   val simplePokemon1ko: BattlePokemon = BattlePokemon(
     basePokemon1,
+    Male,
     levelPokemon1,
     currentHP = 0,
     List(BattleMove(moveThunderShock, powerPoint)),
@@ -75,7 +76,6 @@ object PokemonTestUtils:
 
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
-    Male,
     List(Grass, Poison),
     baseStats = Stats(
       base = Map(
@@ -92,6 +92,7 @@ object PokemonTestUtils:
   )
   val simplePokemon2: BattlePokemon = BattlePokemon(
     basePokemon2,
+    Male,
     levelPokemon2,
     startingHP,
     List(BattleMove(moveElectric, powerPoint)),
@@ -101,7 +102,6 @@ object PokemonTestUtils:
 
   private val basePokemon3 = Pokemon(
     "Charmander",
-    Male,
     Fire,
     baseStats = Stats(
       base = Map(
@@ -119,6 +119,7 @@ object PokemonTestUtils:
 
   private val simplePokemon3: BattlePokemon = BattlePokemon(
     basePokemon3,
+    Male,
     levelPokemon1,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
