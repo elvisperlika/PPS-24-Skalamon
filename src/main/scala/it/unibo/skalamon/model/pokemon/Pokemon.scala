@@ -345,3 +345,5 @@ object Pokemon:
           Move("Electric")
         )
       )
+    case _ =>
+      throw new IllegalArgumentException(s"Unknown Pokémon name: $name")
