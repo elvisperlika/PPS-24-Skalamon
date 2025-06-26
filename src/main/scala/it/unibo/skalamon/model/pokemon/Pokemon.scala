@@ -345,5 +345,45 @@ object Pokemon:
           Move("Electric")
         )
       )
+    case "Bulbasaur" =>
+      Pokemon(
+        name = "Bulbasaur",
+        types = List(Grass, Poison),
+        baseStats = Stats(
+          base = Map(
+            Stat.Attack -> 49,
+            Stat.Defense -> 49,
+            Stat.SpecialAttack -> 65,
+            Stat.SpecialDefense -> 65,
+            Stat.Speed -> 45
+          )
+        ),
+        ability = Ability("Overgrow", Map.empty),
+        weightKg = 6.9,
+        possibleMoves = List(
+          Move("Thunder Shock"),
+          Move("Electric")
+        )
+      )
+    case "Charmander" =>
+      Pokemon(
+        name = "Charmander",
+        types = Fire,
+        baseStats = Stats(
+          base = Map(
+            Stat.Attack -> 52,
+            Stat.Defense -> 43,
+            Stat.SpecialAttack -> 60,
+            Stat.SpecialDefense -> 50,
+            Stat.Speed -> 65
+          )
+        ),
+        ability = Ability("Blaze", Map.empty),
+        weightKg = 8.5,
+        possibleMoves = List(
+          Move("Thunder Shock"),
+          Move("Electric")
+        )
+      )
     case _ =>
       throw new IllegalArgumentException(s"Unknown Pokémon name: $name")
