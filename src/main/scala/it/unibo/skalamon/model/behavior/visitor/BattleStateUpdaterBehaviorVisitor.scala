@@ -3,10 +3,7 @@ package it.unibo.skalamon.model.behavior.visitor
 import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.BehaviorsContext
 import it.unibo.skalamon.model.behavior.kind.*
-import it.unibo.skalamon.model.behavior.modifier.{
-  BehaviorModifiers,
-  TargetModifier
-}
+import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.{
   AssignedStatus,
@@ -26,15 +23,9 @@ import it.unibo.skalamon.model.status.{
   */
 class BattleStateUpdaterBehaviorVisitor(
     private val current: BattleState,
-    private val context: BehaviorsContext[_],
-    private val modifiers: BehaviorModifiers
-) extends BehaviorVisitor[BattleState]:
-
-  /** The target Pokémon, based on the context target and modifiers. */
-  private def target: BattlePokemon =
-    modifiers.target match
-      case Some(TargetModifier.Type.Self) => context.source
-      case _                              => context.target
+    override val context: BehaviorsContext[_],
+    override val modifiers: BehaviorModifiers
+) extends ContextualBehaviorVisitor[BattleState]:
 
   /** Returns a new battle state with [[target]] updated according to [[map]].
     */
