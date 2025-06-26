@@ -20,30 +20,11 @@ object PokemonTestUtils:
   private val moveThunderShock = Move("Thunder Shock")
   private val moveElectric = Move("Electric")
 
-  private val genericAbility = Ability("Static", Map.empty)
-  private val blazeAbility = Ability("Blaze", Map.empty)
-
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
 
-  private val basePokemon1 = Pokemon(
-    "Pikachu",
-    List(Electric),
-    baseStats = Stats(
-      base = Map(
-        Stat.Attack -> 55,
-        Stat.Defense -> 40,
-        Stat.SpecialAttack -> 50,
-        Stat.SpecialDefense -> 50,
-        Stat.Speed -> 90
-      )
-    ),
-    ability = genericAbility,
-    weightKg = 6.0,
-    possibleMoves = List(moveThunderShock, moveElectric)
-  )
   val simplePokemon1: BattlePokemon = BattlePokemon(
-    basePokemon1,
+    Pokemon("Pikachu"),
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
@@ -58,7 +39,7 @@ object PokemonTestUtils:
   /** This Pokémon is KO.
     */
   val simplePokemon1ko: BattlePokemon = BattlePokemon(
-    basePokemon1,
+    Pokemon("Pikachu"),
     Male,
     currentHP = 0,
     List(BattleMove(moveThunderShock, powerPoint)),
@@ -70,24 +51,8 @@ object PokemonTestUtils:
     )
   )
 
-  private val basePokemon2 = Pokemon(
-    "Bulbasaur",
-    List(Grass, Poison),
-    baseStats = Stats(
-      base = Map(
-        Stat.Attack -> 55,
-        Stat.Defense -> 40,
-        Stat.SpecialAttack -> 50,
-        Stat.SpecialDefense -> 50,
-        Stat.Speed -> 90
-      )
-    ),
-    ability = genericAbility,
-    weightKg = 6.0,
-    possibleMoves = List(moveThunderShock, moveElectric)
-  )
   val simplePokemon2: BattlePokemon = BattlePokemon(
-    basePokemon2,
+    Pokemon("Bulbasaur"),
     Male,
     startingHP,
     List(BattleMove(moveElectric, powerPoint)),
@@ -95,25 +60,8 @@ object PokemonTestUtils:
     Set.empty
   )
 
-  private val basePokemon3 = Pokemon(
-    "Charmander",
-    Fire,
-    baseStats = Stats(
-      base = Map(
-        Stat.Attack -> 52,
-        Stat.Defense -> 43,
-        Stat.SpecialAttack -> 60,
-        Stat.SpecialDefense -> 50,
-        Stat.Speed -> 65
-      )
-    ),
-    ability = blazeAbility,
-    weightKg = 8.5,
-    possibleMoves = List(moveThunderShock, moveElectric)
-  )
-
   private val simplePokemon3: BattlePokemon = BattlePokemon(
-    basePokemon3,
+    Pokemon("Charmander"),
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
