@@ -3,7 +3,7 @@ package it.unibo.skalamon.model.event.config
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.battle.TurnStage.ActionsReceived
-import it.unibo.skalamon.model.event.BattleStateEvents.Finished
+import it.unibo.skalamon.model.event.BattleStateEvents.{Changed, Finished}
 import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.event.TurnStageEvents.{Ended, ExecutingActions}
 import it.unibo.skalamon.model.event.config.OrderingUtils
@@ -33,11 +33,12 @@ trait BattleConfiguration extends EventManager:
           turn.state.snapshot.trainers.map(actionBuffer.getAction).collect {
             case Some(m) => m
           }.sorted
-        var state = turn.state.snapshot
+        val oldState = turn.state.snapshot
         sortedActions.foreach {
-          case MoveAction(move) => state = move(state)
-          case SwitchAction()   => () // TODO
-          case _                => ()
+          case MoveAction(move) =>
+            val newState = move(oldState)
+            notify(Changed of (oldState, newState))
+          case SwitchAction() => () // TODO
+          case _              => ()
         }
-
       case _ => ()
