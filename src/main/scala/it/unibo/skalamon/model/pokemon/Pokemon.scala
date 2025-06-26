@@ -16,8 +16,6 @@ case object Genderless extends Gender
 /** Represents the base attributes of a Pokémon.
   * @param name
   *   The name of the Pokémon.
-  * @param gender
-  *   The gender of the Pokémon.
   * @param types
   *   The list of types of the Pokémon.
   * @param baseStats
@@ -31,7 +29,6 @@ case object Genderless extends Gender
   */
 case class Pokemon(
     name: String,
-    gender: Gender,
     types: PokemonType,
     baseStats: Stats,
     ability: Ability,
@@ -42,6 +39,8 @@ case class Pokemon(
 /** Represents the whole Pokémon.
   * @param base
   *   The base attributes of the Pokémon.
+  * @param gender
+  *   The gender of the Pokémon.
   * @param level
   *   The level of the Pokémon.
   * @param currentHP
@@ -59,6 +58,7 @@ case class Pokemon(
   */
 case class BattlePokemon(
     base: Pokemon,
+    gender: Gender,
     level: Int,
     currentHP: Int,
     moves: List[BattleMove],
