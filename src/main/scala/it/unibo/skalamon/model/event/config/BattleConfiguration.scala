@@ -36,8 +36,8 @@ trait BattleConfiguration extends EventManager:
         var state = turn.state.snapshot
         sortedActions.foreach {
           case MoveAction(move) => state = move(state)
-          case SwitchAction()   => ???
-          case _                => ???
+          case SwitchAction()   => () // TODO
+          case _                => ()
         }
 
       case _ => ()
