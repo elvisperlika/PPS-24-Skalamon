@@ -1,7 +1,12 @@
 package it.unibo.skalamon.view.battle
 
 import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.model.battle.{BattleState, Trainer}
+import it.unibo.skalamon.model.battle.{
+  BattleState,
+  BattleStateContainer,
+  Trainer,
+  extractBattleState
+}
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.screen.BattleScreen
@@ -12,7 +17,7 @@ trait BattleView:
     * @param battleState
     *   The current state of the battle.
     */
-  def update(battleState: BattleState): Unit
+  def update(battleState: BattleStateContainer): Unit
 
 /** Provides a factory method to create a new BattleView instance.
   */
@@ -32,11 +37,11 @@ object BattleView:
       screen: BattleScreen
   ) extends BattleView:
     /** Update the whole battle view.
-      * @param battleState
+      * @param battle
       *   The current state of the battle.
       */
-    override def update(battleState: BattleState): Unit =
-      val trainers = battleState.trainers
+    override def update(battleState: BattleStateContainer): Unit =
+      val trainers = extractBattleState(battleState).trainers
       if (trainers.size != BattleScreen.playerNumber) then
         throw new IllegalArgumentException(
           s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
