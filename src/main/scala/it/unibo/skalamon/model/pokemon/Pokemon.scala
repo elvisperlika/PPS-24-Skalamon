@@ -34,26 +34,34 @@ case class Pokemon(
     possibleMoves: List[Move]
 )
 
-/** Represents the whole Pokémon.
-  * @param base
-  *   The base attributes of the Pokémon.
-  * @param gender
-  *   The gender of the Pokémon.
-  * @param level
-  *   The level of the Pokémon.
-  * @param currentHP
-  *   Current Health Points of the Pokémon.
-  * @param moves
-  *   List of moves of the Pokémon.
-  * @param nonVolatileStatus
-  *   The non-volatile status of the Pokémon.
-  * @param volatileStatus
-  *   Set of volatile status of the Pokémon.
-  * @param id
-  *   The unique identifier of the battle Pokémon. This is useful to track the
-  *   Pokémon in a battle context: even if this instance is copied, the ID
-  *   remains the same and can be tracked across different states.
+/** Factory object to create Pokémon instances. This object provides a method to
+  * create a Pokémon based on its ID.
   */
+object Pokemon:
+  /** Creates a Pokémon based on the provided ID.
+    * @param name
+    *   The name of the Pokémon to create.
     * @return
     *   A `Pokemon` instance representing the Pokémon.
     */
+  def apply(name: String): Pokemon = name match
+    case "Pikachu" =>
+      Pokemon(
+        name = "Pikachu",
+        types = Electric,
+        baseStats = Stats(
+          base = Map(
+            Stat.Attack -> 55,
+            Stat.Defense -> 40,
+            Stat.SpecialAttack -> 50,
+            Stat.SpecialDefense -> 50,
+            Stat.Speed -> 90
+          )
+        ),
+        ability = Ability("Static", Map.empty),
+        weightKg = 6.0,
+        possibleMoves = List(
+          Move("Thunder Shock"),
+          Move("Electric")
+        )
+      )
