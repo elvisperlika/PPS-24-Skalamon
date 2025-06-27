@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.field.FieldEffectMixin.{Room, Terrain, Weather}
 import it.unibo.skalamon.model.field.fieldside.FieldSide
 

@@ -3,14 +3,11 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
 import it.unibo.skalamon.model.field.fieldside.{FieldSide, SideCondition}
 import it.unibo.skalamon.model.field.{Field, FieldEffectMixin}
-import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object ExpirableSystem:
 
   extension (field: Field)
-    /** @return
-      *   Field without expired field effects.
-      */
+    
     def removeExpiredEffects(t: Int): Field =
       /** Return the same Option of the [[Expirable]] status if it's not
         * expired, otherwise None.
@@ -40,7 +37,7 @@ object ExpirableSystem:
       field.copy(
         sides = field.sides.view.mapValues(removeExpiredConditions(_, t)).toMap,
         terrain = cleanEffect(field.terrain.collect {
-          case e: FieldEffectMixin.BaseTerrain with Expirable => e
+          case e: FieldEffectMixin.Terrain with Expirable => e
         }),
         room = cleanEffect(field.room.collect {
           case e: FieldEffectMixin.Room with Expirable => e
