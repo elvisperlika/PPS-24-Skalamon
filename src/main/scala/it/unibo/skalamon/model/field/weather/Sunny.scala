@@ -15,10 +15,13 @@ case class Sunny(t: Int)
     with FieldEffect(t)
     with TypesModifier
     with Expirable(t, Sunny.Duration):
-  override val typesModifier: Map[Type, Double] = Map(Fire -> 1.5, Water -> 1.5)
+  override val typesModifier: Map[Type, Double] =
+    Map(Fire -> Sunny.FireModifier, Water -> Sunny.WaterModifier)
   override val description: String = Sunny.Description
 
 object Sunny:
+  private val WaterModifier: Double = 1.5
+  private val FireModifier: Double = 1.5
   val Description: String = "Sunny burn grass Pokémon."
   val Duration: Int = 5
   def apply(t: Int, em: EventManager): Sunny = new Sunny(t)
