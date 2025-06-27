@@ -15,5 +15,6 @@ lazy val root = (project in file("."))
   .settings(
     name := "PPS-24-Skalamon",
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
+    coverageEnabled := true
   )
