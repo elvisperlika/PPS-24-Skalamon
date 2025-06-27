@@ -1,10 +1,10 @@
 package it.unibo.skalamon.model.event
 
-import it.unibo.skalamon.model.battle.Turn
+import it.unibo.skalamon.model.battle.{Battle, Turn}
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
-import it.unibo.skalamon.model.event.TurnStageEvents.Ended
+import it.unibo.skalamon.model.event.TurnStageEvents.{Ended, Started}
 
-trait BattleConfiguration extends EventManager:
+trait BattleConfiguration(battle: Battle) extends EventManager:
   watch(Ended) { t =>
     checkGameOver(t)
   }
@@ -16,3 +16,16 @@ trait BattleConfiguration extends EventManager:
       case Seq(winner) => notify(Finished of Some(winner))
       case Seq()       => notify(Finished of None)
       case _           => ()
+
+  watch(Started) { _ =>
+    registerBattleCallBacks()
+  }
+
+  private def registerBattleCallBacks(): Unit =
+    import it.unibo.skalamon.model.battle.ExpirableSystem.removeExpiredEffects
+    import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+    battle.hookBattleStateUpdate(TurnStageEvents.Started) { (battleState, _) =>
+      battleState.copy(
+        field = battleState.field.removeExpiredEffects(battle.turnIndex)
+      )
+    }

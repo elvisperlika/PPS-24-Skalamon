@@ -27,7 +27,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
   /** The event manager for handling battle/turn events.
     */
   override val eventManager: EventManager =
-    new EventManager with BattleConfiguration
+    new EventManager with BattleConfiguration(this)
 
   eventManager.watch(Finished) { maybeWinner =>
     gameState = GameOver(maybeWinner)
