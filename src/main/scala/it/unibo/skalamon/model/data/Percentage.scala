@@ -29,7 +29,7 @@ case class Percentage(private val value: Int):
   def randomBoolean(using
       generator: RandomGenerator = RandomGenerator()
   ): Boolean =
-    generator.nextInt(MinBound, MaxBound + 1) < value
+    generator.nextInt(MinBound, MaxBound) < value
 
   override def toString: String = s"$value%"
 

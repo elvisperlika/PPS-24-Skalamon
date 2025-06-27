@@ -1,11 +1,8 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.field.FieldEffectMixin.{Room, Terrain, Weather}
 import it.unibo.skalamon.model.field.fieldside.FieldSide
-
-/* temporary classes start */
-case class Trainer(name: String)
-/* temporary classes end */
 
 /** Immutable [[Field]] is the zone Pokémon battle. [[Field]] has as many
   * [[FieldSide]] as Pokémon in battle, and it's dynamic environment with
@@ -82,11 +79,12 @@ class FieldBuilder:
   * @param trainers
   *   Trainers list
   * @param init
-  *   FieldBuilder configuration
+  *   FieldBuilder configuration - by default is empty
   * @return
   *   Field without [[FieldSide]]s
   */
-def field(trainers: List[Trainer])(init: FieldBuilder => Unit): Field =
+def field(trainers: List[Trainer])(init: FieldBuilder => Unit =
+  _ => ()): Field =
   val builder = new FieldBuilder
   init(builder)
   builder.build(trainers.map(t => t -> FieldSide()).toMap)

@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.field.fieldside.{FieldSide, SideCondition}
 import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.terrain.Mud
@@ -9,8 +10,8 @@ import org.scalatest.matchers.should
 
 class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
 
-  val bob: Trainer = Trainer("Bob")
-  val alice: Trainer = Trainer("Alice")
+  val bob: Trainer = Trainer("Bob", Nil, None)
+  val alice: Trainer = Trainer("Alice", Nil, None)
 
   "Field Builder" should "let create empty field" in:
     val empty: Field = field(bob :: Nil)(_ => ())
