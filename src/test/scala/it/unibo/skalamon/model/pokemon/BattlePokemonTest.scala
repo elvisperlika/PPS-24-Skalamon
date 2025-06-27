@@ -4,34 +4,37 @@ import it.unibo.skalamon.model.behavior.kind.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-/** Tests for [[BattlePokemon]] and its implementations.
-  */
 class BattlePokemonTest extends AnyFlatSpec with should.Matchers:
+  private val Damage1 = 10
+  private val Damage2 = 30
+  private val StatStageUp = 2
+  private val StatStageDown = -4
+  private val StatStageDownMultiplier = 0.33
+  private val StatStageUpMultiplier = 2.0
+
   "BattlePokemon" should "takeDamage" in:
     val pokemon = PokemonTestUtils.simplePokemon1
-    val damage1 = 10
-    val damage2 = 30
 
     pokemon
-      .takeDamage(damage1)
-      .currentHP shouldEqual (pokemon.currentHP - damage1)
+      .takeDamage(Damage1)
+      .currentHP shouldEqual (pokemon.currentHP - Damage1)
     pokemon
-      .takeDamage(damage1)
-      .takeDamage(damage2)
-      .currentHP shouldEqual (pokemon.currentHP - damage1 - damage2)
+      .takeDamage(Damage1)
+      .takeDamage(Damage2)
+      .currentHP shouldEqual (pokemon.currentHP - Damage1 - Damage2)
 
   "BattlePokemon" should "apply stat changes and update effective stat value" in:
     val pokemon = PokemonTestUtils.simplePokemon1
     val stat = Stat.Attack
     val baseValue = pokemon.base.baseStats.base(stat)
 
-    pokemon.actualStats.effective(stat) shouldEqual baseValue
+    pokemon.actualStats.base.getOrElse(stat, 0) shouldEqual baseValue
 
-    val changed = pokemon.applyStatChange(StatChange(stat, 2))
-    changed.actualStats.effective(stat) shouldEqual baseValue * 2.0
+    val changed = pokemon.applyStatChange(StatChange(stat, StatStageUp))
+    changed.actualStats.base.getOrElse(stat, 0)  shouldEqual (baseValue * StatStageUpMultiplier).toInt
 
-    val changedAgain = changed.applyStatChange(StatChange(stat, -4))
-    changedAgain.actualStats.effective(stat) shouldEqual baseValue * 0.5
+    val changedAgain = pokemon.applyStatChange(StatChange(stat, StatStageDown))
+    changedAgain.actualStats.base.getOrElse(stat, 0) shouldEqual (baseValue * StatStageDownMultiplier).toInt
 
   "BattlePokemon" should "die" in:
     val pokemon = PokemonTestUtils.simplePokemon1
