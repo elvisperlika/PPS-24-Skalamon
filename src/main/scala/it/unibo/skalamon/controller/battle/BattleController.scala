@@ -56,11 +56,10 @@ private class BattleControllerImpl(override val battle: Battle)
     battle.currentTurn match
       case Some(turn) if turn.state.stage == WaitingForActions =>
         this.actionBuffer = actionBuffer.register(trainer, action)
-        if (actionBuffer.isFull) {
+        if actionBuffer.isFull then
+          given Turn = turn
           battle.setStage(ActionsReceived(actionBuffer))
           this.actionBuffer = actionBuffer.clear()
-        }
-
       case _ => throw new IllegalStateException(
           "Cannot accept actions in the current turn stage."
         )

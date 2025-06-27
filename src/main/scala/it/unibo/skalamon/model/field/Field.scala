@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.field
 
-import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.field.FieldEffectMixin.{Room, Terrain, Weather}
 import it.unibo.skalamon.model.field.fieldside.FieldSide
 
@@ -8,6 +7,7 @@ import it.unibo.skalamon.model.field.fieldside.FieldSide
   * [[FieldSide]] as Pokémon in battle, and it's dynamic environment with
   * dynamic creation of [[Room]], [[Terrain]] or [[Weather]] caused by Pokémon
   * moves.
+  *
   * @param sides
   *   Specific piece of the battlefield where Pokémon in battle is located
   * @param terrain
@@ -63,6 +63,12 @@ class FieldBuilder:
     */
   def setWeather(w: Weather): Unit = weather = Some(w)
 
+  /** Generate a battlefield.
+    * @param sides
+    *   One Side for every player
+    * @return
+    *   Battlefield
+    */
   def build(sides: Map[Trainer, FieldSide]): Field =
     Field(sides, terrain, room, weather)
 
@@ -71,11 +77,12 @@ class FieldBuilder:
   * @param trainers
   *   Trainers list
   * @param init
-  *   FieldBuilder configuration
+  *   FieldBuilder configuration - by default is empty
   * @return
   *   Field without [[FieldSide]]s
   */
-def field(trainers: List[Trainer])(init: FieldBuilder => Unit = _ => ()): Field =
+def field(trainers: List[Trainer])(init: FieldBuilder => Unit =
+  _ => ()): Field =
   val builder = new FieldBuilder
   init(builder)
   builder.build(trainers.map(t => t -> FieldSide()).toMap)
