@@ -48,11 +48,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     */
   def update(): Unit =
     currentTurn match
-      case Some(t) =>
-        t.state = t.state.copy(snapshot =
-          t.state.snapshot.notifyEventQueue(eventManager)
-        )
-        update(t)
+      case Some(t) => update(t)
       case _ => throw new IllegalStateException("No active turn to update")
 
   private def update(turn: Turn): Unit =

@@ -67,7 +67,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
     battle.start()
     notified shouldBe true
 
-  it should "enqueue behavior events" in:
+  it should "trigger behavior events" in:
     val behavior = DamageBehavior(10)
     var notified = false
 
@@ -87,9 +87,6 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
 
     battle.start()
 
-    val newState = context(battle.currentTurn.get.state.snapshot)
-    newState.eventQueue.size shouldBe 1
-    newState.eventQueue.dequeue._1.eventType shouldEqual BehaviorEvent[DamageBehavior]()
-
-    newState.notifyEventQueue(battle.eventManager).eventQueue shouldBe empty
+    given EventManager = battle.eventManager
+    context(battle.currentTurn.get.state.snapshot)
     notified shouldBe true
