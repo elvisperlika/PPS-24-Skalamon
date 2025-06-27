@@ -68,12 +68,16 @@ case class BattlePokemon(
     id: UUID = UUID.randomUUID()
 ):
 
-  /** Return the current stats of the Pokémon, updated to it's level.
+  /** Return the current stats of the Pokémon.
     * @return
     *   the current stats of the Pokémon.
     */
   def actualStats: Stats =
-    base.baseStats.copy(stages = statChanges)
+    base.baseStats.copy(
+      base = base.baseStats.base.map { case (stat, value) =>
+        stat -> (StatStage.multiplier(statChanges.getOrElse(stat, 0)) * value).toInt
+      }
+    )
 
   /** Return true if the Pokémon is still alive.
     * @return
@@ -100,6 +104,6 @@ case class BattlePokemon(
     *   the copy of the Pokémon with the applied stat change.
     */
   def applyStatChange(change: StatChange): BattlePokemon =
-    val currentStage = statChanges.getOrElse(change.stat, 0)
-    val newStage = StatStage.clamp(currentStage + change.stage)
+    val newStage =
+      StatStage.clamp(statChanges.getOrElse(change.stat, 0) + change.stage)
     this.copy(statChanges = statChanges.updated(change.stat, newStage))
