@@ -1,5 +1,6 @@
-package it.unibo.skalamon.controller.battle.action
+package it.unibo.skalamon.model.battle
 
+import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.battle.TurnStage.ActionsReceived
 import it.unibo.skalamon.model.battle.{
   Battle,
