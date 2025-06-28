@@ -1,7 +1,6 @@
 package it.unibo.skalamon.controller.battle.action
 
-import it.unibo.skalamon.model.move.{BattleMove, MoveContext}
-import it.unibo.skalamon.model.pokemon.BattlePokemon
+import it.unibo.skalamon.model.move.MoveContext
 
 trait Action:
   val priority: Int

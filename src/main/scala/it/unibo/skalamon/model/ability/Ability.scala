@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.ability
 
-import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.EventType
 

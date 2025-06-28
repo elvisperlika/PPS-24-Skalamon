@@ -3,19 +3,9 @@ package it.unibo.skalamon.controller.battle
 import it.unibo.skalamon.controller.battle.action.{
   Action,
   ActionBuffer,
-  MoveAction,
-  SwitchAction
+  BattleHooksConfigurator
 }
-import it.unibo.skalamon.model.battle.TurnStage.ActionsReceived
 import it.unibo.skalamon.model.battle.{Battle, Trainer, Turn, TurnStage}
-import it.unibo.skalamon.model.event.TurnStageEvents.ExecutingActions
-import it.unibo.skalamon.model.event.config.OrderingUtils
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleState,
-  Turn,
-  hookBattleStateUpdate
-}
 
 /** Controller for managing battles in the game.
   *
@@ -61,26 +51,7 @@ object BattleController:
 private class BattleControllerImpl(override val battle: Battle)
     extends BattleController:
 
-  battle.hookBattleStateUpdate(ExecutingActions) { (battleState, turn) =>
-    executeMoves(turn)
-  }
-
-  private def executeMoves(turn: Turn): BattleState =
-    var state: BattleState = turn.state.snapshot
-    turn.state.stage match
-      case ActionsReceived(actionBuffer) =>
-        import OrderingUtils.given
-        val sortedActions =
-          turn.state.snapshot.trainers.map(actionBuffer.getAction).collect {
-            case Some(m) => m
-          }.sorted
-        sortedActions.foreach {
-          case MoveAction(context) => state = context(state)
-          case SwitchAction()      => () // TODO
-          case _                   => ()
-        }
-      case _ => ()
-    state
+  BattleHooksConfigurator.configure(battle)
 
   private var actionBuffer = ActionBuffer(battle.trainers.size)
 
