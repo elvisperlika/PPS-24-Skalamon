@@ -12,9 +12,11 @@ import it.unibo.skalamon.model.types.TypesCollection.Grass
 case class Grassy(t: Int) extends Terrain with FieldEffect(t) with TypesModifier
     with Expirable(t, Grassy.Duration):
   override val description: String = Grassy.Description
-  override val typesModifier: Map[Type, Double] = Map(Grass -> 1.5)
+  override val typesModifier: Map[Type, Double] =
+    Map(Grass -> Grassy.GrassModifier)
 
 object Grassy:
+  val GrassModifier: Double = 1.5
   val Description: String = "Grassy boosts Grass Pokémon."
   val Duration: Int = 5
   def apply(t: Int): Grassy = new Grassy(t)

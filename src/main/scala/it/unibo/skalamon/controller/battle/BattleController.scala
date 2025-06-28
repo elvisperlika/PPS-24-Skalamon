@@ -1,6 +1,10 @@
 package it.unibo.skalamon.controller.battle
 
-import it.unibo.skalamon.controller.battle.action.{Action, ActionBuffer}
+import it.unibo.skalamon.controller.battle.action.{
+  Action,
+  ActionBuffer,
+  BattleHooksConfigurator
+}
 import it.unibo.skalamon.model.battle.{Battle, Trainer, Turn, TurnStage}
 
 /** Controller for managing battles in the game.
@@ -46,6 +50,9 @@ object BattleController:
 
 private class BattleControllerImpl(override val battle: Battle)
     extends BattleController:
+
+  BattleHooksConfigurator.configure(battle)
+
   private var actionBuffer = ActionBuffer(battle.trainers.size)
 
   override def start(): Unit = battle.start()

@@ -6,7 +6,7 @@ import it.unibo.skalamon.model.field.fieldside.FieldSide
 
 /** Immutable [[Field]] is the zone Pokémon battle. [[Field]] has as many
   * [[FieldSide]] as Pokémon in battle, and it's dynamic environment with
-  * dynamic creation of [[Room]], [[Terrain]] or [[Weather2]] caused by Pokémon
+  * dynamic creation of [[Room]], [[Terrain]] or [[Weather]] caused by Pokémon
   * moves.
   *
   * @param sides
@@ -16,7 +16,7 @@ import it.unibo.skalamon.model.field.fieldside.FieldSide
   * @param room
   *   The active [[Room]], if any
   * @param weather
-  *   The active [[Weather2]], if any
+  *   The active [[Weather]], if any
   */
 case class Field(
     sides: Map[Trainer, FieldSide],
@@ -58,8 +58,7 @@ class FieldBuilder:
     */
   def setRoom(r: Room): Unit = room = Some(r)
 
-  /** [[Weather2]] setter.
-    *
+  /** [[Weather]] setter.
     * @param w
     *   Weather to apply
     */

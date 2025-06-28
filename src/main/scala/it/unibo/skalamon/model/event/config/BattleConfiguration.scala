@@ -1,10 +1,13 @@
-package it.unibo.skalamon.model.event
+package it.unibo.skalamon.model.event.config
 
-import it.unibo.skalamon.model.battle.Turn
+import it.unibo.skalamon.model.battle.{Battle, Turn}
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
+import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.event.TurnStageEvents.Ended
 
-trait BattleConfiguration extends EventManager:
+/** Mixin of [[EventManager]] for events pre-configuration.
+  */
+trait BattleConfiguration(battle: Battle) extends EventManager:
   watch(Ended) { t =>
     checkGameOver(t)
   }

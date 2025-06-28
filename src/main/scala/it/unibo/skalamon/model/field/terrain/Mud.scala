@@ -14,10 +14,13 @@ case class Mud(t: Int)
     with FieldEffect(t)
     with TypesModifier
     with Expirable(t, Mud.Duration):
-  override val typesModifier: Map[Type, Double] = Map(Fire -> 1.5, Water -> 1.5)
+  override val typesModifier: Map[Type, Double] =
+    Map(Fire -> Mud.FireModifier, Water -> Mud.WaterModifier)
   override val description: String = Mud.Description
 
 object Mud:
+  val WaterModifier: Double = 1.5
+  val FireModifier: Double = 1.5
   val Description: String = "Mud boosts Fire and Water Pokémon."
   val Duration: Int = 5
   def apply(t: Int): Mud = new Mud(t)

@@ -30,10 +30,11 @@ trait BehaviorsContext[O] extends WithBehaviors:
     * @param state
     *   The current battle state to be updated.
     * @param eventManager
-    *   The event manager to notify about changes in the battle state.
+    *   The event manager to notify about changes in the battle state
+    *   ([[BattleStateEvents.Changed]]) and triggered behaviors
+    *   ([[BehaviorEvent]]).
     * @return
-    *   A new battle state with the behaviors applied, and each behavior's event
-    *   queued into the battle state's event queue.
+    *   A new battle state with the behaviors applied.
     */
   def apply(state: BattleState)(using
       eventManager: EventManager = EventManager()
@@ -42,10 +43,9 @@ trait BehaviorsContext[O] extends WithBehaviors:
       val visitor =
         BattleStateUpdaterBehaviorVisitor(currentState, this, modifiers)
 
-      val newState =
-        behavior.accept(visitor)
-          .copy(eventQueue = currentState.eventQueue.enqueue(behavior.event))
+      val newState = behavior.accept(visitor)
 
+      eventManager.notify(behavior.event(this))
       eventManager.notify(BattleStateEvents.Changed of (
         currentState,
         newState

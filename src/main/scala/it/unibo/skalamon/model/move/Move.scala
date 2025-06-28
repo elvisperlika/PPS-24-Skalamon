@@ -15,6 +15,7 @@ import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
   */
 case class Move(
     name: String,
+    priority: Int,
     success: Behavior = EmptyBehavior,
     fail: Behavior = EmptyBehavior
 )

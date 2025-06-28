@@ -14,7 +14,7 @@ class FieldBuilderTest extends AnyFlatSpec with should.Matchers:
   val alice: Trainer = Trainer("Alice", Nil, None)
 
   "Field Builder" should "let create empty field" in:
-    val empty: Field = field(bob :: Nil)(_ => ())
+    val empty: Field = field(bob :: Nil)()
     println(empty)
     empty shouldBe Field(Map(bob -> FieldSide()), None, None, None)
 

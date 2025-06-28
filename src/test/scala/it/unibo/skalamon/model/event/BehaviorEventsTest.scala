@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.event
 
+import it.unibo.skalamon.model.behavior.BehaviorTestUtils
 import it.unibo.skalamon.model.behavior.kind.{SingleHitBehavior, StatusBehavior}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
@@ -18,17 +19,17 @@ class BehaviorEventsTest extends AnyFlatSpec with should.Matchers with BeforeAnd
     notified = false
 
   "Behaviors" should "trigger their own event" in:
-    eventManager.watch(BehaviorEvent[SingleHitBehavior]()) { behavior =>
+    eventManager.watch(BehaviorEvent[SingleHitBehavior]()) { (behavior, _) =>
       notified = true
       behavior.power shouldBe hitBehavior.power
     }
     println(hitBehavior.event)
-    eventManager.notify(hitBehavior.event)
+    eventManager.notify(hitBehavior.event(BehaviorTestUtils.context))
     notified shouldBe true
 
   "EventManager" should "not notify for different behavior types" in:
     eventManager.watch(BehaviorEvent[StatusBehavior]()) { _ =>
       notified = true
     }
-    eventManager.notify(hitBehavior.event)
+    eventManager.notify(hitBehavior.event(BehaviorTestUtils.context))
     notified shouldBe false

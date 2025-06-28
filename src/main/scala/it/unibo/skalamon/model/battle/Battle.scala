@@ -5,6 +5,7 @@ import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.*
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
+import it.unibo.skalamon.model.event.config.BattleConfiguration
 
 /** A battle between trainers.
   * @param trainers
@@ -18,6 +19,8 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     */
   private var turnHistory: Stack[Turn] = Stack.empty
 
+  var turnIndex: Int = turnHistory.size
+
   /** The current turn of the battle.
     */
   def currentTurn: Option[Turn] = turnHistory.peek
@@ -25,7 +28,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
   /** The event manager for handling battle/turn events.
     */
   override val eventManager: EventManager =
-    new EventManager with BattleConfiguration
+    new EventManager with BattleConfiguration(this)
 
   eventManager.watch(Finished) { maybeWinner =>
     gameState = GameOver(maybeWinner)
@@ -46,11 +49,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     */
   def update(): Unit =
     currentTurn match
-      case Some(t) =>
-        t.state = t.state.copy(snapshot =
-          t.state.snapshot.notifyEventQueue(eventManager)
-        )
-        update(t)
+      case Some(t) => update(t)
       case _ => throw new IllegalStateException("No active turn to update")
 
   private def update(turn: Turn): Unit =
