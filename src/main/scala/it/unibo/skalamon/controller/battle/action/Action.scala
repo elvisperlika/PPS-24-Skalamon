@@ -1,9 +1,16 @@
 package it.unibo.skalamon.controller.battle.action
 
-import it.unibo.skalamon.model.move.MoveContext
+import it.unibo.skalamon.model.move.{BattleMove, MoveContext}
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
-trait Action
+trait Action:
+  val priority: Int
 
-case class MoveAction(move: MoveContext) extends Action
+case class MoveAction(context: MoveContext) extends Action:
+  override val priority: Int = context.origin.move.priority
 
-case class SwitchAction() extends Action
+case class SwitchAction() extends Action:
+  override val priority: Int = SwitchAction.Priority
+
+object SwitchAction:
+  private val Priority: Int = 6

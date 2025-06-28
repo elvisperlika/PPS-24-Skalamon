@@ -1,23 +1,18 @@
 package it.unibo.skalamon.model.event.config
 
-import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
-import it.unibo.skalamon.controller.battle.action.Action
+import it.unibo.skalamon.controller.battle.action.{Action, MoveAction}
 import it.unibo.skalamon.model.pokemon.Stat.Speed
 
 object OrderingUtils:
 
   given Ordering[Action] with
     def compare(a1: Action, a2: Action): Int =
-      def priorityOf(a: Action): Int = a match
-        case SwitchAction() => 6
-        case MoveAction(m)  => m.origin.move.priority
-
       def speedOf(a: Action): Int = a match
-        case MoveAction(m) => m.source.base.baseStats.base(Speed)
-        case _             => 0
+        case MoveAction(context) => context.source.base.baseStats.base(Speed)
+        case _                   => 0
 
-      val p1 = priorityOf(a1)
-      val p2 = priorityOf(a2)
+      val p1 = a1.priority
+      val p2 = a2.priority
       if p1 != p2 then p2.compareTo(p1)
       else
         (a1, a2) match
