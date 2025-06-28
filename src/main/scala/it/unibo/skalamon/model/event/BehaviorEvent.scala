@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.event
 
-import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.behavior.{Behavior, BehaviorsContext}
 
 import scala.reflect.{ClassTag, classTag}
 
@@ -14,7 +14,7 @@ import scala.reflect.{ClassTag, classTag}
   */
 class BehaviorEvent[B <: Behavior: ClassTag](
     runtimeClass: Option[Class[? <: B]] = None
-) extends EventType[B]:
+) extends EventType[(B, BehaviorsContext[_])]:
   /** The type of the event. */
   val tag: ClassTag[B] = runtimeClass.map(ClassTag(_)).getOrElse(classTag[B])
 
@@ -35,4 +35,4 @@ extension [T <: Behavior: ClassTag](behavior: T)
     * @return
     *   An event of the behavior type.
     */
-  def event: Event[T] = BehaviorEvent[T](Some(behavior.getClass)) of behavior
+  def event(context: BehaviorsContext[_]): Event[(T, BehaviorsContext[_])] = BehaviorEvent(Some(behavior.getClass)) of (behavior, context)
