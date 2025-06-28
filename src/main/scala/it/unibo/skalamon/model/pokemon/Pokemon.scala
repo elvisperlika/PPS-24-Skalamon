@@ -20,6 +20,8 @@ case object Genderless extends Gender
   *   The gender of the Pokémon.
   * @param types
   *   The list of types of the Pokémon.
+  * @param hp
+  *   The base HP of the Pokémon.
   * @param baseStats
   *   The base stats of the Pokémon.
   * @param ability
@@ -33,6 +35,7 @@ case class Pokemon(
     name: String,
     gender: Gender,
     types: PokemonType,
+    hp: Int,
     baseStats: Stats,
     ability: Ability,
     weightKg: Double,
