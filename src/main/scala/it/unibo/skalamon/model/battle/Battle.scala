@@ -5,6 +5,7 @@ import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.*
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
+import it.unibo.skalamon.model.event.config.BattleConfiguration
 
 /** A battle between trainers.
   * @param trainers
@@ -25,7 +26,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
   /** The event manager for handling battle/turn events.
     */
   override val eventManager: EventManager =
-    new EventManager with BattleConfiguration
+    new EventManager with BattleConfiguration(this)
 
   eventManager.watch(Finished) { maybeWinner =>
     gameState = GameOver(maybeWinner)

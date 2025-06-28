@@ -77,6 +77,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
     val move =
       Move(
         "TestMove",
+        priority = 5,
         success = behavior
       )
     val context = BattleMove(move, pp = 10).createContext(
