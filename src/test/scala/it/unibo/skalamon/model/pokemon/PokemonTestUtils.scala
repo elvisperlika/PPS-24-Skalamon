@@ -3,8 +3,12 @@ package it.unibo.skalamon.model.pokemon
 import it.unibo.skalamon.model
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
+import it.unibo.skalamon.model.behavior.EmptyBehavior
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
+import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.move.MoveModel.Category.{Physical, Special}
 import it.unibo.skalamon.model.status.*
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.{
@@ -17,8 +21,22 @@ import it.unibo.skalamon.model.types.TypesCollection.{
 /** Test utilities for testing Pokémon.
   */
 object PokemonTestUtils:
-  private val moveThunderShock = Move("Thunder Shock", priority = 5)
-  private val moveElectric = Move("Electric", priority = 5)
+  private val moveThunderShock = Move(
+    name = "Thunder Shock",
+    priority = 5,
+    moveType = Electric,
+    category = Special,
+    accuracy = Of(100.percent),
+    success = EmptyBehavior
+  )
+  private val moveElectric = Move(
+    name = "Electric",
+    priority = 5,
+    moveType = Electric,
+    category = Physical,
+    accuracy = Of(100.percent),
+    success = EmptyBehavior
+  )
 
   private val genericAbility = Ability("Static", Map.empty)
   private val blazeAbility = Ability("Blaze", Map.empty)

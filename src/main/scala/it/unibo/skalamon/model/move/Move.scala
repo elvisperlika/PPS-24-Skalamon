@@ -1,6 +1,8 @@
 package it.unibo.skalamon.model.move
 
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
+import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
+import it.unibo.skalamon.model.types.MoveType
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -14,10 +16,13 @@ import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
   *   The behavior of this move when it fails/misses.
   */
 case class Move(
-    name: String,
-    priority: Int,
-    success: Behavior = EmptyBehavior,
-    fail: Behavior = EmptyBehavior
+                 name: String,
+                 priority: Int,
+                 moveType: MoveType,
+                 category: Category,
+                 accuracy: Accuracy,
+                 success: Behavior = EmptyBehavior,
+                 fail: Behavior = EmptyBehavior
 )
 
 /** A move in the context of a battle.
