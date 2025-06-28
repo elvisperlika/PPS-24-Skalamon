@@ -15,7 +15,10 @@ object BehaviorTestUtils:
   def context(target: BattlePokemon, source: BattlePokemon): MoveContext =
     MoveContext(
       origin = BattleMove(
-        Move("TestMove"),
+        Move(
+          "TestMove",
+          priority = 5
+        ),
         pp = 10
       ),
       target = target,

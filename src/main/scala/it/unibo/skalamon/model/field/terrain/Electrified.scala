@@ -12,9 +12,11 @@ import it.unibo.skalamon.model.types.TypesCollection.Electric
 case class Electrified(t: Int) extends Terrain with FieldEffect(t)
     with TypesModifier with Expirable(t, Electrified.Duration):
   override val description: String = Electrified.Description
-  override val typesModifier: Map[Type, Double] = Map(Electric -> 1.5)
+  override val typesModifier: Map[Type, Double] =
+    Map(Electric -> Electrified.ElectricModifier)
 
 object Electrified:
+  val ElectricModifier: Double = 1.5
   val Description: String = "Electric boosts Electric Pokémon."
   val Duration: Int = 5
   def apply(t: Int): Electrified = new Electrified(t)
