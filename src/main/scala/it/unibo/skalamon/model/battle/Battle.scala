@@ -19,6 +19,11 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     */
   private var turnHistory: Stack[Turn] = Stack.empty
 
+  /** The current turn number (starts from 0).
+    *
+    * Not to be used as an index to access elements in turnHistory. For that,
+    * use: `turnHistory(turnIndex - 1)` or other safe accessors.
+    */
   var turnIndex: Int = turnHistory.size
 
   /** The current turn of the battle.
