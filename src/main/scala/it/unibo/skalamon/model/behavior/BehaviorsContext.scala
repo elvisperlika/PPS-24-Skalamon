@@ -45,7 +45,7 @@ trait BehaviorsContext[O] extends WithBehaviors:
 
       val newState = behavior.accept(visitor)
 
-      eventManager.notify(behavior.event)
+      eventManager.notify(behavior.event(this))
       eventManager.notify(BattleStateEvents.Changed of (
         currentState,
         newState
