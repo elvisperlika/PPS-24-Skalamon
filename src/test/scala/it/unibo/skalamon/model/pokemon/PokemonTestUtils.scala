@@ -24,7 +24,7 @@ object PokemonTestUtils:
   private val powerPoint: Int = 4
 
   val simplePokemon1: BattlePokemon = BattlePokemon(
-    Pokemon("Pikachu"),
+    Pokemon.pikachu,
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
@@ -39,7 +39,7 @@ object PokemonTestUtils:
   /** This Pokémon is KO.
     */
   val simplePokemon1ko: BattlePokemon = BattlePokemon(
-    Pokemon("Pikachu"),
+    Pokemon.pikachu,
     Male,
     currentHP = 0,
     List(BattleMove(moveThunderShock, powerPoint)),
@@ -52,7 +52,7 @@ object PokemonTestUtils:
   )
 
   val simplePokemon2: BattlePokemon = BattlePokemon(
-    Pokemon("Bulbasaur"),
+    Pokemon.bulbasaur,
     Male,
     startingHP,
     List(BattleMove(moveElectric, powerPoint)),
@@ -61,7 +61,7 @@ object PokemonTestUtils:
   )
 
   private val simplePokemon3: BattlePokemon = BattlePokemon(
-    Pokemon("Charmander"),
+    Pokemon.charmander,
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
