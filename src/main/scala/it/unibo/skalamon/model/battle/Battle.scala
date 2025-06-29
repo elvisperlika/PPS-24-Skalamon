@@ -19,7 +19,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     */
   private var turnHistory: Stack[Turn] = Stack.empty
 
-  var turnIndex: Int = turnHistory.size
+  def turnIndex: Int = turnHistory.size
 
   /** The current turn of the battle.
     */
