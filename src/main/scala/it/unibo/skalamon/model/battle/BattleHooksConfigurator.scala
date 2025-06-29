@@ -2,13 +2,11 @@ package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.battle.TurnStage.ActionsReceived
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleState,
-  Turn,
-  hookBattleStateUpdate
-}
+import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.TurnStageEvents.{ExecutingActions, Started}
+import it.unibo.skalamon.model.move.{Move, MoveModel}
+import it.unibo.skalamon.model.move.createContext
 
 object BattleHooksConfigurator:
 
@@ -29,18 +27,27 @@ object BattleHooksConfigurator:
       )
 
     def executeMoves(turn: Turn): BattleState =
-      var state: BattleState = turn.state.snapshot
+      val initialState = turn.state.snapshot
       turn.state.stage match
         case ActionsReceived(actionBuffer) =>
           import it.unibo.skalamon.model.event.config.OrderingUtils.given
           val sortedActions =
-            turn.state.snapshot.trainers.map(actionBuffer.getAction).collect {
-              case Some(m) => m
-            }.sorted
-          sortedActions.foreach {
-            case MoveAction(context) => state = context(state)
-            case SwitchAction()      => () // TODO
-            case _                   => ()
+            initialState.trainers.flatMap(actionBuffer.getAction).sorted
+
+          val finalState = sortedActions.foldLeft(initialState) { (s, a) =>
+            a match
+              case MoveAction(battleMove, source, target) =>
+                val result: Move => Behavior = _ =>
+                  battleMove.move.accuracy match
+                    case MoveModel.Accuracy.Of(percentage)
+                        if !percentage.randomBoolean => battleMove.move.fail
+                    case _ => battleMove.move.success
+
+                battleMove.createContext(result, target, source)(initialState)
+              case SwitchAction(pIn, pOut) => s
+              case _                       => s
           }
-        case _ => ()
-      state
+          finalState
+
+        case _ =>
+          initialState

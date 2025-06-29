@@ -1,7 +1,13 @@
 package it.unibo.skalamon.model.event
 
-import it.unibo.skalamon.model.battle.{Battle, BattleState, TurnStage, hookBattleStateUpdate}
+import it.unibo.skalamon.model.battle.{
+  Battle,
+  BattleState,
+  TurnStage,
+  hookBattleStateUpdate
+}
 import it.unibo.skalamon.model.behavior.kind.DamageBehavior
+import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.move.{BattleMove, Move, createContext}
@@ -11,7 +17,6 @@ import it.unibo.skalamon.model.types.TypesCollection.Electric
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import it.unibo.skalamon.model.data.percent
 
 /** Tests for [[EventManager]] updating the current [[BattleState]].
   */

@@ -11,6 +11,10 @@ import it.unibo.skalamon.model.types.TypesCollection.Electric
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.{
+  simplePokemon1,
+  simplePokemon2
+}
 
 class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
 
@@ -65,21 +69,47 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
   val context2 = move2.createContext(_.success, target, source)
 
   val actions = MoveAction(
-    context2
-  ) :: SwitchAction() :: MoveAction(
-    context5
-  ) :: MoveAction(context1) :: MoveAction(context5b) :: Nil
+    move2,
+    source,
+    target
+  ) :: SwitchAction(
+    simplePokemon1,
+    simplePokemon2
+  ) :: MoveAction(
+    move5,
+    source,
+    target
+  ) :: MoveAction(
+    move1,
+    source,
+    target
+  ) :: MoveAction(
+    move5b,
+    source,
+    target
+  ) :: Nil
 
   "Moves" should "be in order" in:
     import OrderingUtils.given
     val flattenList = actions.sorted
 
-    flattenList shouldEqual SwitchAction() :: MoveAction(
-      context5
+    flattenList shouldEqual SwitchAction(
+      simplePokemon1,
+      simplePokemon2
     ) :: MoveAction(
-      context5b
+      move5,
+      source,
+      target
     ) :: MoveAction(
-      context2
+      move5b,
+      source,
+      target
     ) :: MoveAction(
-      context1
+      move2,
+      source,
+      target
+    ) :: MoveAction(
+      move1,
+      source,
+      target
     ) :: Nil
