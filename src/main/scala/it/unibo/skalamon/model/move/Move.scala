@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.move
 
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
-import it.unibo.skalamon.model.types.MoveType
+import it.unibo.skalamon.model.types.Type
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -18,7 +18,7 @@ import it.unibo.skalamon.model.types.MoveType
 case class Move(
                  name: String,
                  priority: Int,
-                 moveType: MoveType,
+                 moveType: Type,
                  category: Category,
                  accuracy: Accuracy,
                  success: Behavior = EmptyBehavior,

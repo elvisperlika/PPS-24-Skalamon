@@ -19,13 +19,10 @@ trait Type(
     * @return
     *   Efficacy list
     */
-  def computeEffectiveness(t: PokemonType): List[Efficacy] =
-    t match
-      case t: Type          => List(computeSingleEffectiveness(t))
-      case list: List[Type] =>
-        list.foldLeft(List[Efficacy]())((list, t) =>
-          computeSingleEffectiveness(t) :: list
-        )
+  def computeEffectiveness(t: List[Type]): List[Efficacy] =
+    t.foldLeft(List[Efficacy]())((list, t) =>
+      computeSingleEffectiveness(t) :: list
+    )
 
   private def computeSingleEffectiveness(t: Type): Efficacy =
     import Efficacy.*
@@ -33,11 +30,3 @@ trait Type(
     else if resistedBy contains t then Resisted
     else if ineffectiveAgainst contains t then Ineffective
     else Effective
-
-/** A Pokémon can have one or two Types.
-  */
-type PokemonType = Type | List[Type]
-
-/** A move can have only one type.
-  */
-type MoveType = Type

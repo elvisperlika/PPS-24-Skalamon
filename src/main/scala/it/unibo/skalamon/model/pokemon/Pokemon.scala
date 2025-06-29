@@ -32,7 +32,7 @@ case object Genderless extends Gender
 case class Pokemon(
     name: String,
     gender: Gender,
-    types: PokemonType,
+    types: List[Type],
     stats: Stats,
     ability: Ability,
     weightKg: Double,

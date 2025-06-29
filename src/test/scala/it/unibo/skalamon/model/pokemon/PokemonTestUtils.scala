@@ -49,8 +49,8 @@ object PokemonTestUtils:
   private val basePokemon1 = Pokemon(
     "Pikachu",
     Male,
-    List(Electric),
-    baseStats = Stats(
+    Electric :: Nil,
+    stats = Stats(
       base = Map(
         Stat.Attack -> 55,
         Stat.Defense -> 40,
@@ -94,8 +94,8 @@ object PokemonTestUtils:
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
     Male,
-    List(Grass, Poison),
-    baseStats = Stats(
+    Grass :: Poison :: Nil,
+    stats = Stats(
       base = Map(
         Stat.Attack -> 55,
         Stat.Defense -> 40,
@@ -120,8 +120,8 @@ object PokemonTestUtils:
   private val basePokemon3 = Pokemon(
     "Charmander",
     Male,
-    Fire,
-    baseStats = Stats(
+    Fire :: Nil,
+    stats = Stats(
       base = Map(
         Stat.Attack -> 52,
         Stat.Defense -> 43,
