@@ -11,7 +11,8 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 @main
 def main(): Unit =
-  var (trainerAlice, trainerBob) = (PokemonTestUtils.trainerAlice, PokemonTestUtils.trainerBob)
+  var (trainerAlice, trainerBob) =
+    (PokemonTestUtils.trainerAlice, PokemonTestUtils.trainerBob)
   trainerAlice = trainerAlice.copy(inField = Some(trainerAlice.team.head))
   trainerBob = trainerBob.copy(inField = Some(trainerBob.team.head))
 
@@ -23,8 +24,8 @@ def main(): Unit =
 
   controller.start()
 
-  while battle.gameState != GameState.GameOver do
-    Thread.sleep(4000)
+  while battle.gameState == GameState.InProgress do
+    Thread.sleep(2000)
 
     println(s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}")
 
