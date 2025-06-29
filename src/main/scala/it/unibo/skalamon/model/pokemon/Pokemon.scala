@@ -20,7 +20,7 @@ case object Genderless extends Gender
   *   The gender of the Pokémon.
   * @param types
   *   The list of types of the Pokémon.
-  * @param baseStats
+  * @param stats
   *   The base stats of the Pokémon.
   * @param ability
   *   The ability of the Pokémon.
@@ -33,7 +33,7 @@ case class Pokemon(
     name: String,
     gender: Gender,
     types: PokemonType,
-    baseStats: Stats,
+    stats: Stats,
     ability: Ability,
     weightKg: Double,
     possibleMoves: List[Move]
@@ -72,7 +72,7 @@ case class BattlePokemon(
     *   the current stats of the Pokémon.
     */
   def actualStats: Stats =
-    base.baseStats // TODO: for now, just return the base stats
+    base.stats // TODO: for now, just return the base stats
 
   /** Return true if the Pokémon is still alive.
     * @return
@@ -93,4 +93,4 @@ case class BattlePokemon(
     ) // TODO: this method is just temporary, to be removed when the battle engine is implemented
 
   def applyStatChange(change: StatChange): BattlePokemon =
-    this.copy(base = base.copy(baseStats = base.baseStats.applyChange(change)))
+    this.copy(base = base.copy(stats = base.stats.applyChange(change)))
