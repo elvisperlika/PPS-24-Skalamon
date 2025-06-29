@@ -13,6 +13,7 @@ object BattleHooksConfigurator:
   def configure(battle: Battle): Unit =
 
     battle.hookBattleStateUpdate(ActionsReceived) { (state, turn) =>
+      println("EXECUTING ACTIONS\nx\nx")
       executeMoves(turn)
     }
 
@@ -32,14 +33,14 @@ object BattleHooksConfigurator:
       turn.state.stage match
         case TurnStage.ActionsReceived(actionBuffer) =>
           import it.unibo.skalamon.model.event.config.OrderingUtils.given
-          val sortedActions =
-            turn.state.snapshot.trainers.map(actionBuffer.getAction).collect {
-              case Some(m) => m
-            }.sorted
+          val sortedActions = actionBuffer.actions.values.toSeq.sorted
+
           sortedActions.foreach {
             case MoveAction(context) => state = context(state)
             case SwitchAction()      => () // TODO
             case _                   => ()
           }
-        case _ => ()
+        case _ => throw new IllegalStateException(
+            s"Cannot execute moves in stage ${turn.state.stage}"
+          )
       state
