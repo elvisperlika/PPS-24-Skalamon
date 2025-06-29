@@ -24,4 +24,4 @@ object Sunny:
   private val FireModifier: Double = 1.5
   val Description: String = "Sunny burn grass Pokémon."
   val Duration: Int = 5
-  def apply(t: Int, em: EventManager): Sunny = new Sunny(t)
+  def apply(t: Int): Sunny = new Sunny(t)
