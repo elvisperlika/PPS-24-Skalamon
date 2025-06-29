@@ -1,19 +1,18 @@
 package it.unibo.skalamon.controller.battle.action
 
-import it.unibo.skalamon.model.battle.TurnStage.ActionsReceived
 import it.unibo.skalamon.model.battle.{
   Battle,
   BattleState,
   Turn,
   hookBattleStateUpdate
 }
-import it.unibo.skalamon.model.event.TurnStageEvents.{ExecutingActions, Started}
+import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
 
 object BattleHooksConfigurator:
 
   def configure(battle: Battle): Unit =
 
-    battle.hookBattleStateUpdate(ExecutingActions) { (state, turn) =>
+    battle.hookBattleStateUpdate(ActionsReceived) { (state, turn) =>
       executeMoves(turn)
     }
 
@@ -29,8 +28,9 @@ object BattleHooksConfigurator:
 
     def executeMoves(turn: Turn): BattleState =
       var state: BattleState = turn.state.snapshot
+      import it.unibo.skalamon.model.battle.TurnStage
       turn.state.stage match
-        case ActionsReceived(actionBuffer) =>
+        case TurnStage.ActionsReceived(actionBuffer) =>
           import it.unibo.skalamon.model.event.config.OrderingUtils.given
           val sortedActions =
             turn.state.snapshot.trainers.map(actionBuffer.getAction).collect {
