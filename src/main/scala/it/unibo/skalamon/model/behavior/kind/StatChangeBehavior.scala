@@ -52,24 +52,11 @@ object StatStage:
 /** Represents the base stats and current stage-modifiers of a Pokémon.
   */
 case class Stats(
-    base: Map[Stat, Int],
-    stages: Map[Stat, Int] = Map.empty
+    base: Map[Stat, Int]
 ):
   /** Apply a single stat change and return the updated stats.
     */
   def applyChange(change: StatChange): Stats =
-    val currentStage = stages.getOrElse(change.stat, 0)
-    val newStage = StatStage.clamp(currentStage + change.stage)
-    copy(stages = stages.updated(change.stat, newStage))
-
-  /** Compute the effective value of a stat with current stage modifiers.
-    */
-  def effective(stat: Stat): Double =
-    val baseValue = base.getOrElse(stat, 0)
-    val stage = stages.getOrElse(stat, 0)
-    baseValue * StatStage.multiplier(stage)
-
-  /** Compute the effective value of all stats.
-    */
-  def allEffective: Map[Stat, Double] =
-    Stat.values.map(s => s -> effective(s)).toMap
+    this.copy(base =
+      base.updated(change.stat, StatStage.multiplier(change.stage).toInt)
+    )

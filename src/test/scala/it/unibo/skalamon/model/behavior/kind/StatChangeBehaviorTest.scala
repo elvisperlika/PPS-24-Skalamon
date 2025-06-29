@@ -16,42 +16,25 @@ class StatChangeBehaviorTest extends AnyFlatSpec with Matchers:
     StatStage.clamp(0) shouldBe 0
 
   "StatStage.multiplier" should "return correct multipliers for positive stages" in:
-    StatStage.multiplier(0) shouldBe 1.0
-    StatStage.multiplier(1) shouldBe 1.5
-    StatStage.multiplier(2) shouldBe 2.0
-    StatStage.multiplier(6) shouldBe 4.0
+    StatStage.multiplier(0) shouldBe 1.0 +- 0.0001
+    StatStage.multiplier(1) shouldBe 1.5 +- 0.0001
+    StatStage.multiplier(2) shouldBe 2.0 +- 0.0001
+    StatStage.multiplier(3) shouldBe 2.5 +- 0.0001
+    StatStage.multiplier(4) shouldBe 3.0 +- 0.0001
+    StatStage.multiplier(5) shouldBe 3.5 +- 0.0001
+    StatStage.multiplier(6) shouldBe 4.0 +- 0.0001
+
+    StatStage.multiplier(-1) shouldBe (2.0/3.0) +- 0.0001
+    StatStage.multiplier(-2) shouldBe 0.5 +- 0.0001
+    StatStage.multiplier(-3) shouldBe (2.0/5.0) +- 0.0001
+    StatStage.multiplier(-4) shouldBe (1.0/3.0) +- 0.0001
+    StatStage.multiplier(-5) shouldBe (2.0/7.0) +- 0.0001
+    StatStage.multiplier(-6) shouldBe (1.0/4.0) +- 0.0001
 
   it should "return correct multipliers for negative stages" in:
     StatStage.multiplier(-1) shouldBe (2.0 / 3.0) +- 0.0001
     StatStage.multiplier(-2) shouldBe (2.0 / 4.0) +- 0.0001
     StatStage.multiplier(-6) shouldBe (2.0 / 8.0) +- 0.0001
-
-  "Stats.applyChange" should "correctly update stage modifiers" in:
-    val baseStats = Map(Stat.Attack -> 100)
-    val stats = Stats(base = baseStats)
-
-    val updated = stats.applyChange(Stat.Attack + 2)
-    updated.stages(Stat.Attack) shouldBe 2
-
-    val clamped = updated.applyChange(Stat.Attack + 10)
-    clamped.stages(Stat.Attack) shouldBe 6
-
-    val lowered = clamped.applyChange(Stat.Attack + -20)
-    lowered.stages(Stat.Attack) shouldBe -6
-
-  "Stats.effective" should "calculate correct stat values with stage modifiers" in:
-    val baseStats = Map(Stat.Attack -> 100)
-    val stats = Stats(base = baseStats)
-
-    stats.effective(Stat.Attack) shouldBe 100.0
-
-    val modified = stats.applyChange(Stat.Attack + 1)
-    modified.effective(Stat.Attack) shouldBe 150.0
-
-    val decreased = modified.applyChange(Stat.Attack + -2)
-    decreased.effective(
-      Stat.Attack
-    ) shouldBe (100.0 * StatStage.multiplier(-1)) +- 0.001
 
   "StatChangeBehavior" should "bring stat change" in:
     val stage = 2

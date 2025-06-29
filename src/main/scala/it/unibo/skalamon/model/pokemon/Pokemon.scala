@@ -64,15 +64,20 @@ case class BattlePokemon(
     moves: List[BattleMove],
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
     volatileStatus: Set[AssignedStatus[VolatileStatus]],
+    statChanges: Map[Stat, Int] = Map.empty,
     id: UUID = UUID.randomUUID()
 ):
 
-  /** Return the current stats of the Pokémon, updated to it's level.
+  /** Return the current stats of the Pokémon.
     * @return
     *   the current stats of the Pokémon.
     */
   def actualStats: Stats =
-    base.baseStats // TODO: for now, just return the base stats
+    base.baseStats.copy(
+      base = base.baseStats.base.map { case (stat, value) =>
+        stat -> (StatStage.multiplier(statChanges.getOrElse(stat, 0)) * value).toInt
+      }
+    )
 
   /** Return true if the Pokémon is still alive.
     * @return
@@ -92,5 +97,13 @@ case class BattlePokemon(
       math.max(0, currentHP - damage)
     ) // TODO: this method is just temporary, to be removed when the battle engine is implemented
 
+  /** Applies a stat change to the Pokémon.
+    * @param change
+    *   The stat change to be applied.
+    * @return
+    *   the copy of the Pokémon with the applied stat change.
+    */
   def applyStatChange(change: StatChange): BattlePokemon =
-    this.copy(base = base.copy(baseStats = base.baseStats.applyChange(change)))
+    val newStage =
+      StatStage.clamp(statChanges.getOrElse(change.stat, 0) + change.stage)
+    this.copy(statChanges = statChanges.updated(change.stat, newStage))
