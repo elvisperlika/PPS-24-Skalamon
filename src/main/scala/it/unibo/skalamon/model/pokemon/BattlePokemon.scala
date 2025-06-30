@@ -41,6 +41,8 @@ case class BattlePokemon(
     nonVolatileStatus: Option[AssignedStatus[NonVolatileStatus]],
     volatileStatus: Set[AssignedStatus[VolatileStatus]],
     statChanges: Map[Stat, Int] = Map.empty,
+    isProtected: Boolean = false,
+    skipsCurrentTurn: Boolean = false,
     id: UUID = UUID.randomUUID()
 ):
   /** Return the current stats of the Pokémon.
