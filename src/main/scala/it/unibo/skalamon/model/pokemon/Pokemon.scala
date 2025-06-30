@@ -75,7 +75,10 @@ case class BattlePokemon(
   def actualStats: Stats =
     base.baseStats.copy(
       base = base.baseStats.base.map { case (stat, value) =>
-        stat -> (StatStage.multiplier(statChanges.getOrElse(stat, 0)) * value).toInt
+        stat -> (StatStage.multiplier(statChanges.getOrElse(
+          stat,
+          1
+        )) * value).toInt
       }
     )
 
