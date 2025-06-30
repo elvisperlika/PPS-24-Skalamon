@@ -85,18 +85,6 @@ case class BattlePokemon(
     */
   def isAlive: Boolean = currentHP > 0
 
-  /** Deals damage to the Pokémon.
-    *
-    * @param damage
-    *   The damage to be inflicted on the Pokémon.
-    * @return
-    *   the copy of the damaged Pokémon.
-    */
-  def takeDamage(damage: Int): BattlePokemon =
-    this.copy(currentHP =
-      math.max(0, currentHP - damage)
-    ) // TODO: this method is just temporary, to be removed when the battle engine is implemented
-
   /** Applies a stat change to the Pokémon.
     * @param change
     *   The stat change to be applied.
