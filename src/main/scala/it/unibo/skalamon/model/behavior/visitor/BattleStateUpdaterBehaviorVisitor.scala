@@ -4,6 +4,7 @@ import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.BehaviorsContext
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
+import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.{
   AssignedStatus,
@@ -52,7 +53,14 @@ class BattleStateUpdaterBehaviorVisitor(
   // Behaviors
 
   override def visit(behavior: SingleHitBehavior): BattleState =
-    ??? // TODO calc move damage, based on power, type effectiveness, etc.
+    val damage: Int = context match
+      case MoveContext(origin, target, source, behaviors) =>
+        import it.unibo.skalamon.model.behavior.damage.DamageCalculatorGen1.calculate
+        calculate(origin, target, source, behavior.power)
+      case _ => 0
+    updateTarget { pokemon =>
+      pokemon.copy(currentHP = pokemon.currentHP - damage)
+    }
 
   override def visit(behavior: HealthBehavior): BattleState =
     updateTarget { pokemon =>
