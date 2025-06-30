@@ -15,10 +15,11 @@ case class Snow(t: Int)
   override val rules: List[(EventType[_], PokemonRule)] =
     (
       CreateWeather,
-      Modify.except(Ice) { p => p.copy(currentHP = p.currentHP - 10) }
+      Modify.except(Ice) { p => p.copy(currentHP = p.currentHP - Snow.Damage) }
     ) :: Nil
 
 object Snow:
+  val Damage: Int = 10
   val Description: String = "Snow boosts Ice-type defense."
   val Duration: Int = 5
   def apply(t: Int, em: EventManager): Snow = new Snow(t)

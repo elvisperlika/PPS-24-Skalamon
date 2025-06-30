@@ -16,9 +16,10 @@ import it.unibo.skalamon.model.types.TypesCollection.Psychic
 case class Awakened(t: Int) extends Terrain with FieldEffect(t)
     with TypesModifier with Expirable(t, Awakened.Duration):
   override val description: String = Awakened.Description
-  override val typesModifier: Map[Type, Double] = Map(Psychic -> 1.5)
+  override val typesModifier: Map[Type, Double] = Map(Psychic -> Awakened.PsychicModifier)
 
 object Awakened:
+  val PsychicModifier: Double = 1.5
   val Description: String = "Psychic boosts Psychic Pokémon."
   val Duration: Int = 5
   def apply(t: Int): Awakened = new Awakened(t)
