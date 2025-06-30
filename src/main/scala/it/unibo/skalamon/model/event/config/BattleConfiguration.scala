@@ -39,17 +39,29 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
       case Nil          => battle.gameState = GameOver(None)
       case _            =>
 
-  watch(Ended)(executeStatus)
+  battle.hookBattleStateUpdate(Ended) { (state, _) => executeStatus(state) }
 
-  private def executeStatus(turn: Turn): Unit =
-    turn.state.snapshot.trainers.foreach: trainer =>
+  private def executeStatus(bt: BattleState): BattleState =
+    val updatedTrainers = bt.trainers.map { trainer =>
       trainer.inField match
-        case Some(pokemon) =>
-          pokemon.nonVolatileStatus match
-            case Some(status) =>
-              executeNonVolatileStatus(pokemon, status, turn)
-            case None => ()
-        case None => ()
+        case Some(inFieldPokemon) =>
+          val pk = trainer.team.find(
+            _.id == inFieldPokemon.id
+          ).get.copy(isProtected = false, skipsCurrentTurn = false)
+          val afterNonVolatile = pk.nonVolatileStatus match
+            case Some(status) => executeNonVolatileStatus(pk, status)
+            case None         => pk
+          val afterVolatile = executeVolatileStatus(
+            afterNonVolatile,
+            afterNonVolatile.volatileStatus
+          )
+          val updatedTeam = trainer.team.map(p =>
+            if (p.id == afterVolatile.id) afterVolatile else p
+          )
+          trainer.copy(team = updatedTeam)
+        case None => trainer
+    }
+    bt.copy(trainers = updatedTrainers)
 
   private def executeNonVolatileStatus(
       pk: BattlePokemon,
