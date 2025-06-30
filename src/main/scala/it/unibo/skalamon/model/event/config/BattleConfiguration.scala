@@ -26,6 +26,8 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
   private val ParalyzeAttackReduction = 2
   private val ParalyzeTriggerChance = 0.25
 
+  private val SleepTurns = 3
+
   private val FreezeThawChance = 0.2
 
   private val PoisonedDamageReduction = 16
@@ -96,29 +98,24 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
           scala.util.Random.nextDouble() < ParalyzeTriggerChance
       )
 
-    // TODO: Non so come gestirlo
-    // Pokémon cannot act for 1 to 3 turns.
+    // Pokémon cannot act for 3 turns.
     // Turns spent asleep are tracked even if switched out.
-    // Moves like Rest auto-induce sleep but heal HP to 100%.
-    // Can be bypassed by:
-    //    Sleep Talk which picks a random move
-    //    Snore which is a normal attack
-    case Sleep => pk
+    case Sleep =>
+      if battle.turnIndex - status.turnAssigned < SleepTurns then
+        pk.copy(skipsCurrentTurn = true)
+      else
+        pk
 
-    // TODO: Non so come gestire lo scongelamento istantaneo
     // Pokémon cannot move while frozen.
     // 20% chance each turn to thaw naturally.
-    // Pokémon thaw immediately if hit by a Fire-type move or use certain moves (e.g., Scald, Flame Wheel).
     case Freeze =>
       if scala.util.Random.nextDouble() < FreezeThawChance then
         pk.copy(nonVolatileStatus = Option.empty)
       else
         pk
 
-    // TODO: Non so se gesire qui la cosa del Poison Heal
     // Takes 1/16 max HP damage per turn.
     // Persists indefinitely until cured.
-    // Some abilities convert this to a benefit (Poison Heal).
     case Poison =>
       pk.copy(currentHP = pk.currentHP - (pk.base.hp / PoisonedDamageReduction))
 
@@ -143,5 +140,5 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
           else
             pk
 
-        // - Blocks moves that target this Pokémon.
+        // Blocks moves that target this Pokémon.
         case ProtectEndure => pk.copy(isProtected = true)
