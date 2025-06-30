@@ -22,6 +22,14 @@ trait BattleController:
     */
   def start(): Unit
 
+  /** Checks if the battle is waiting for actions from trainers, to be
+    * registered via [[registerAction]].
+    *
+    * @return
+    *   True if the battle is waiting for actions, false otherwise.
+    */
+  def isWaitingForActions: Boolean
+
   /** Registers an action from a trainer.
     *
     * @param trainer
@@ -51,11 +59,16 @@ object BattleController:
 private class BattleControllerImpl(override val battle: Battle)
     extends BattleController:
 
-  BattleHooksConfigurator.configure(battle)
-
   private var actionBuffer = ActionBuffer(battle.trainers.size)
 
-  override def start(): Unit = battle.start()
+  override def start(): Unit =
+    BattleHooksConfigurator.configure(battle)
+    battle.start()
+
+  override def isWaitingForActions: Boolean =
+    battle.currentTurn match
+      case Some(turn) if turn.state.stage == TurnStage.WaitingForActions => true
+      case _ => false
 
   override def registerAction(trainer: Trainer, action: Action): Unit =
     import TurnStage.*
