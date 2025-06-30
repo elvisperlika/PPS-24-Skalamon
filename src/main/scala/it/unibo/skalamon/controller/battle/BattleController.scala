@@ -1,6 +1,10 @@
 package it.unibo.skalamon.controller.battle
 
-import it.unibo.skalamon.controller.battle.action.{Action, ActionBuffer}
+import it.unibo.skalamon.controller.battle.action.{
+  Action,
+  ActionBuffer,
+  BattleHooksConfigurator
+}
 import it.unibo.skalamon.model.battle.{Battle, Trainer, Turn, TurnStage}
 
 /** Controller for managing battles in the game.
@@ -17,6 +21,14 @@ trait BattleController:
     * This method initializes the battle and sets the initial turn stage.
     */
   def start(): Unit
+
+  /** Checks if the battle is waiting for actions from trainers, to be
+    * registered via [[registerAction]].
+    *
+    * @return
+    *   True if the battle is waiting for actions, false otherwise.
+    */
+  def isWaitingForActions: Boolean
 
   /** Registers an action from a trainer.
     *
@@ -46,9 +58,17 @@ object BattleController:
 
 private class BattleControllerImpl(override val battle: Battle)
     extends BattleController:
+
   private var actionBuffer = ActionBuffer(battle.trainers.size)
 
-  override def start(): Unit = battle.start()
+  override def start(): Unit =
+    BattleHooksConfigurator.configure(battle)
+    battle.start()
+
+  override def isWaitingForActions: Boolean =
+    battle.currentTurn match
+      case Some(turn) if turn.state.stage == TurnStage.WaitingForActions => true
+      case _ => false
 
   override def registerAction(trainer: Trainer, action: Action): Unit =
     import TurnStage.*
@@ -57,6 +77,7 @@ private class BattleControllerImpl(override val battle: Battle)
       case Some(turn) if turn.state.stage == WaitingForActions =>
         this.actionBuffer = actionBuffer.register(trainer, action)
         if actionBuffer.isFull then
+          given Turn = turn
           battle.setStage(ActionsReceived(actionBuffer))
           this.actionBuffer = actionBuffer.clear()
       case _ => throw new IllegalStateException(

@@ -3,7 +3,11 @@ package it.unibo.skalamon.model.behavior
 import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
-import it.unibo.skalamon.model.event.{BattleStateEvents, EventManager}
+import it.unibo.skalamon.model.event.{
+  BattleStateEvents,
+  BehaviorEvent,
+  EventManager
+}
 import it.unibo.skalamon.model.field.field
 import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
 import it.unibo.skalamon.utils.MockTrainers
@@ -11,8 +15,10 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 /** */
-class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers with MockTrainers:
-  private val state = BattleState(alice :: bob :: Nil, field = field(alice :: bob :: Nil)())
+class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
+    with MockTrainers:
+  private val state =
+    BattleState(alice :: bob :: Nil, field = field(alice :: bob :: Nil)())
 
   private val context = BehaviorTestUtils.context(
     target = target,
@@ -83,7 +89,8 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers with MockT
   it should "trigger multiple state changed events for each behavior" in:
     given manager: EventManager = EventManager()
 
-    val behavior = BehaviorGroup(DamageBehavior(damage), StatusBehavior(Confusion, 1))
+    val behavior =
+      BehaviorGroup(DamageBehavior(damage), StatusBehavior(Confusion, 1))
 
     var currentState = state
     var count = 0
@@ -96,3 +103,14 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers with MockT
     behavior(context)(state)
 
     count shouldBe behavior.behaviors.size
+
+  it should "enqueue behavior events" in:
+    given manager: EventManager = EventManager()
+    var notified = false
+    manager.watch(BehaviorEvent[DamageBehavior]()) { _ =>
+      notified = true
+    }
+
+    DamageBehavior(damage)(context)(state)
+
+    notified shouldBe true

@@ -3,8 +3,9 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.controller.battle.GameState
 import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
 import it.unibo.skalamon.model.data.Stacks.Stack
-import it.unibo.skalamon.model.event.BattleStateEvents.Finished
 import it.unibo.skalamon.model.event.*
+import it.unibo.skalamon.model.event.BattleStateEvents.Finished
+import it.unibo.skalamon.model.event.config.BattleConfiguration
 
 /** A battle between trainers.
   * @param trainers
@@ -18,6 +19,8 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     */
   private var turnHistory: Stack[Turn] = Stack.empty
 
+  def turnIndex: Int = turnHistory.size
+
   /** The current turn of the battle.
     */
   def currentTurn: Option[Turn] = turnHistory.peek
@@ -25,19 +28,20 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
   /** The event manager for handling battle/turn events.
     */
   override val eventManager: EventManager =
-    new EventManager with BattleConfiguration
-
-  eventManager.watch(Finished) { maybeWinner =>
-    gameState = GameOver(maybeWinner)
-  }
+    new EventManager with BattleConfiguration(this)
 
   /** Starts the battle by initializing the first turn.
     */
   def start(): Unit =
-    turnHistory = turnHistory push Turn(TurnState.initial(trainers))
+    given turn: Turn = Turn(TurnState.initial(trainers))
+    turnHistory = turnHistory push turn
     setStage(TurnStage.Started)
 
-  /** Makes the battle advance to the next stage.
+  /** Notifies each event from the current turn's [[BattleState]]'s event queue
+    * to the event manager, and updates the turn state making the battle advance
+    * to the next stage.
+    * @throws IllegalStateException
+    *   If there is no active turn to update.
     */
   def update(): Unit =
     currentTurn match
@@ -46,6 +50,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
 
   private def update(turn: Turn): Unit =
     import TurnStage.*
+    given Turn = turn
     turn.state.stage match
       case Started                       => setStage(WaitingForActions)
       case WaitingForActions             =>
@@ -60,11 +65,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     * @param stage
     *   The new stage to set for the turn.
     */
-  def setStage(stage: TurnStage): Unit =
-    currentTurn match
-      case Some(turn) =>
-        turn.state = turn.state.copy(stage = stage)
-        given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
-        eventManager.notify(turn.state.stage of turn)
-      case None =>
-        throw new IllegalStateException("No active turn to set stage")
+  def setStage(stage: TurnStage)(using turn: Turn): Unit =
+    given Conversion[TurnStage, EventType[Turn]] = TurnStageEvents.from(_)
+    turn.state = turn.state.copy(stage = stage)
+    eventManager.notify(turn.state.stage of turn)

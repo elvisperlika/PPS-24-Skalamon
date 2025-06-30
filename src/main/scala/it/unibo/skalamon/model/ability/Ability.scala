@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.ability
 
-import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.EventType
 
@@ -15,5 +14,5 @@ import it.unibo.skalamon.model.event.EventType
   */
 case class Ability(
     name: String,
-    hooks: Map[EventType[Turn], Behavior]
+    hooks: Map[EventType[_], Behavior]
 )

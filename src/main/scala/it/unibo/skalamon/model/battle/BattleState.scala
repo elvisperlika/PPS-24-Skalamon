@@ -7,5 +7,5 @@ import it.unibo.skalamon.model.field.Field
   */
 case class BattleState(
     trainers: List[Trainer],
-    field: Field
+    field: Field,
 )

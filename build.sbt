@@ -20,4 +20,5 @@ lazy val root = (project in file("."))
       "junit" % "junit" % "4.13.2" % Test,
       "com.github.trystan" % "AsciiPanel" % "master-SNAPSHOT"
     )
+    coverageEnabled := true
   )

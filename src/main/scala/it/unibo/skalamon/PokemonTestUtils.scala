@@ -1,11 +1,10 @@
-package it.unibo.skalamon.model.pokemon
+package it.unibo.skalamon
 
-import it.unibo.skalamon.model
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
-import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
@@ -14,11 +13,11 @@ import it.unibo.skalamon.model.types.TypesCollection.{
   Poison
 }
 
-/** Test utilities for testing Pokémon.
-  */
+// TEMPORARY
+
 object PokemonTestUtils:
-  private val moveThunderShock = Move("Thunder Shock", priority = 5)
-  private val moveElectric = Move("Electric", priority = 5)
+  private val moveThunderShock = Move("Thunder Shock", priority = 0, success = DamageBehavior(10))
+  private val moveElectric = Move("Electric", priority = 0, success = DamageBehavior(5))
 
   private val genericAbility = Ability("Static", Map.empty)
   private val blazeAbility = Ability("Blaze", Map.empty)
@@ -50,27 +49,8 @@ object PokemonTestUtils:
     levelPokemon1,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn, 1)),
-    Set(
-      AssignedStatus(Substitute, 4),
-      AssignedStatus(ProtectEndure, 3),
-      AssignedStatus(Substitute, 8)
-    )
-  )
-
-  /** This Pokémon is KO.
-    */
-  val simplePokemon1ko: BattlePokemon = BattlePokemon(
-    basePokemon1,
-    levelPokemon1,
-    currentHP = 0,
-    List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn, 1)),
-    Set(
-      AssignedStatus(Substitute, 4),
-      AssignedStatus(ProtectEndure, 3),
-      AssignedStatus(Substitute, 8)
-    )
+    None,
+    Set.empty
   )
 
   private val basePokemon2 = Pokemon(
@@ -122,12 +102,8 @@ object PokemonTestUtils:
     levelPokemon1,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Sleep, 4)),
-    Set(
-      AssignedStatus(Flinch, 4),
-      AssignedStatus(ProtectEndure, 3),
-      AssignedStatus(Yawn, 8)
-    )
+    None,
+    Set.empty
   )
 
   def trainerAlice: Trainer =

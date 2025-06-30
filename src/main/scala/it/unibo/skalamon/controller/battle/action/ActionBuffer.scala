@@ -27,6 +27,9 @@ trait ActionBuffer:
     */
   def withdraw(trainer: Trainer): ActionBuffer
 
+  /** The actions registered by each trainer. */
+  def actions: Map[Trainer, Action]
+
   /** Retrieves the action registered by a trainer.
     * @param trainer
     *   The trainer whose action is to be retrieved.
@@ -59,7 +62,7 @@ object ActionBuffer:
 
 private case class BasicActionBuffer(
     override val maxSize: Int,
-    actions: Map[Trainer, Action] = Map.empty
+    override val actions: Map[Trainer, Action] = Map.empty
 ) extends ActionBuffer:
 
   override def register(trainer: Trainer, action: Action): ActionBuffer =
