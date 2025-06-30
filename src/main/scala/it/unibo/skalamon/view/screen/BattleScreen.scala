@@ -20,7 +20,7 @@ class BattleScreen(
   import BattleScreen.*
 
   private val defaultPokemonName = "No Pokemon"
-  private val defaultAbilityName = "No Ability"
+  private val defaultAbilityName = "No Move"
 
   /** Shows the player's and opponent's names on the screen.
     * @param player
