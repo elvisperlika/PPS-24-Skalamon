@@ -3,6 +3,7 @@ package it.unibo.skalamon
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
 import it.unibo.skalamon.model.types.*
@@ -16,21 +17,22 @@ import it.unibo.skalamon.model.types.TypesCollection.{
 // TEMPORARY
 
 object PokemonTestUtils:
-  private val moveThunderShock = Move("Thunder Shock", priority = 0, success = DamageBehavior(10))
-  private val moveElectric = Move("Electric", priority = 0, success = DamageBehavior(5))
+  private val moveThunderShock =
+    Move("Thunder Shock", priority = 0, success = DamageBehavior(10))
+  private val moveElectric =
+    Move("Electric", priority = 0, success = DamageBehavior(5))
 
-  private val genericAbility = Ability("Static", Map.empty)
+  private val genericAbility = Ability("Static", hooks = Map(
+    TurnStageEvents.Started -> DamageBehavior(1) // 1HP damage at the start of the turn
+  ))
   private val blazeAbility = Ability("Blaze", Map.empty)
 
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
-  private val levelPokemon1: Int = 100
-  private val levelPokemon2: Int = 86
 
   private val basePokemon1 = Pokemon(
     "Pikachu",
-    Male,
-    List(Electric),
+    List(Electric), // Qui va una lista di PokemonType
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 55,
@@ -40,13 +42,13 @@ object PokemonTestUtils:
         Stat.Speed -> 90
       )
     ),
-    ability = genericAbility,
+    ability = blazeAbility,
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
   val simplePokemon1: BattlePokemon = BattlePokemon(
     basePokemon1,
-    levelPokemon1,
+    Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     None,
@@ -55,7 +57,6 @@ object PokemonTestUtils:
 
   private val basePokemon2 = Pokemon(
     "Bulbasaur",
-    Male,
     List(Grass, Poison),
     baseStats = Stats(
       base = Map(
@@ -72,7 +73,7 @@ object PokemonTestUtils:
   )
   val simplePokemon2: BattlePokemon = BattlePokemon(
     basePokemon2,
-    levelPokemon2,
+    Male,
     startingHP,
     List(BattleMove(moveElectric, powerPoint)),
     Option.empty,
@@ -81,7 +82,6 @@ object PokemonTestUtils:
 
   private val basePokemon3 = Pokemon(
     "Charmander",
-    Male,
     Fire,
     baseStats = Stats(
       base = Map(
@@ -99,7 +99,7 @@ object PokemonTestUtils:
 
   private val simplePokemon3: BattlePokemon = BattlePokemon(
     basePokemon3,
-    levelPokemon1,
+    Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     None,

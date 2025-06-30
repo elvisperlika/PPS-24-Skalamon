@@ -1,5 +1,6 @@
 package it.unibo.skalamon.controller.battle.action
 
+import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.{
   Battle,
   BattleState,
@@ -19,6 +20,15 @@ object BattleHooksConfigurator:
 
     battle.hookBattleStateUpdate(Started) { (state, _) =>
       updateBattleField(state)
+    }
+    
+    battle.trainers.foreach { trainer =>
+      trainer.team.foreach { pokemon =>
+        pokemon.base.ability.hookAll(battle)(
+          source = Some(pokemon).filter(trainer.inField.contains),
+          target = battle.trainers.find(_ != trainer).flatMap(_.inField)
+        )
+      }
     }
 
     def updateBattleField(battleState: BattleState): BattleState =

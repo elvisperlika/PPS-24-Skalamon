@@ -15,7 +15,6 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
   var icePokemon: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Pikachu",
-      gender = Male,
       types = Ice,
       hp = 100,
       baseStats = Stats(
@@ -31,7 +30,7 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
       weightKg = 10,
       possibleMoves = Nil
     ),
-    level = 1,
+    gender = Male,
     currentHP = 100,
     moves = Nil,
     nonVolatileStatus = None,
