@@ -2,10 +2,7 @@ package it.unibo.skalamon
 
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleState
-}
+import it.unibo.skalamon.model.battle.{Battle, BattleState}
 import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.move.{BattleMove, createContext}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
@@ -30,9 +27,6 @@ def main(): Unit =
   battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
     printView(state)
     battleView.update(state)
-
-  controller.start()
-  controller.update()
 
   controller.start()
 
