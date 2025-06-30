@@ -60,7 +60,13 @@ class BattleStateUpdaterBehaviorVisitor(
     val damage: Int = context match
       case MoveContext(origin, target, source, behaviors) =>
         val damageCalculator: DamageCalculator = DamageCalculatorGen1
-        damageCalculator.calculate(origin, target, source, behavior.power)
+        damageCalculator.calculate(
+          origin,
+          target,
+          source,
+          behavior.power,
+          current
+        )
       case _ => 0
     updateTarget { pokemon =>
       pokemon.copy(currentHP = pokemon.currentHP - damage)

@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.behavior.damage
 
+import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
 
@@ -22,5 +23,6 @@ trait DamageCalculator:
       origin: BattleMove,
       source: BattlePokemon,
       target: BattlePokemon,
-      power: Int
+      power: Int,
+      battleState: BattleState
   ): Int

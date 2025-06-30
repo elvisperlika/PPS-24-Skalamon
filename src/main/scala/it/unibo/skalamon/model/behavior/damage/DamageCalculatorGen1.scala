@@ -1,5 +1,14 @@
 package it.unibo.skalamon.model.behavior.damage
 
+import it.unibo.skalamon.model.battle.BattleState
+import it.unibo.skalamon.model.behavior.damage.DamageCalculatorUtility.{
+  calculateCategoryScalar,
+  calculateFieldFactor,
+  calculateLevelScalar,
+  calculateRandomFactor,
+  calculateStabFactor,
+  calculateTypeEfficacy
+}
 import it.unibo.skalamon.model.data.RandomGenerator
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.move.MoveModel.Category
@@ -10,7 +19,7 @@ import it.unibo.skalamon.model.pokemon.Stat.{
   SpecialAttack,
   SpecialDefense
 }
-import it.unibo.skalamon.model.types.TypeUtility
+import it.unibo.skalamon.model.types.{Type, TypeUtility}
 
 case object DamageCalculatorGen1 extends DamageCalculator:
 
@@ -18,9 +27,7 @@ case object DamageCalculatorGen1 extends DamageCalculator:
   private val LevelMultiplier: Int = 2
   private val LevelDivider: Int = 5
   private val LevelBoost: Int = 2
-//  private val RandomFactorMinBound: Int = 85
-//  private val RandomFactorMaxBound: Int = 100
-//  private val PercentageDivider: Int = 100
+
   private val DamageDivider: Int = 50
   private val StabMultiplier: Int = 2
 
@@ -28,38 +35,28 @@ case object DamageCalculatorGen1 extends DamageCalculator:
       origin: BattleMove,
       source: BattlePokemon,
       target: BattlePokemon,
-      power: Int
+      power: Int,
+      battleState: BattleState
   ): Int =
-    val sourceStat = source.base.stats.base
-    val targetStat = target.base.stats.base
-
-    val categoryScalar: Double = origin.move.category match
-      case Category.Physical => sourceStat(Attack) / targetStat(Defense)
-      case Category.Special  =>
-        sourceStat(SpecialAttack) * targetStat(SpecialDefense)
-      case _ => NoMultiplier
-
-    val levelScalar = LevelMultiplier * source.level / LevelDivider + LevelBoost
-
+    val categoryScalar: Double =
+      calculateCategoryScalar(origin, source.actualStats, target.actualStats)
+    val levelScalar = calculateLevelScalar(source.level)
     val baseDamage: Double =
       levelScalar * power * categoryScalar / DamageDivider
 
     val multiplier: Double =
       val stab: Double =
-        if source.base.types.contains(origin.move.moveType)
-        then StabMultiplier
-        else NoMultiplier
-
-      val typeEfficacy: Double = TypeUtility.calculateTypeMultiplier(
-        origin.move.moveType.computeEffectiveness(target.base.types)
-      )
-
+        calculateStabFactor(source.base.types, origin.move.moveType)
+      val typeEfficacy: Double =
+        calculateTypeEfficacy(origin.move.moveType, target.base.types)
       /* Comment this factor for testing */
-//      val randomFactor = RandomGenerator().nextInt(
-//        RandomFactorMinBound,
-//        RandomFactorMaxBound
-//      ) / PercentageDivider
-
-      stab * typeEfficacy // * randomFactor
+      // val randomFactor = calculateRandomFactor
+      val fieldFactor: Double = calculateFieldFactor(
+        origin.move.moveType,
+        source,
+        target,
+        battleState
+      )
+      stab * typeEfficacy * fieldFactor // * randomFactor
 
     (baseDamage * multiplier).toInt
