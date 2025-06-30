@@ -12,7 +12,7 @@ import it.unibo.skalamon.model.pokemon.Stat.{
 }
 import it.unibo.skalamon.model.types.TypeUtility
 
-object DamageCalculatorGen1:
+case object DamageCalculatorGen1 extends DamageCalculator:
 
   private val NoMultiplier: Int = 1
   private val LevelMultiplier: Int = 2
