@@ -2,12 +2,15 @@ package it.unibo.skalamon
 
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
-import it.unibo.skalamon.model.battle.{Battle, BattleState}
+import it.unibo.skalamon.model.battle.{
+  Battle,
+  BattleState
+}
 import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.move.{BattleMove, createContext}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-
-// TEMPORARY
+import it.unibo.skalamon.view.MainView
+import it.unibo.skalamon.view.battle.BattleView
 
 @main
 def main(): Unit =
@@ -19,15 +22,26 @@ def main(): Unit =
   val battle = Battle(List(trainerAlice, trainerBob))
   val controller = BattleController(battle)
 
+  val mainView: MainView = MainView()
+  mainView.setupView()
+
+  val battleView = BattleView(mainView.getPlayScreen())
+
   battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
     printView(state)
+    battleView.update(state)
+
+  controller.start()
+  controller.update()
 
   controller.start()
 
   while battle.gameState == GameState.InProgress do
     Thread.sleep(2000)
 
-    println(s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}")
+    println(
+      s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}"
+    )
 
     if controller.isWaitingForActions then
       println("Waiting for actions...")

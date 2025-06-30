@@ -17,7 +17,7 @@ trait BattleView:
     * @param battleState
     *   The current state of the battle.
     */
-  def update(battleState: BattleStateContainer): Unit
+  def update(battleState: BattleState): Unit
 
 /** Provides a factory method to create a new BattleView instance.
   */
@@ -36,12 +36,8 @@ object BattleView:
   private class BattleViewImpl(
       screen: BattleScreen
   ) extends BattleView:
-    /** Update the whole battle view.
-      * @param battle
-      *   The current state of the battle.
-      */
-    override def update(battleState: BattleStateContainer): Unit =
-      val trainers = extractBattleState(battleState).trainers
+    override def update(battleState: BattleState): Unit =
+      val trainers = battleState.trainers
       if (trainers.size != BattleScreen.playerNumber) then
         throw new IllegalArgumentException(
           s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
