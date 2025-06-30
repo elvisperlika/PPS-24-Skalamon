@@ -22,6 +22,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       name = "Pikachu",
       gender = Male,
       types = Electric,
+      hp = 100,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 100,
@@ -47,6 +48,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       name = "Snowsaur",
       gender = Female,
       types = Ice,
+      hp = 80,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 90,

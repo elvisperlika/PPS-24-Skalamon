@@ -32,6 +32,7 @@ object PokemonTestUtils:
     "Pikachu",
     Male,
     List(Electric),
+    hp = startingHP,
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 55,
@@ -77,6 +78,7 @@ object PokemonTestUtils:
     "Bulbasaur",
     Male,
     List(Grass, Poison),
+    hp = startingHP,
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 55,
@@ -103,6 +105,7 @@ object PokemonTestUtils:
     "Charmander",
     Male,
     Fire,
+    hp = startingHP,
     baseStats = Stats(
       base = Map(
         Stat.Attack -> 52,

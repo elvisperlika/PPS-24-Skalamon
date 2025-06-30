@@ -17,6 +17,7 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
       name = "Pikachu",
       gender = Male,
       types = Ice,
+      hp = 100,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 100,
