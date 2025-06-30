@@ -5,8 +5,6 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 class BattlePokemonTest extends AnyFlatSpec with should.Matchers:
-  private val Damage1 = 10
-  private val Damage2 = 30
   private val StatStageUp = 2
   private val StatStageDown = -4
   private val StatStageDownMultiplier = 0.33
