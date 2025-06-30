@@ -3,7 +3,11 @@ package it.unibo.skalamon.model.behavior
 import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
-import it.unibo.skalamon.model.event.{BattleStateEvents, EventManager}
+import it.unibo.skalamon.model.event.{
+  BattleStateEvents,
+  BehaviorEvent,
+  EventManager
+}
 import it.unibo.skalamon.model.field.field
 import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
 import it.unibo.skalamon.utils.MockTrainers
@@ -102,8 +106,11 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
 
   it should "enqueue behavior events" in:
     given manager: EventManager = EventManager()
+    var notified = false
+    manager.watch(BehaviorEvent[DamageBehavior]()) { _ =>
+      notified = true
+    }
 
-    val behavior = DamageBehavior(damage)
-    val newState = behavior(context)(state)
+    DamageBehavior(damage)(context)(state)
 
-    newState.eventQueue.size shouldBe 1
+    notified shouldBe true

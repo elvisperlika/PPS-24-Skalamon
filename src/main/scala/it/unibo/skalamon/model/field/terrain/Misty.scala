@@ -15,9 +15,11 @@ case class Misty(t: Int)
     with TypesModifier
     with Expirable(t, Misty.Duration):
   override val description: String = Misty.Description
-  override val typesModifier: Map[Type, Double] = Map(Dragon -> 0.5)
+  override val typesModifier: Map[Type, Double] =
+    Map(Dragon -> Misty.DragonModifier)
 
 object Misty:
+  val DragonModifier: Double = 0.5
   val Description: String = "Misty weakens Dragon Pokémon."
   val Duration: Int = 5
   def apply(t: Int): Misty = new Misty(t)

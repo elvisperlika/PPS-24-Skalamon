@@ -17,8 +17,8 @@ import it.unibo.skalamon.model.types.TypesCollection.{
 /** Test utilities for testing Pokémon.
   */
 object PokemonTestUtils:
-  private val moveThunderShock = Move("Thunder Shock")
-  private val moveElectric = Move("Electric")
+  private val moveThunderShock = Move("Thunder Shock", priority = 5)
+  private val moveElectric = Move("Electric", priority = 5)
 
   private val startingHP: Int = 70
   private val powerPoint: Int = 4

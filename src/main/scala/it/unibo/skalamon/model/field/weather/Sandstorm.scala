@@ -17,11 +17,12 @@ case class Sandstorm(t: Int) extends FieldEffect(t) with PokemonRules
     (
       Started,
       Modify.except(Rock, Steel, Ground) { p =>
-        p.copy(currentHP = p.currentHP - 10)
+        p.copy(currentHP = p.currentHP - Sandstorm.Damange)
       }
     ) :: Nil
 
 object Sandstorm:
+  val Damange: Int = 10
   val Description: String = "Sandstorm damages non-Rock, Ground, Steel types."
   val Duration: Int = 5
   def apply(t: Int): Sandstorm = new Sandstorm(t)
