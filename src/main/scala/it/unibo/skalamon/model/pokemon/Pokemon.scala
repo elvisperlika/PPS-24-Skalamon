@@ -6,11 +6,6 @@ import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.*
 
-sealed trait Gender
-case object Male extends Gender
-case object Female extends Gender
-case object Genderless extends Gender
-
 /** Represents the base attributes of a Pokémon.
   * @param name
   *   The name of the Pokémon.
