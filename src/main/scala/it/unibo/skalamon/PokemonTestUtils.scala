@@ -3,6 +3,7 @@ package it.unibo.skalamon
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
 import it.unibo.skalamon.model.types.*
@@ -19,7 +20,9 @@ object PokemonTestUtils:
   private val moveThunderShock = Move("Thunder Shock", priority = 0, success = DamageBehavior(10))
   private val moveElectric = Move("Electric", priority = 0, success = DamageBehavior(5))
 
-  private val genericAbility = Ability("Static", Map.empty)
+  private val genericAbility = Ability("Static", hooks = Map(
+    TurnStageEvents.Started -> DamageBehavior(1) // 1HP damage at the start of the turn
+  ))
   private val blazeAbility = Ability("Blaze", Map.empty)
 
   private val startingHP: Int = 70
@@ -40,7 +43,7 @@ object PokemonTestUtils:
         Stat.Speed -> 90
       )
     ),
-    ability = genericAbility,
+    ability = blazeAbility,
     weightKg = 6.0,
     possibleMoves = List(moveThunderShock, moveElectric)
   )
