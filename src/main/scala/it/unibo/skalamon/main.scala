@@ -13,8 +13,8 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 def main(): Unit =
   var (trainerAlice, trainerBob) =
     (PokemonTestUtils.trainerAlice, PokemonTestUtils.trainerBob)
-  trainerAlice = trainerAlice.copy(inField = Some(trainerAlice.team.head))
-  trainerBob = trainerBob.copy(inField = Some(trainerBob.team.head))
+  trainerAlice = trainerAlice.copy(_inField = Some(trainerAlice.team.head))
+  trainerBob = trainerBob.copy(_inField = Some(trainerBob.team.head))
 
   val battle = Battle(List(trainerAlice, trainerBob))
   val controller = BattleController(battle)
