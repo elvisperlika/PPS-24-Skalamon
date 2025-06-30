@@ -37,7 +37,9 @@ class BattleStateUpdaterBehaviorVisitor(
       trainers = current.trainers.map { trainer =>
         trainer.copy(
           team = trainer.team.map { pokemon =>
-            if (pokemon.id == target.id) map(pokemon) else pokemon
+            if (pokemon.id == target.id && !pokemon.isProtected) then
+              map(pokemon).copy(isProtected = false)
+            else pokemon
           }
         )
       }

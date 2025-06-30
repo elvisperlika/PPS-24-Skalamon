@@ -1,7 +1,12 @@
 package it.unibo.skalamon.model.event.config
 
 import it.unibo.skalamon.controller.battle.GameState.GameOver
-import it.unibo.skalamon.model.battle.{Battle, Turn}
+import it.unibo.skalamon.model.battle.{
+  Battle,
+  BattleState,
+  Turn,
+  hookBattleStateUpdate
+}
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
 import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.event.TurnStageEvents.Ended
@@ -19,6 +24,7 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
   private val BurnDamageReduction = 16
 
   private val ParalyzeAttackReduction = 2
+  private val ParalyzeTriggerChance = 0.25
 
   private val FreezeThawChance = 0.2
 
@@ -47,10 +53,9 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
 
   private def executeNonVolatileStatus(
       pk: BattlePokemon,
-      status: AssignedStatus[NonVolatileStatus],
-      turn: Turn
+      status: AssignedStatus[NonVolatileStatus]
   ): BattlePokemon = status.status match
-    
+
     // Deals damage: 1/16 of max HP at end of each turn.
     // Halves physical attack stat (unless the Pokémon has the ability Guts)
     case Burn =>
@@ -65,7 +70,6 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
         )
       )
 
-    // TODO: non so come gesitre la cosa del non puo attaccare
     // 25% chance to be fully unable to act each turn.
     // Reduces Speed to 50%.
     case Paralyze =>
@@ -75,7 +79,9 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
       pk.copy(
         base = pk.base.copy(
           baseStats = pk.base.baseStats.copy(base = updatedStats)
-        )
+        ),
+        skipsCurrentTurn =
+          scala.util.Random.nextDouble() < ParalyzeTriggerChance
       )
 
     // TODO: Non so come gestirlo
@@ -111,3 +117,19 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
         pk.base.hp * (battle.turnIndex - status.turnAssigned) / BadlyPoisonedDamageReduction
       pk.copy(currentHP = pk.currentHP - damage)
     case _ => pk
+
+  private def executeVolatileStatus(
+      pk: BattlePokemon,
+      status: Set[AssignedStatus[VolatileStatus]]
+  ): BattlePokemon =
+    status.foldLeft(pk): (pk, assignedStatus) =>
+      assignedStatus.status match
+        // After 1 turn, the target Pokémon will fall asleep, unless switched out.
+        case Yawn =>
+          if battle.turnIndex == assignedStatus.turnAssigned + 1 then
+            pk.copy(skipsCurrentTurn = true)
+          else
+            pk
+
+        // - Blocks moves that target this Pokémon.
+        case ProtectEndure => pk.copy(isProtected = true)
