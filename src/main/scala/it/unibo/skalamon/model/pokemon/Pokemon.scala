@@ -41,6 +41,7 @@ object Pokemon:
     Pokemon(
       name = "Gengar",
       types = List(Ghost, Poison),
+      hp = 60,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 65,
@@ -61,6 +62,7 @@ object Pokemon:
     Pokemon(
       name = "Machamp ",
       types = Fighting,
+      hp = 90,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 130,
@@ -81,6 +83,7 @@ object Pokemon:
     Pokemon(
       name = "Alakazam",
       types = Psychic,
+      hp = 55,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 50,
@@ -101,6 +104,7 @@ object Pokemon:
     Pokemon(
       name = "Tyranitar",
       types = List(Rock, Dark),
+      hp = 100,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 134,
@@ -121,6 +125,7 @@ object Pokemon:
     Pokemon(
       name = "Pikachu",
       types = Electric,
+      hp = 35,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 55,
@@ -141,6 +146,7 @@ object Pokemon:
     Pokemon(
       name = "Dragonite",
       types = List(Dragon, Flying),
+      hp = 91,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 134,
@@ -161,6 +167,7 @@ object Pokemon:
     Pokemon(
       name = "Scizor",
       types = List(Bug, Steel),
+      hp = 70,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 130,
@@ -181,6 +188,7 @@ object Pokemon:
     Pokemon(
       name = "Gardevoir",
       types = List(Psychic, Fairy),
+      hp = 68,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 65,
@@ -201,6 +209,7 @@ object Pokemon:
     Pokemon(
       name = "Gyarados",
       types = List(Water, Flying),
+      hp = 95,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 125,
@@ -221,6 +230,7 @@ object Pokemon:
     Pokemon(
       name = "Lucario",
       types = List(Flying, Steel),
+      hp = 70,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 110,
@@ -241,6 +251,7 @@ object Pokemon:
     Pokemon(
       name = "Snorlax",
       types = Normal,
+      hp = 160,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 110,
@@ -261,6 +272,7 @@ object Pokemon:
     Pokemon(
       name = "Greninja",
       types = List(Water, Dark),
+      hp = 72,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 95,
@@ -281,6 +293,7 @@ object Pokemon:
     Pokemon(
       name = "Aegislash",
       types = List(Steel, Dark),
+      hp = 60,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 50,
@@ -301,6 +314,7 @@ object Pokemon:
     Pokemon(
       name = "Mimikyu",
       types = List(Ghost, Fairy),
+      hp = 55,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 90,
@@ -321,6 +335,7 @@ object Pokemon:
     Pokemon(
       name = "Dragapult",
       types = List(Dragon, Ghost),
+      hp = 88,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 120,
@@ -341,6 +356,7 @@ object Pokemon:
     Pokemon(
       name = "Bulbasaur",
       types = List(Grass, Poison),
+      hp = 45,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 49,
@@ -361,6 +377,7 @@ object Pokemon:
     Pokemon(
       name = "Charmander",
       types = Fire,
+      hp = 39,
       baseStats = Stats(
         base = Map(
           Stat.Attack -> 52,
