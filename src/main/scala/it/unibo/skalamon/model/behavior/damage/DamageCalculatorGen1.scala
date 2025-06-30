@@ -54,11 +54,11 @@ object DamageCalculatorGen1:
         origin.move.moveType.computeEffectiveness(target.base.types)
       )
 
-      // Comment this factor for testing
-      /* val randomFactor = RandomGenerator().nextInt(
-        RandomFactorMinBound,
-        RandomFactorMaxBound
-      ) / PercentageDivider */
+      /* Comment this factor for testing */
+//      val randomFactor = RandomGenerator().nextInt(
+//        RandomFactorMinBound,
+//        RandomFactorMaxBound
+//      ) / PercentageDivider
 
       stab * typeEfficacy // * randomFactor
 

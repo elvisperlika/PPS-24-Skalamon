@@ -16,13 +16,13 @@ import it.unibo.skalamon.model.types.Type
   *   The behavior of this move when it fails/misses.
   */
 case class Move(
-                 name: String,
-                 priority: Int,
-                 moveType: Type,
-                 category: Category,
-                 accuracy: Accuracy,
-                 success: Behavior = EmptyBehavior,
-                 fail: Behavior = EmptyBehavior
+    name: String,
+    priority: Int = 0,
+    moveType: Type,
+    category: Category,
+    accuracy: Accuracy,
+    success: Behavior = EmptyBehavior,
+    fail: Behavior = EmptyBehavior
 )
 
 /** A move in the context of a battle.
