@@ -1,10 +1,9 @@
 package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.controller.battle.GameState
-import it.unibo.skalamon.controller.battle.GameState.{GameOver, InProgress}
+import it.unibo.skalamon.controller.battle.GameState.InProgress
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.*
-import it.unibo.skalamon.model.event.BattleStateEvents.Finished
 import it.unibo.skalamon.model.event.config.BattleConfiguration
 
 /** A battle between trainers.
@@ -19,7 +18,12 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     */
   private var turnHistory: Stack[Turn] = Stack.empty
 
-  def turnIndex: Int = turnHistory.size
+  /** The current turn number (starts from 0).
+    *
+    * Not to be used as an index to access elements in turnHistory. For that,
+    * use: `turnHistory(turnIndex - 1)` or other safe accessors.
+    */
+  var turnIndex: Int = turnHistory.size
 
   /** The current turn of the battle.
     */

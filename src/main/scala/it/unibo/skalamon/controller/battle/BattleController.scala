@@ -2,10 +2,9 @@ package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.{
   Action,
-  ActionBuffer,
-  BattleHooksConfigurator
+  ActionBuffer
 }
-import it.unibo.skalamon.model.battle.{Battle, Trainer, Turn, TurnStage}
+import it.unibo.skalamon.model.battle.{Battle, BattleHooksConfigurator, Trainer, Turn, TurnStage}
 
 /** Controller for managing battles in the game.
   *

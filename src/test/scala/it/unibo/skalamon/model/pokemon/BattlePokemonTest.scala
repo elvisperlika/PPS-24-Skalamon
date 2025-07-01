@@ -13,7 +13,7 @@ class BattlePokemonTest extends AnyFlatSpec with should.Matchers:
   "BattlePokemon" should "apply stat changes and update effective stat value" in:
     val pokemon = PokemonTestUtils.simplePokemon1
     val stat = Stat.Attack
-    val baseValue = pokemon.base.baseStats.base(stat)
+    val baseValue = pokemon.base.stats.base(stat)
 
     println("--- " + pokemon.actualStats.base.getOrElse(stat, 0))
     pokemon.actualStats.base.getOrElse(stat, 0) shouldEqual baseValue

@@ -49,8 +49,8 @@ case class BattlePokemon(
     *   the current stats of the Pokémon.
     */
   def actualStats: Stats =
-    base.baseStats.copy(
-      base = base.baseStats.base.map { case (stat, value) =>
+    base.stats.copy(
+      base = base.stats.base.map { case (stat, value) =>
         stat -> (StatStage.multiplier(statChanges.getOrElse(
           stat,
           0
