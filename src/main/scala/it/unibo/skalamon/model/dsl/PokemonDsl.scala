@@ -1,0 +1,67 @@
+package it.unibo.skalamon.model.dsl
+
+import it.unibo.skalamon.model.ability.Ability
+import it.unibo.skalamon.model.behavior.kind.Stats
+import it.unibo.skalamon.model.pokemon.Pokemon
+import it.unibo.skalamon.model.types.{PokemonType, Type}
+
+/** A builder for creating Pokémon instances using a DSL-like syntax.
+  *
+  * @param name
+  *   The name of the Pokémon being built.
+  */
+class PokemonBuilder(private val name: String):
+  private var types: Option[PokemonType] = None
+
+  /** Sets the type or types of the Pokémon.
+    *
+    * @param types
+    *   The types to assign to the Pokémon.
+    * @return
+    *   This for chaining.
+    */
+  def typed(types: PokemonType): PokemonBuilder =
+    this.types = Some(types)
+    this
+
+  /** Builds the Pokémon instance with the provided attributes.
+    *
+    * @return
+    *   The constructed Pokémon instance.
+    * @throws IllegalArgumentException
+    *   If mandatory attributes are not defined.
+    */
+  def build: Pokemon =
+    Pokemon(
+      name = name,
+      types = types.getOrElse(
+        throw new IllegalArgumentException("Types must be defined")
+      ),
+      baseStats = Stats(Map.empty), // Placeholder for base stats
+      ability = Ability("Unknown", Map.empty), // Placeholder for ability
+      weightKg = 0.0, // Placeholder for weight
+      possibleMoves = List() // Placeholder for moves
+    )
+
+extension (t: Type)
+  /** Combines this type with another type to create a composite Pokémon type.
+    *
+    * @param other
+    *   The other type to combine with.
+    * @return
+    *   A new PokémonType that includes both types.
+    */
+  def and(other: Type): PokemonType =
+    List(t, other)
+
+/** DSL function to create a base Pokémon instance.
+  *
+  * @param name
+  *   The name of the Pokémon.
+  * @param build
+  *   A function that takes a `PokemonBuilder` and returns a modified builder.
+  * @return
+  *   The constructed Pokémon instance.
+  */
+def pokemon(name: String)(build: PokemonBuilder => PokemonBuilder): Pokemon =
+  build(PokemonBuilder(name)).build
