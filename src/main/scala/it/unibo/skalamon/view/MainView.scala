@@ -4,6 +4,9 @@ import it.unibo.skalamon.view.screen.*
 
 import javax.swing.{JFrame, WindowConstants}
 import asciiPanel.AsciiPanel
+import it.unibo.skalamon.view.battle.{BattleInput, keyEventToBattleInput}
+
+import java.awt.event.{KeyAdapter, KeyEvent}
 
 class MainView() extends JFrame:
   private val terminalWidth: Int = 80
@@ -24,3 +27,14 @@ class MainView() extends JFrame:
 
   override def repaint(): Unit =
     super.repaint()
+
+  private var onKeyPressedCallback: Option[BattleInput => Unit] = None
+
+  def setKeyPressedHandler(handler: BattleInput => Unit): Unit =
+    onKeyPressedCallback = Some(handler)
+
+  addKeyListener(new KeyAdapter:
+    override def keyPressed(e: KeyEvent): Unit =
+      keyEventToBattleInput(e).foreach { battleInput =>
+        onKeyPressedCallback.foreach(_(battleInput))
+      })

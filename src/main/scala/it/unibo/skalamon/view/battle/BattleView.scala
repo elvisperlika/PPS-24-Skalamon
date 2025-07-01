@@ -11,6 +11,8 @@ import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.screen.BattleScreen
 
+import java.awt.event.KeyListener
+
 trait BattleView:
 
   /** Update the whole battle view.
@@ -34,6 +36,9 @@ object BattleView:
   private class BattleViewImpl(
       screen: BattleScreen
   ) extends BattleView:
+
+    private var keyHandler: Option[GameKeyEvent => Unit] = None
+
     override def update(battleState: BattleState): Unit =
       val trainers = battleState.trainers
       if (trainers.size != BattleScreen.playerNumber) then
@@ -61,3 +66,5 @@ object BattleView:
         opponent.inField.map(_.moves).getOrElse(List.empty)
 
       screen.setMoves(pMoves, oMoves)
+
+case class GameKeyEvent(keyChar: Char, keyCode: Int)
