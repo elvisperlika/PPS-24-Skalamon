@@ -18,7 +18,7 @@ class PokemonDslTest extends AnyFlatSpec with should.Matchers:
 
   it should "allow combining types" in {
     val charizard = pokemon("Charizard"):
-      _ typed (Fire and Flying) weighting 90.5.kg
+      _ typed Fire + Flying weighting 90.5.kg
 
     charizard.types shouldBe Fire :: Flying :: Nil
   }

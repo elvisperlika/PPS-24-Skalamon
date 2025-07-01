@@ -76,7 +76,7 @@ extension (t: Type)
     * @return
     *   A new PokémonType that includes both types.
     */
-  def and(other: Type): PokemonType =
+  def +(other: Type): PokemonType =
     List(t, other)
 
 extension (d: Double)
