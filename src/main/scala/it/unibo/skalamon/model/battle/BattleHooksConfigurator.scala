@@ -5,6 +5,7 @@ import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
 import it.unibo.skalamon.model.move.{Move, MoveModel, createContext}
+import it.unibo.skalamon.model.ability.hookAll
 
 object BattleHooksConfigurator:
 
@@ -17,6 +18,15 @@ object BattleHooksConfigurator:
 
     battle.hookBattleStateUpdate(Started) { (state, _) =>
       updateBattleField(state)
+    }
+
+    battle.trainers.foreach { trainer =>
+      trainer.team.foreach { pokemon =>
+        pokemon.base.ability.hookAll(battle)(
+          source = Some(pokemon).filter(trainer.inField.contains),
+          target = battle.trainers.find(_ != trainer).flatMap(_.inField)
+        )
+      }
     }
 
     def updateBattleField(battleState: BattleState): BattleState =
