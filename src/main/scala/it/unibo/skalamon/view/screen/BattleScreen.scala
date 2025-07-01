@@ -171,9 +171,6 @@ class BattleScreen(
       s"PP: ${move.pp}"
     )
 
-  override def respondToUserInput(key: KeyEvent): Screen =
-    this
-
 object BattleScreen:
   /** The number of players in the battle. */
   val playerNumber: Int = 2
