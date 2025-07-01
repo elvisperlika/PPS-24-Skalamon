@@ -7,7 +7,8 @@ import it.unibo.skalamon.model.behavior.kind.{
   SingleHitBehavior
 }
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
-import it.unibo.skalamon.model.move.MoveModel.Category
+import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.types.TypesCollection.{Electric, Normal}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -22,6 +23,7 @@ class MoveDslTest extends AnyFlatSpec with should.Matchers:
     tackle.priority shouldBe 0
     tackle.moveType shouldBe Normal
     tackle.category shouldBe Category.Physical
+    tackle.accuracy shouldBe Accuracy.Of(100.percent)
     tackle.success shouldBe EmptyBehavior
     tackle.fail shouldBe EmptyBehavior
 
@@ -30,6 +32,18 @@ class MoveDslTest extends AnyFlatSpec with should.Matchers:
       _ priority 1
 
     quickAttack.priority shouldBe 1
+
+  it should "allow setting accuracy percentage" in:
+    val slash = move("Slash", Normal, Category.Physical):
+      _ accuracyOf 90.percent
+
+    slash.accuracy shouldBe Accuracy.Of(90.percent)
+
+  it should "allow setting perfect accuracy" in:
+    val swift = move("Swift", Normal, Category.Special):
+      _.neverFailing
+
+    swift.accuracy shouldBe Accuracy.NeverFail
 
   it should "allow setting behaviors" in:
     val thunderbolt = move("Thunderbolt", Electric, Category.Special):

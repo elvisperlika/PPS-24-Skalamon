@@ -36,11 +36,26 @@ class MoveBuilder(
     this.priority = priority
     this
 
-  def accuracy(accuracy: Accuracy): MoveBuilder =
+  private def accuracy(accuracy: Accuracy): MoveBuilder =
     this.accuracy = accuracy
     this
 
-  def accuracy(accuracy: Percentage): MoveBuilder =
+  /** Sets the move to always hit (perfect accuracy).
+    *
+    * @return
+    *   This for chaining.
+    */
+  def neverFailing: MoveBuilder =
+    this.accuracy(Accuracy.NeverFail)
+
+  /** Sets the accuracy of the move.
+    *
+    * @param accuracy
+    *   The accuracy percentage.
+    * @return
+    *   This for chaining.
+    */
+  def accuracyOf(accuracy: Percentage): MoveBuilder =
     this.accuracy(Accuracy.Of(accuracy))
 
   /** Sets the behavior of the move in case of success.
