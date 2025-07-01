@@ -22,7 +22,7 @@ def main(): Unit =
   val mainView: MainView = MainView()
   mainView.setupView()
 
-  val battleView = BattleView(mainView.getPlayScreen())
+  val battleView = BattleView(mainView.getPlayScreen)
 
   battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
     printView(state)
@@ -62,15 +62,3 @@ def moveToAction(
 ): MoveAction =
   val context = move.createContext(_.success, target, source)
   MoveAction(context)
-
-def printView(state: BattleState): Unit =
-  state.trainers.foreach { trainer =>
-    println(s"Trainer: ${trainer.name}")
-    trainer.team.foreach { pokemon =>
-      println(s"  Pokemon: ${pokemon.base.name}")
-      println(s"    HP: ${pokemon.currentHP}")
-      println(s"    Moves: ${pokemon.moves.map(_.move.name).mkString(", ")}")
-      println(s"    Status: ${pokemon.nonVolatileStatus.mkString(", ")}")
-    }
-  }
-  println("\n\n\n")

@@ -28,8 +28,6 @@ object BattleView:
   /** Create a new BattleView.
     * @param screen
     *   The screen to be used for the battle view.
-    * @param controllerProxy
-    *   The action buffer to be used for the battle view.
     * @return
     *   A new instance of BattleView.
     */
