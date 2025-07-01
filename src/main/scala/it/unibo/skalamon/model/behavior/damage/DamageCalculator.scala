@@ -6,16 +6,18 @@ import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
 
 trait DamageCalculator:
 
-  /** Calculate the move's damage in function of the [[Move]] and [[Pokemon]]
-    * statistics.
+  /** Calculate the move's damage in function of the [[Move]], [[Pokemon]]s and
+    * [[BattleState]] statistics.
     * @param origin
-    *   [[Move]] performed
+    *   Move performed
     * @param source
-    *   [[BattlePokemon]] that perform the move
+    *   Pokémon that perform the move
     * @param target
-    *   [[BattlePokemon]] that recive the move
+    *   Pokémon that recive the move
     * @param power
     *   Behavior's base damage
+    * @param battleState
+    *   Current battle state
     * @return
     *   Final damage
     */
