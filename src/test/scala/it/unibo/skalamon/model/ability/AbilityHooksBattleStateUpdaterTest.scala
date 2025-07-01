@@ -28,9 +28,25 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     )
 
     ability.hookAll(battle)(
-      target,
-      source,
+      Some(target),
+      Some(source),
     )
 
     battle.start()
     getTarget(battle.currentTurn.get.state.snapshot).currentHP shouldEqual target.currentHP - damage
+
+  "Ability" should "not apply if the source is missing" in:
+    val damage = 10
+    val behavior = DamageBehavior(damage)
+    val ability = Ability(
+      "TestAbility",
+      hooks = Map(TurnStageEvents.Started -> behavior)
+    )
+
+    ability.hookAll(battle)(
+      Some(target),
+      None,
+    )
+
+    battle.start()
+    getTarget(battle.currentTurn.get.state.snapshot).currentHP shouldEqual target.currentHP

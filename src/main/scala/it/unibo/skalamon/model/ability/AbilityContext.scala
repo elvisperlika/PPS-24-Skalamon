@@ -54,7 +54,9 @@ extension (ability: Ability)
     behavior(ability)(AbilityContext(ability, target, source))
 
   /** Hooks all hooks of the ability to an event manager, allowing it to execute
-    * behaviors when specific events occur in the battle.
+    * behaviors when specific events occur in the battle. An update to the
+    * battle state will be triggered only if both the target and source Pokémon
+    * are defined.
     *
     * @param battle
     *   The battle in which the ability is being used. Its event manager will be
@@ -65,15 +67,15 @@ extension (ability: Ability)
     *   The source Pokémon that owns the ability.
     */
   def hookAll(battle: Battle)(
-      target: BattlePokemon,
-      source: BattlePokemon
+      target: => Option[BattlePokemon],
+      source: => Option[BattlePokemon]
   ): Unit =
     ability.hooks.foreach { case (eventType, behavior) =>
       battle.hookBattleStateUpdate(eventType): (battleState, _) =>
-        val context = createContext(
-          _.hooks(eventType),
-          target,
-          source
-        )
-        context(battleState)
+        (target, source) match
+          case (Some(t), Some(s)) =>
+            val context = createContext(_.hooks(eventType), t, s)
+            context(battleState)
+
+          case _ => battleState
     }
