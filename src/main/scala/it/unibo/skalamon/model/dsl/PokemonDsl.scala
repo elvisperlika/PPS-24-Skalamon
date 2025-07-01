@@ -33,7 +33,7 @@ class PokemonBuilder(private val name: String):
     * @return
     *   This for chaining.
     */
-  def weighting(weight: Double): PokemonBuilder =
+  def weighing(weight: Double): PokemonBuilder =
     this.weight = Some(weight)
     this
 
