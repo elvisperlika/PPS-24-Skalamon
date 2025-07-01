@@ -5,12 +5,16 @@ import it.unibo.skalamon.model.event.TurnStageEvents.Started
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,
-  PokemonRules
+  PokemonRules,
+  Weather
 }
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
 import it.unibo.skalamon.model.types.TypesCollection.{Ground, Rock, Steel}
 
-case class Sandstorm(t: Int) extends FieldEffect(t) with PokemonRules
+case class Sandstorm(t: Int)
+    extends Weather
+    with FieldEffect(t)
+    with PokemonRules
     with Expirable(t, Sandstorm.Duration):
   override val description: String = Sandstorm.Description
   override val rules: List[(EventType[_], PokemonRule)] =

@@ -4,7 +4,6 @@ import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.battle.{Battle, BattleState}
 import it.unibo.skalamon.model.event.BattleStateEvents
-import it.unibo.skalamon.model.move.{BattleMove, createContext}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 // TEMPORARY
@@ -25,19 +24,21 @@ def main(): Unit =
   controller.start()
 
   while battle.gameState == GameState.InProgress do
-    Thread.sleep(2000)
+    Thread.sleep(200)
 
-    println(s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}")
+    println(
+      s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}"
+    )
 
     if controller.isWaitingForActions then
       println("Waiting for actions...")
       // Simulated action registration
-      val aliceAction = moveToAction(
+      val aliceAction = MoveAction(
         move = trainerAlice.inField.get.moves.head,
         source = trainerAlice.inField.get,
         target = trainerBob.inField.get
       )
-      val bobAction = moveToAction(
+      val bobAction = MoveAction(
         move = trainerBob.inField.get.moves.head,
         source = trainerBob.inField.get,
         target = trainerAlice.inField.get
@@ -46,14 +47,6 @@ def main(): Unit =
       controller.registerAction(PokemonTestUtils.trainerBob, bobAction)
 
     controller.update()
-
-def moveToAction(
-    move: BattleMove,
-    source: BattlePokemon,
-    target: BattlePokemon
-): MoveAction =
-  val context = move.createContext(_.success, target, source)
-  MoveAction(context)
 
 def printView(state: BattleState): Unit =
   state.trainers.foreach { trainer =>

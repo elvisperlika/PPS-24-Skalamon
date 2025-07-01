@@ -3,12 +3,13 @@ package it.unibo.skalamon.model.field.weather
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,
-  TypesModifier
+  TypesModifier,
+  Weather
 }
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.{Fire, Water}
 
-case class Rain(t: Int) extends FieldEffect(t)
+case class Rain(t: Int) extends Weather with FieldEffect(t)
     with TypesModifier with Expirable(t, Sandstorm.Duration):
   override val description: String = Sandstorm.Description
   override val typesModifier: Map[Type, Double] =

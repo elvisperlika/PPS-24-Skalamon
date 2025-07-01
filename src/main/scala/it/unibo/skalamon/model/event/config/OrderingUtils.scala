@@ -8,8 +8,9 @@ object OrderingUtils:
   given Ordering[Action] with
     def compare(a1: Action, a2: Action): Int =
       def speedOf(a: Action): Int = a match
-        case MoveAction(context) => context.source.base.baseStats.base(Speed)
-        case _                   => 0
+        case MoveAction(battleMove, source, target) =>
+          source.base.stats.base(Speed)
+        case _ => 0
 
       val p1 = a1.priority
       val p2 = a2.priority

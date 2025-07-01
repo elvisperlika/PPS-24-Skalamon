@@ -15,8 +15,8 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
   var icePokemon: BattlePokemon = BattlePokemon(
     base = Pokemon(
       name = "Pikachu",
-      types = Ice,
-      baseStats = Stats(
+      types = Ice :: Nil,
+      stats = Stats(
         base = Map(
           Stat.Attack -> 100,
           Stat.Defense -> 100,

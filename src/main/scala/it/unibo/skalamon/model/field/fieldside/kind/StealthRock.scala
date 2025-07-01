@@ -11,6 +11,7 @@ import it.unibo.skalamon.model.field.{Modify, PokemonRule}
 import it.unibo.skalamon.model.field.fieldside.{SideCondition, Unique}
 import it.unibo.skalamon.model.types.TypeUtility
 import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.field.fieldside.kind.StealthRock.DamagePercentage
 import it.unibo.skalamon.model.types.TypesCollection.Rock
 
 import scala.reflect.ClassTag
@@ -26,7 +27,7 @@ case class StealthRock(t: Int)(implicit val classTag: ClassTag[StealthRock])
         p =>
           p.copy(currentHP =
             /* 13 ~ 1/ 8 */
-            p.currentHP - (13.percent of p.currentHP * TypeUtility.calculateMultiplier(
+            p.currentHP - (DamagePercentage.percent of p.currentHP * TypeUtility.calculateTypeMultiplier(
               Rock.computeEffectiveness(p.base.types)
             ).toInt)
           )
@@ -35,6 +36,7 @@ case class StealthRock(t: Int)(implicit val classTag: ClassTag[StealthRock])
   override val description: String = StealthRock.Description
 
 object StealthRock:
+  val DamagePercentage: Int = 13
   val Description: String =
     "Deals damage to the target’s Pokémon when they switch in. The damage depends to the target’s weakness to rock type."
   val Duration: Int = 5

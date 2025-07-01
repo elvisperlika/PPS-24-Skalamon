@@ -1,12 +1,13 @@
 package it.unibo.skalamon.model.behavior
 
 import it.unibo.skalamon.model.data.RandomGenerator
+import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
+import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.move.{BattleMove, Move, MoveContext}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-import it.unibo.skalamon.model.pokemon.PokemonTestUtils.{
-  simplePokemon1,
-  simplePokemon2
-}
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.{simplePokemon1, simplePokemon2}
+import it.unibo.skalamon.model.types.TypesCollection.Electric
+import it.unibo.skalamon.model.data.percent
 
 /** Test utilities for testing behaviors.
   */
@@ -17,7 +18,11 @@ object BehaviorTestUtils:
       origin = BattleMove(
         Move(
           "TestMove",
-          priority = 5
+          priority = 5,
+          moveType = Electric,
+          category = Physical,
+          accuracy = Of(100.percent),
+          success = EmptyBehavior
         ),
         pp = 10
       ),

@@ -22,4 +22,4 @@ object Snow:
   val Damage: Int = 10
   val Description: String = "Snow boosts Ice-type defense."
   val Duration: Int = 5
-  def apply(t: Int, em: EventManager): Snow = new Snow(t)
+  def apply(t: Int): Snow = new Snow(t)
