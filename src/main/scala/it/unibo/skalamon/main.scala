@@ -24,7 +24,7 @@ def main(): Unit =
   controller.start()
 
   while battle.gameState == GameState.InProgress do
-    Thread.sleep(2000)
+    Thread.sleep(200)
 
     println(
       s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}"

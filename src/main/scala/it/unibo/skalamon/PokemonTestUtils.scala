@@ -18,7 +18,6 @@ object PokemonTestUtils:
   private val moveThunderShock =
     Move(
       name = "Thunder Shock",
-      priority = 10,
       moveType = Electric,
       category = Special,
       accuracy = Of(100.percent),
@@ -26,7 +25,6 @@ object PokemonTestUtils:
     )
   private val moveElectric =
     Move(name = "Electric", 
-      priority = 10,
       moveType = Electric,
       category = Special,
       accuracy = Of(100.percent),
