@@ -10,7 +10,7 @@ import it.unibo.skalamon.model.types.{PokemonType, Type}
   * @param name
   *   The name of the Pokémon being built.
   */
-class PokemonBuilder(private val name: String):
+class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
   private var types: Option[PokemonType] = None
   private var weight: Option[Double] = None
   private var stats: Map[Stat, Int] = Map.empty
@@ -54,7 +54,7 @@ class PokemonBuilder(private val name: String):
     * @throws IllegalArgumentException
     *   If mandatory attributes are not defined.
     */
-  def build: Pokemon =
+  override def build: Pokemon =
     Pokemon(
       name = name,
       types = types.getOrElse(

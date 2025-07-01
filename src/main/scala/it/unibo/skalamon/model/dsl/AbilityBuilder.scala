@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.event.EventType
   * @param name
   *   The name of the move being built.
   */
-class AbilityBuilder(private val name: String):
+class AbilityBuilder(private val name: String) extends DslBuilder[Ability]:
   private var hooks: Map[EventType[_], Behavior] = Map.empty
 
   /** Sets the behavior of the ability in case of an event of the specified
@@ -29,7 +29,7 @@ class AbilityBuilder(private val name: String):
     * @return
     *   The constructed Ability instance.
     */
-  def build: Ability =
+  override def build: Ability =
     Ability(
       name = name,
       hooks = hooks

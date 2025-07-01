@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.types.Type
   * @param name
   *   The name of the move being built.
   */
-class MoveBuilder(private val name: String):
+class MoveBuilder(private val name: String) extends DslBuilder[Move]:
   private var priority = 0
   private var moveType: Option[Type] = None
   private var success: Behavior = EmptyBehavior
@@ -64,7 +64,7 @@ class MoveBuilder(private val name: String):
     * @return
     *   The constructed Move instance.
     */
-  def build: Move = // TODO assign move type once it's implemented
+  override def build: Move = // TODO assign move type once it's implemented
     Move(name, priority, success, fail)
 
 /** DSL function to create a Move instance.
