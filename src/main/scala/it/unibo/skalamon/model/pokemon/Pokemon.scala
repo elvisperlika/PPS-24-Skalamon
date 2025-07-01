@@ -4,31 +4,32 @@ import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.types.TypesCollection.{Bug, Dark, Dragon, Electric, Fairy, Fighting, Fire, Flying, Ghost, Grass, Normal, Poison, Psychic, Rock, Steel, Water}
-
-import java.util.UUID
+import it.unibo.skalamon.model.types.TypesCollection.*
 
 /** Represents the base attributes of a Pokémon.
   * @param name
   *   The name of the Pokémon.
   * @param types
   *   The list of types of the Pokémon.
+  * @param hp
+  *   The base HP (Health Points) of the Pokémon.
   * @param stats
   *   The base stats of the Pokémon.
   * @param ability
   *   The ability of the Pokémon.
   * @param weightKg
   *   The weight of the Pokémon in Kg.
-  * @param possibleMoves
+  * @param moves
   *   The list of possible moves of the Pokémon.
   */
 case class Pokemon(
     name: String,
     types: List[Type],
+    hp: Int,
     stats: Stats,
     ability: Ability,
     weightKg: Double,
-    possibleMoves: List[Move]
+    moves: List[Move]
 )
 
 /** Factory object to create Pokémon instances. This object contains predefined
@@ -40,6 +41,7 @@ object Pokemon:
     Pokemon(
       name = "Gengar",
       types = Ghost :: Poison :: Nil,
+      hp = 60,
       stats = Stats(
         base = Map(
           Stat.Attack -> 65,
@@ -51,7 +53,7 @@ object Pokemon:
       ),
       ability = Ability("Cursed body", Map.empty),
       weightKg = 40.5,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -61,6 +63,7 @@ object Pokemon:
     Pokemon(
       name = "Machamp ",
       types = Fighting :: Nil,
+      hp = 90,
       stats = Stats(
         base = Map(
           Stat.Attack -> 130,
@@ -72,7 +75,7 @@ object Pokemon:
       ),
       ability = Ability("Guts", Map.empty),
       weightKg = 130.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -82,6 +85,7 @@ object Pokemon:
     Pokemon(
       name = "Alakazam",
       types = Psychic :: Nil,
+      hp = 55,
       stats = Stats(
         base = Map(
           Stat.Attack -> 50,
@@ -93,7 +97,7 @@ object Pokemon:
       ),
       ability = Ability("Synchronize", Map.empty),
       weightKg = 48.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -103,6 +107,7 @@ object Pokemon:
     Pokemon(
       name = "Tyranitar",
       types = Rock :: Dark :: Nil,
+      hp = 100,
       stats = Stats(
         base = Map(
           Stat.Attack -> 134,
@@ -114,7 +119,7 @@ object Pokemon:
       ),
       ability = Ability("Sand Stream", Map.empty),
       weightKg = 202.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -124,6 +129,7 @@ object Pokemon:
     Pokemon(
       name = "Pikachu",
       types = Electric :: Nil,
+      hp = 35,
       stats = Stats(
         base = Map(
           Stat.Attack -> 55,
@@ -135,7 +141,7 @@ object Pokemon:
       ),
       ability = Ability("Static", Map.empty),
       weightKg = 6.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -145,6 +151,7 @@ object Pokemon:
     Pokemon(
       name = "Dragonite",
       types = Dragon :: Flying :: Nil,
+      hp = 91,
       stats = Stats(
         base = Map(
           Stat.Attack -> 134,
@@ -156,7 +163,7 @@ object Pokemon:
       ),
       ability = Ability("Inner Focus", Map.empty),
       weightKg = 210.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -166,6 +173,7 @@ object Pokemon:
     Pokemon(
       name = "Scizor",
       types = Bug :: Steel :: Nil,
+      hp = 70,
       stats = Stats(
         base = Map(
           Stat.Attack -> 130,
@@ -177,7 +185,7 @@ object Pokemon:
       ),
       ability = Ability("Swarm", Map.empty),
       weightKg = 118.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -187,6 +195,7 @@ object Pokemon:
     Pokemon(
       name = "Gardevoir",
       types = Psychic :: Fairy :: Nil,
+      hp = 68,
       stats = Stats(
         base = Map(
           Stat.Attack -> 65,
@@ -198,7 +207,7 @@ object Pokemon:
       ),
       ability = Ability("Synchronize", Map.empty),
       weightKg = 48.4,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -208,6 +217,7 @@ object Pokemon:
     Pokemon(
       name = "Gyarados",
       types = Water :: Flying :: Nil,
+      hp = 95,
       stats = Stats(
         base = Map(
           Stat.Attack -> 125,
@@ -219,7 +229,7 @@ object Pokemon:
       ),
       ability = Ability("Intimidate", Map.empty),
       weightKg = 235.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -229,6 +239,7 @@ object Pokemon:
     Pokemon(
       name = "Lucario",
       types = List(Flying, Steel),
+      hp = 70,
       stats = Stats(
         base = Map(
           Stat.Attack -> 110,
@@ -240,7 +251,7 @@ object Pokemon:
       ),
       ability = Ability("Steadfast", Map.empty),
       weightKg = 54.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -250,6 +261,7 @@ object Pokemon:
     Pokemon(
       name = "Snorlax",
       types = Normal :: Nil,
+      hp = 160,
       stats = Stats(
         base = Map(
           Stat.Attack -> 110,
@@ -261,7 +273,7 @@ object Pokemon:
       ),
       ability = Ability("Immunity", Map.empty),
       weightKg = 460.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -271,6 +283,7 @@ object Pokemon:
     Pokemon(
       name = "Greninja",
       types = List(Water, Dark),
+      hp = 72,
       stats = Stats(
         base = Map(
           Stat.Attack -> 95,
@@ -282,7 +295,7 @@ object Pokemon:
       ),
       ability = Ability("Torrent", Map.empty),
       weightKg = 40.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -292,6 +305,7 @@ object Pokemon:
     Pokemon(
       name = "Aegislash",
       types = List(Steel, Dark),
+      hp = 60,
       stats = Stats(
         base = Map(
           Stat.Attack -> 50,
@@ -303,7 +317,7 @@ object Pokemon:
       ),
       ability = Ability("Stance Change", Map.empty),
       weightKg = 53.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -313,6 +327,7 @@ object Pokemon:
     Pokemon(
       name = "Mimikyu",
       types = List(Ghost, Fairy),
+      hp = 55,
       stats = Stats(
         base = Map(
           Stat.Attack -> 90,
@@ -324,7 +339,7 @@ object Pokemon:
       ),
       ability = Ability("Disguise", Map.empty),
       weightKg = 0.7,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -334,6 +349,7 @@ object Pokemon:
     Pokemon(
       name = "Dragapult",
       types = List(Dragon, Ghost),
+      hp = 88,
       stats = Stats(
         base = Map(
           Stat.Attack -> 120,
@@ -345,7 +361,7 @@ object Pokemon:
       ),
       ability = Ability("Clear Body", Map.empty),
       weightKg = 50.0,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -355,6 +371,7 @@ object Pokemon:
     Pokemon(
       name = "Bulbasaur",
       types = Grass :: Poison :: Nil,
+      hp = 45,
       stats = Stats(
         base = Map(
           Stat.Attack -> 49,
@@ -366,7 +383,7 @@ object Pokemon:
       ),
       ability = Ability("Overgrow", Map.empty),
       weightKg = 6.9,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")
@@ -376,6 +393,7 @@ object Pokemon:
     Pokemon(
       name = "Charmander",
       types = Fire :: Nil,
+      hp = 39,
       stats = Stats(
         base = Map(
           Stat.Attack -> 52,
@@ -387,7 +405,7 @@ object Pokemon:
       ),
       ability = Ability("Blaze", Map.empty),
       weightKg = 8.5,
-      possibleMoves = Nil
+      moves = Nil
 //      List(
 //        Move("Thunder Shock"),
 //        Move("Electric")

@@ -4,6 +4,7 @@ import it.unibo.skalamon.model.battle.{BattleState, Trainer}
 import it.unibo.skalamon.model.behavior.damage.DamageCalculatorGen1.calculate
 import it.unibo.skalamon.model.behavior.kind.SimpleSingleHitBehavior
 import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.dsl.*
 import it.unibo.skalamon.model.field.field
 import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.terrain.Electrified
@@ -30,12 +31,10 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
     moveType = Electric,
     category = Physical,
     accuracy = Of(100.percent),
+    pp = 10,
     success = SimpleSingleHitBehavior(10)
   )
-  val electricMove: BattleMove = BattleMove(
-    move = move,
-    pp = 10
-  )
+  val electricMove: BattleMove = move.battling
 
   val alice: Trainer =
     Trainer("Alice", List(simplePokemon1), Some(simplePokemon1))
@@ -110,13 +109,12 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
       priority = 5,
       moveType = Flying,
       category = Special,
+      pp = 10,
       accuracy = Of(100.percent),
       success = SimpleSingleHitBehavior(10)
     )
-    val specialFlyingMove: BattleMove = BattleMove(
-      move = move,
-      pp = 10
-    )
+    val specialFlyingMove: BattleMove = move.battling
+    
     val alice: Trainer =
       Trainer("Alice", List(simplePokemon2), Some(simplePokemon2))
     val bob: Trainer =

@@ -15,20 +15,26 @@ import it.unibo.skalamon.model.types.TypesCollection.Electric
 // TEMPORARY
 
 object PokemonTestUtils:
+  private val powerPoint: Int = 4
+
   private val moveThunderShock =
     Move(
       name = "Thunder Shock",
       moveType = Electric,
       category = Special,
+      pp = powerPoint,
       accuracy = Of(100.percent),
       success = DamageBehavior(10)
     )
   private val moveElectric =
-    Move(name = "Electric", 
+    Move(
+      name = "Electric",
       moveType = Electric,
       category = Special,
+      pp = powerPoint,
       accuracy = Of(100.percent),
-      success = DamageBehavior(5))
+      success = DamageBehavior(5)
+    )
 
   private val genericAbility = Ability(
     "Static",
@@ -41,7 +47,6 @@ object PokemonTestUtils:
   private val blazeAbility = Ability("Blaze", Map.empty)
 
   private val startingHP: Int = 70
-  private val powerPoint: Int = 4
 
   val simplePokemon1: BattlePokemon = BattlePokemon(
     Pokemon.pikachu,
