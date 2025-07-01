@@ -15,5 +15,12 @@ def keyEventToBattleInput(keyEvent: KeyEvent): Option[BattleInput] =
   keyEvent.getKeyCode match
 
     case KeyEvent.VK_Q => Some(BattleInput.playerAction1)
+    case KeyEvent.VK_W => Some(BattleInput.playerAction2)
+    case KeyEvent.VK_E => Some(BattleInput.playerAction3)
+    case KeyEvent.VK_R => Some(BattleInput.playerAction4)
     case KeyEvent.VK_Z => Some(BattleInput.opponentAction1)
+    case KeyEvent.VK_X => Some(BattleInput.opponentAction2)
+    case KeyEvent.VK_C => Some(BattleInput.opponentAction3)
+    case KeyEvent.VK_V => Some(BattleInput.opponentAction4)
+
     case _ => None
