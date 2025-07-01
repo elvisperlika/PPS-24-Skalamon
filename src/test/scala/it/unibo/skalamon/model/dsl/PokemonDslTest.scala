@@ -13,7 +13,7 @@ class PokemonDslTest extends AnyFlatSpec with should.Matchers:
       _ typed Electric weighing 6.0.kg
 
     pikachu.name shouldBe "Pikachu"
-    pikachu.types shouldBe Electric
+    pikachu.types shouldBe Electric :: Nil
 
   it should "allow combining types" in:
     val charizard = pokemon("Charizard"):
@@ -29,7 +29,7 @@ class PokemonDslTest extends AnyFlatSpec with should.Matchers:
     val bulbasaur = pokemon("Pikachu"):
       _ typed Electric weighing 6.0.kg stat Stat.Attack -> 20 stat Stat.Defense -> 10
 
-    bulbasaur.baseStats.base shouldBe Map(
+    bulbasaur.stats.base shouldBe Map(
       Stat.Attack -> 20,
       Stat.Defense -> 10
     )

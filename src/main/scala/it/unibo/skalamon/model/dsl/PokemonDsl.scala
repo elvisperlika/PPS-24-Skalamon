@@ -3,7 +3,7 @@ package it.unibo.skalamon.model.dsl
 import it.unibo.skalamon.model.ability.Ability
 import it.unibo.skalamon.model.behavior.kind.Stats
 import it.unibo.skalamon.model.pokemon.{Pokemon, Stat}
-import it.unibo.skalamon.model.types.{PokemonType, Type}
+import it.unibo.skalamon.model.types.Type
 
 /** A builder for creating Pokémon instances using a DSL-like syntax.
   *
@@ -11,19 +11,30 @@ import it.unibo.skalamon.model.types.{PokemonType, Type}
   *   The name of the Pokémon being built.
   */
 class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
-  private var types: Option[PokemonType] = None
+  private var types: List[Type] = List.empty
   private var weight: Option[Double] = None
   private var stats: Map[Stat, Int] = Map.empty
 
-  /** Sets the type or types of the Pokémon.
+  /** Sets the type of the Pokémon.
     *
-    * @param types
+    * @param pokemonType
+    *   The single type to assign to the Pokémon.
+    * @return
+    *   This for chaining.
+    */
+  def typed(pokemonType: Type): PokemonBuilder =
+    this.types = List(pokemonType)
+    this
+
+  /** Sets the types of the Pokémon.
+    *
+    * @param pokemonTypes
     *   The types to assign to the Pokémon.
     * @return
     *   This for chaining.
     */
-  def typed(types: PokemonType): PokemonBuilder =
-    this.types = Some(types)
+  def typed(pokemonTypes: List[Type]): PokemonBuilder =
+    this.types = pokemonTypes
     this
 
   /** Sets the weight of the Pokémon in kilograms.
@@ -57,10 +68,10 @@ class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
   override def build: Pokemon =
     Pokemon(
       name = name,
-      types = types.getOrElse(
-        throw new IllegalArgumentException("Types must be defined")
+      types = Some(types).filterNot(_.isEmpty).getOrElse(
+        throw new IllegalArgumentException("At least one type must be defined")
       ),
-      baseStats = Stats(stats),
+      stats = Stats(stats),
       ability = Ability("Unknown", Map.empty), // Placeholder for ability
       weightKg = weight.getOrElse(
         throw new IllegalArgumentException("Weight must be defined")
@@ -76,7 +87,7 @@ extension (t: Type)
     * @return
     *   A new PokémonType that includes both types.
     */
-  def +(other: Type): PokemonType =
+  def +(other: Type): List[Type] =
     List(t, other)
 
 extension (d: Double)
