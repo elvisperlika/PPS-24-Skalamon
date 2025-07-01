@@ -1,7 +1,6 @@
 package it.unibo.skalamon.model.behavior.damage
 
 import it.unibo.skalamon.model.battle.{BattleState, Trainer}
-import it.unibo.skalamon.model.behavior.damage.DamageCalculatorGen1.LevelMultiplier
 import it.unibo.skalamon.model.behavior.kind.Stats
 import it.unibo.skalamon.model.data.RandomGenerator
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
@@ -20,11 +19,11 @@ import it.unibo.skalamon.model.types.{Type, TypeUtility}
 
 object DamageCalculatorUtility:
 
-  private val NoMultiplier: Int = 1
-  private val LevelMultiplier: Int = 2
-  private val LevelDivider: Int = 5
-  private val LevelBoost: Int = 2
-  private val StabMultiplier: Int = 2
+  private val NoMultiplier: Double = 1
+  private val LevelMultiplier: Double = 2
+  private val LevelDivider: Double = 5
+  private val LevelBoost: Double = 2
+  private val StabMultiplier: Double = 1.5
   private val RandomFactorMinBound: Int = 85
   private val RandomFactorMaxBound: Int = 100
   private val PercentageDivider: Int = 100
@@ -38,7 +37,7 @@ object DamageCalculatorUtility:
       case Category.Physical =>
         sourceStat.base(Attack) / targetStat.base(Defense)
       case Category.Special =>
-        sourceStat.base(SpecialAttack) * targetStat.base(SpecialDefense)
+        sourceStat.base(SpecialAttack) / targetStat.base(SpecialDefense)
       case _ => NoMultiplier
 
   def calculateLevelScalar(level: Int): Double =
