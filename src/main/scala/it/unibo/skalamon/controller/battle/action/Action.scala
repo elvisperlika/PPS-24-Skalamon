@@ -7,16 +7,16 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 trait Action:
   val priority: Int
 
-/** @param battleMove
+/** @param move
   * @param source
   * @param target
   */
 case class MoveAction(
-    battleMove: BattleMove,
+    move: BattleMove,
     source: BattlePokemon,
     target: BattlePokemon
 ) extends Action:
-  override val priority: Int = battleMove.move.priority
+  override val priority: Int = move.move.priority
 
 /** @param pIn
   * @param pOut

@@ -37,8 +37,7 @@ case object DamageCalculatorGen1 extends DamageCalculator:
     val baseDamage: Double =
       val categoryScalar: Double =
         calculateCategoryScalar(origin, source.actualStats, target.actualStats)
-      val levelScalar = calculateLevelScalar(source.level)
-      levelScalar * power * categoryScalar / DamageDivider + DamageBoost
+      power * categoryScalar / DamageDivider + DamageBoost
 
     val multiplier: Double =
       val stab: Double =

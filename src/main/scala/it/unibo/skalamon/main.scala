@@ -27,17 +27,19 @@ def main(): Unit =
   while battle.gameState == GameState.InProgress do
     Thread.sleep(2000)
 
-    println(s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}")
+    println(
+      s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}"
+    )
 
     if controller.isWaitingForActions then
       println("Waiting for actions...")
       // Simulated action registration
-      val aliceAction = moveToAction(
+      val aliceAction = MoveAction(
         move = trainerAlice.inField.get.moves.head,
         source = trainerAlice.inField.get,
         target = trainerBob.inField.get
       )
-      val bobAction = moveToAction(
+      val bobAction = MoveAction(
         move = trainerBob.inField.get.moves.head,
         source = trainerBob.inField.get,
         target = trainerAlice.inField.get
@@ -46,14 +48,6 @@ def main(): Unit =
       controller.registerAction(PokemonTestUtils.trainerBob, bobAction)
 
     controller.update()
-
-def moveToAction(
-    move: BattleMove,
-    source: BattlePokemon,
-    target: BattlePokemon
-): MoveAction =
-  val context = move.createContext(_.success, target, source)
-  MoveAction(context)
 
 def printView(state: BattleState): Unit =
   state.trainers.foreach { trainer =>
