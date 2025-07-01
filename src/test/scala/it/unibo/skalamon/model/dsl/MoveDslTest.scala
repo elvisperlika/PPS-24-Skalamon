@@ -27,6 +27,12 @@ class MoveDslTest extends AnyFlatSpec with should.Matchers:
     tackle.success shouldBe EmptyBehavior
     tackle.fail shouldBe EmptyBehavior
 
+  it should "allow setting pp" in:
+    val tackle = move("Tackle", Normal, Category.Physical):
+      _ pp 35
+
+    tackle.pp shouldBe 35
+  
   it should "allow setting priority" in:
     val quickAttack = move("Quick Attack", Normal, Category.Physical):
       _ priority 1

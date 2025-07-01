@@ -13,6 +13,7 @@ import it.unibo.skalamon.model.types.Type
   */
 class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
   private var types: List[Type] = List.empty
+  private var hp: Option[Int] = None
   private var weight: Option[Double] = None
   private var stats: Map[Stat, Int] = Map.empty
   private var moves: List[Move] = List.empty
@@ -38,6 +39,19 @@ class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
     */
   def typed(pokemonTypes: List[Type]): PokemonBuilder =
     this.types = pokemonTypes
+    this
+
+  /** Sets the HP (Health Points) of the Pokémon.
+    * @param hp
+    *   The base HP value to assign to the Pokémon.
+    * @return
+    *   This for chaining.
+    * @throws IllegalArgumentException
+    *   If the HP is not a positive integer.
+    */
+  def hp(hp: Int): PokemonBuilder =
+    require(hp > 0, "HP must be a positive integer")
+    this.hp = Some(hp)
     this
 
   /** Sets the weight of the Pokémon in kilograms.
@@ -96,6 +110,9 @@ class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
       types = Some(types).filterNot(_.isEmpty).getOrElse(
         throw new IllegalArgumentException("At least one type must be defined")
       ),
+      hp = hp.getOrElse(
+        throw new IllegalArgumentException("HP must be defined")
+      ),
       stats = Stats(stats),
       ability = this.ability.getOrElse(
         throw new IllegalArgumentException("Ability must be defined")
@@ -103,7 +120,7 @@ class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
       weightKg = weight.getOrElse(
         throw new IllegalArgumentException("Weight must be defined")
       ),
-      possibleMoves = this.moves
+      moves = this.moves
     )
 
 extension (t: Type)

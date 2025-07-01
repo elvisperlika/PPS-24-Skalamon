@@ -22,6 +22,7 @@ class MoveBuilder(
 ) extends DslBuilder[Move]:
   private var priority = 0
   private var accuracy: Accuracy = Accuracy.Of(100.percent)
+  private var pp: Int = 40
   private var success: Behavior = EmptyBehavior
   private var fail: Behavior = EmptyBehavior
 
@@ -58,6 +59,20 @@ class MoveBuilder(
   def accuracyOf(accuracy: Percentage): MoveBuilder =
     this.accuracy(Accuracy.Of(accuracy))
 
+  /** Sets the PP (Power Points) of the move.
+    *
+    * @param pp
+    *   The number of times the move can be used.
+    * @return
+    *   This for chaining.
+    * @throws IllegalArgumentException
+    *   If PP is less than or equal to 0.
+    */
+  def pp(pp: Int): MoveBuilder =
+    require(pp > 0, "PP must be a positive integer")
+    this.pp = pp
+    this
+
   /** Sets the behavior of the move in case of success.
     *
     * @param success
@@ -86,7 +101,7 @@ class MoveBuilder(
     *   The constructed Move instance.
     */
   override def build: Move =
-    Move(name, priority, moveType, category, accuracy, success, fail)
+    Move(name, priority, moveType, category, accuracy, pp, success, fail)
 
 /** DSL function to create a Move instance.
   *

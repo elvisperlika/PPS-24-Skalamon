@@ -21,6 +21,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     base = Pokemon(
       name = "Pikachu",
       types = Electric :: Nil,
+      hp = 100,
       stats = Stats(
         base = Map(
           Stat.Attack -> 100,
@@ -32,7 +33,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       ),
       ability = Ability("Say Hello", Map.empty),
       weightKg = 10,
-      possibleMoves = Nil
+      moves = Nil
     ),
     gender = Male,
     currentHP = 100,
@@ -45,6 +46,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     base = Pokemon(
       name = "Snowsaur",
       types = Ice :: Nil,
+      hp = 100,
       stats = Stats(
         base = Map(
           Stat.Attack -> 90,
@@ -56,7 +58,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
       ),
       ability = Ability("Cold Veil", Map.empty),
       weightKg = 85,
-      possibleMoves = Nil
+      moves = Nil
     ),
     gender = Female,
     currentHP = 80,

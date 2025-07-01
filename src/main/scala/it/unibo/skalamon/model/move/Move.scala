@@ -10,6 +10,19 @@ import it.unibo.skalamon.model.types.Type
   *
   * @param name
   *   The name of the move.
+  * @param priority
+  *   The priority of the move, which determines the order of execution relative
+  *   to other moves.
+  * @param moveType
+  *   The type of the move (e.g., Fire, Water, etc.).
+  * @param category
+  *   The category of the move (e.g., Physical, Special, Status).
+  * @param accuracy
+  *   The accuracy of the move, which determines the likelihood of hitting the
+  *   target.
+  * @param pp
+  *   The Power Points of the move, which indicate how many times the move can
+  *   be used before it needs to be restored.
   * @param success
   *   The behavior of this move when it is successful.
   * @param fail
@@ -21,6 +34,7 @@ case class Move(
     moveType: Type,
     category: Category,
     accuracy: Accuracy,
+    pp: Int,
     success: Behavior = EmptyBehavior,
     fail: Behavior = EmptyBehavior
 )
