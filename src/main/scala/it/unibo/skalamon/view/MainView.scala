@@ -19,9 +19,8 @@ class MainView() extends JFrame:
     this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     this.setVisible(true)
 
-  def getPlayScreen(): BattleScreen =
+  def getPlayScreen: BattleScreen =
     BattleScreen(terminal)
 
   override def repaint(): Unit =
-    terminal.clear
     super.repaint()

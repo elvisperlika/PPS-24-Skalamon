@@ -3,6 +3,8 @@ package it.unibo.skalamon.view.Container
 import java.awt.Color
 import asciiPanel.AsciiPanel
 
+import scala.annotation.tailrec
+
 /** Creates a box in the terminal that can contain text.
   *
   * @param terminal
@@ -90,6 +92,7 @@ class BoxContainer(
     * @param y
     *   Y coordinate for first line of text.
     */
+  @tailrec
   private def drawText(
       textList: Seq[String],
       color: Color,

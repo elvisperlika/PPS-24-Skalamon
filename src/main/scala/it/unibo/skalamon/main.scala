@@ -25,7 +25,7 @@ def main(): Unit =
   val battleView = BattleView(mainView.getPlayScreen)
 
   battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
-    printView(state)
+    mainView.repaint()
     battleView.update(state)
 
   controller.start()
