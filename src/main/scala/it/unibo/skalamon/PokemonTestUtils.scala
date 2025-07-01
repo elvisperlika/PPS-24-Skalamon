@@ -3,14 +3,14 @@ package it.unibo.skalamon
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
-import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Category.Special
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
+import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon}
 import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.types.TypesCollection.{Electric, Fire, Grass, Poison}
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 
 // TEMPORARY
 

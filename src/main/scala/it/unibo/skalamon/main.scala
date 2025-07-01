@@ -4,7 +4,6 @@ import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.battle.{Battle, BattleState}
 import it.unibo.skalamon.model.event.BattleStateEvents
-import it.unibo.skalamon.model.move.{BattleMove, createContext}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 // TEMPORARY

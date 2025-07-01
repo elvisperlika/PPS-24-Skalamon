@@ -4,22 +4,11 @@ import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.damage.DamageCalculatorUtility.{
   calculateCategoryScalar,
   calculateFieldFactor,
-  calculateLevelScalar,
-  calculateRandomFactor,
   calculateStabFactor,
   calculateTypeEfficacy
 }
-import it.unibo.skalamon.model.data.RandomGenerator
 import it.unibo.skalamon.model.move.BattleMove
-import it.unibo.skalamon.model.move.MoveModel.Category
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-import it.unibo.skalamon.model.pokemon.Stat.{
-  Attack,
-  Defense,
-  SpecialAttack,
-  SpecialDefense
-}
-import it.unibo.skalamon.model.types.{Type, TypeUtility}
 
 case object DamageCalculatorGen1 extends DamageCalculator:
 
