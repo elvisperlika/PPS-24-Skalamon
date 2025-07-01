@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.dsl
 
 import it.unibo.skalamon.model.ability.Ability
 import it.unibo.skalamon.model.behavior.kind.Stats
-import it.unibo.skalamon.model.pokemon.Pokemon
+import it.unibo.skalamon.model.pokemon.{Pokemon, Stat}
 import it.unibo.skalamon.model.types.{PokemonType, Type}
 
 /** A builder for creating Pokémon instances using a DSL-like syntax.
@@ -12,6 +12,9 @@ import it.unibo.skalamon.model.types.{PokemonType, Type}
   */
 class PokemonBuilder(private val name: String):
   private var types: Option[PokemonType] = None
+  private var stats: Map[Stat, Int] = Map.empty
+
+  def and() = this
 
   /** Sets the type or types of the Pokémon.
     *
@@ -22,6 +25,16 @@ class PokemonBuilder(private val name: String):
     */
   def typed(types: PokemonType): PokemonBuilder =
     this.types = Some(types)
+    this
+
+  /** Sets a base stat.
+    * @param stat
+    *   A tuple containing the stat and its value.
+    * @return
+    *   This for chaining.
+    */
+  def stat(stat: (Stat, Int)): PokemonBuilder =
+    this.stats = this.stats + stat
     this
 
   /** Builds the Pokémon instance with the provided attributes.
@@ -37,7 +50,7 @@ class PokemonBuilder(private val name: String):
       types = types.getOrElse(
         throw new IllegalArgumentException("Types must be defined")
       ),
-      baseStats = Stats(Map.empty), // Placeholder for base stats
+      baseStats = Stats(stats), // Placeholder for base stats
       ability = Ability("Unknown", Map.empty), // Placeholder for ability
       weightKg = 0.0, // Placeholder for weight
       possibleMoves = List() // Placeholder for moves

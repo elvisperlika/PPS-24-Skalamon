@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.dsl
 
+import it.unibo.skalamon.model.pokemon.Stat
 import it.unibo.skalamon.model.types.TypesCollection.{Electric, Fire, Flying}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -26,4 +27,14 @@ class PokemonDslTest extends AnyFlatSpec with should.Matchers:
     an[IllegalArgumentException] should be thrownBy {
       pokemon("Unknown")(identity)
     }
+  }
+  
+  it should "allow setting stats" in {
+    val bulbasaur = pokemon("Pikachu"):
+      _ typed Electric stat Stat.Attack -> 20 stat Stat.Defense -> 10
+
+    bulbasaur.baseStats.base shouldBe Map(
+      Stat.Attack -> 20,
+      Stat.Defense -> 10
+    )
   }
