@@ -2,6 +2,7 @@ package it.unibo.skalamon.model.dsl
 
 import it.unibo.skalamon.model.ability.Ability
 import it.unibo.skalamon.model.behavior.kind.Stats
+import it.unibo.skalamon.model.move.Move
 import it.unibo.skalamon.model.pokemon.{Pokemon, Stat}
 import it.unibo.skalamon.model.types.Type
 
@@ -14,6 +15,8 @@ class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
   private var types: List[Type] = List.empty
   private var weight: Option[Double] = None
   private var stats: Map[Stat, Int] = Map.empty
+  private var moves: List[Move] = List.empty
+  private var ability: Option[Ability] = None
 
   /** Sets the type of the Pokémon.
     *
@@ -58,6 +61,28 @@ class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
     this.stats = this.stats + stat
     this
 
+  /** Sets the moves of the Pokémon.
+    *
+    * @param moves
+    *   The list of moves to assign to the Pokémon.
+    * @return
+    *   This for chaining.
+    */
+  def moves(moves: Move*): PokemonBuilder =
+    this.moves = moves.toList
+    this
+
+  /** Sets the ability of the Pokémon.
+    *
+    * @param ability
+    *   The ability to assign to the Pokémon.
+    * @return
+    *   This for chaining.
+    */
+  def ability(ability: Ability): PokemonBuilder =
+    this.ability = Some(ability)
+    this
+
   /** Builds the Pokémon instance with the provided attributes.
     *
     * @return
@@ -72,11 +97,13 @@ class PokemonBuilder(private val name: String) extends DslBuilder[Pokemon]:
         throw new IllegalArgumentException("At least one type must be defined")
       ),
       stats = Stats(stats),
-      ability = Ability("Unknown", Map.empty), // Placeholder for ability
+      ability = this.ability.getOrElse(
+        throw new IllegalArgumentException("Ability must be defined")
+      ),
       weightKg = weight.getOrElse(
         throw new IllegalArgumentException("Weight must be defined")
       ),
-      possibleMoves = List() // Placeholder for moves
+      possibleMoves = this.moves
     )
 
 extension (t: Type)
