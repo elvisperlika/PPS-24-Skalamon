@@ -58,9 +58,12 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
     }
   )
 
-  "Damage Calculator" should " calculate damage of an Electric pokemon " +
-    "that attack with Electric move a Grass-Poison pokemon with Electrified, " +
-    "Sunny and TrickRoom field effects" in:
+  /**
+   * Calculate damage to an Electric Pokémon that attack with Electric
+   * move a Grass-Poison Pokémon with Electrified
+   * Sunny and TrickRoom field effects
+   */
+  "Damage Calculator" should "calculate damage (1)" in:
     val movePower = 10
     val damage =
       calculate(
@@ -77,7 +80,10 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
     val multiplier = 1.5 * 0.5 * 1.5
     damage shouldEqual (baseDamage * multiplier).toInt
 
-  it should "calculate damage with same conditions of test above with no field effects" in:
+  /**
+   * Calculate damage with same conditions of test above with no field effects.
+   */
+  it should "calculate damage (2)" in:
     val battleState: BattleState = BattleState(trainers, field(trainers)())
     val movePower = 5
     val damage =
@@ -95,8 +101,11 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
     val multiplier = 1.5 * 0.5 * 1.0
     damage shouldEqual (baseDamage * multiplier).toInt
 
-  it should "calculate damage of Grassy-Poison pokemon that attack with Flying " +
-    "Special attack without field effects" in:
+  /**
+   * Calculate damage to Grassy-Poison Pokémon that attack with Flying
+   * Special attack without field effects
+   */
+  it should "calculate damage (3)" in:
     val move: Move = Move(
       name = "flyingAttack",
       priority = 5,
