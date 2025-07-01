@@ -12,9 +12,8 @@ import it.unibo.skalamon.model.types.{PokemonType, Type}
   */
 class PokemonBuilder(private val name: String):
   private var types: Option[PokemonType] = None
+  private var weight: Option[Double] = None
   private var stats: Map[Stat, Int] = Map.empty
-
-  def and() = this
 
   /** Sets the type or types of the Pokémon.
     *
@@ -25,6 +24,17 @@ class PokemonBuilder(private val name: String):
     */
   def typed(types: PokemonType): PokemonBuilder =
     this.types = Some(types)
+    this
+
+  /** Sets the weight of the Pokémon in kilograms.
+    *
+    * @param weight
+    *   The weight in kilograms.
+    * @return
+    *   This for chaining.
+    */
+  def weighting(weight: Double): PokemonBuilder =
+    this.weight = Some(weight)
     this
 
   /** Sets a base stat.
@@ -50,9 +60,11 @@ class PokemonBuilder(private val name: String):
       types = types.getOrElse(
         throw new IllegalArgumentException("Types must be defined")
       ),
-      baseStats = Stats(stats), // Placeholder for base stats
+      baseStats = Stats(stats),
       ability = Ability("Unknown", Map.empty), // Placeholder for ability
-      weightKg = 0.0, // Placeholder for weight
+      weightKg = weight.getOrElse(
+        throw new IllegalArgumentException("Weight must be defined")
+      ),
       possibleMoves = List() // Placeholder for moves
     )
 
@@ -66,6 +78,13 @@ extension (t: Type)
     */
   def and(other: Type): PokemonType =
     List(t, other)
+
+extension (d: Double)
+  /** Syntactic sugar for Pokémon weight in kilograms.
+    * @return
+    *   This value.
+    */
+  def kg: Double = d
 
 /** DSL function to create a base Pokémon instance.
   *
