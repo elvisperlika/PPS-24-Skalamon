@@ -1,7 +1,7 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-// Aggiungi il resolver di JitPack
 resolvers += "jitpack" at "https://jitpack.io"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 
 inThisBuild(
   List(
@@ -15,10 +15,8 @@ inThisBuild(
 lazy val root = (project in file("."))
   .settings(
     name := "PPS-24-Skalamon",
-    libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-      "junit" % "junit" % "4.13.2" % Test,
-      "com.github.trystan" % "AsciiPanel" % "master-SNAPSHOT"
-    )
+    libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
+    libraryDependencies += "com.github.trystan" % "AsciiPanel" % "master-SNAPSHOT",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     coverageEnabled := true
   )
