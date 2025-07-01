@@ -35,10 +35,6 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
   override val eventManager: EventManager =
     new EventManager with BattleConfiguration(this)
 
-  eventManager.watch(Finished) { maybeWinner =>
-    gameState = GameOver(maybeWinner)
-  }
-
   /** Starts the battle by initializing the first turn.
     */
   def start(): Unit =
