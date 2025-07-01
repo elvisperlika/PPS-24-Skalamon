@@ -23,13 +23,8 @@ import it.unibo.skalamon.model.types.{Type, TypeUtility}
 
 case object DamageCalculatorGen1 extends DamageCalculator:
 
-  private val NoMultiplier: Int = 1
-  private val LevelMultiplier: Int = 2
-  private val LevelDivider: Int = 5
-  private val LevelBoost: Int = 2
-
   private val DamageDivider: Int = 50
-  private val StabMultiplier: Int = 2
+  private val DamageBoost: Int = 2
 
   def calculate(
       origin: BattleMove,
@@ -38,11 +33,12 @@ case object DamageCalculatorGen1 extends DamageCalculator:
       power: Int,
       battleState: BattleState
   ): Int =
-    val categoryScalar: Double =
-      calculateCategoryScalar(origin, source.actualStats, target.actualStats)
-    val levelScalar = calculateLevelScalar(source.level)
+
     val baseDamage: Double =
-      levelScalar * power * categoryScalar / DamageDivider
+      val categoryScalar: Double =
+        calculateCategoryScalar(origin, source.actualStats, target.actualStats)
+      val levelScalar = calculateLevelScalar(source.level)
+      levelScalar * power * categoryScalar / DamageDivider + DamageBoost
 
     val multiplier: Double =
       val stab: Double =

@@ -9,10 +9,11 @@ import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.terrain.Electrified
 import it.unibo.skalamon.model.field.weather.Sunny
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
-import it.unibo.skalamon.model.move.MoveModel.Category.Physical
+import it.unibo.skalamon.model.move.MoveModel.Category.{Physical, Special}
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
-import it.unibo.skalamon.model.types.TypesCollection.Electric
+import it.unibo.skalamon.model.pokemon.Stat.{Attack, Defense, SpecialAttack, SpecialDefense}
+import it.unibo.skalamon.model.types.TypesCollection.{Electric, Flying}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -26,7 +27,7 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
     accuracy = Of(100.percent),
     success = SimpleSingleHitBehavior(10)
   )
-  val battleMoveElectric: BattleMove = BattleMove(
+  val electricMove: BattleMove = BattleMove(
     move = move,
     pp = 10
   )
@@ -57,14 +58,74 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
     }
   )
 
-  "Damage Calculator" should "test 1" in:
+  "Damage Calculator" should " calculate damage of an Electric pokemon " +
+    "that attack with Electric move a Grass-Poison pokemon with Electrified, " +
+    "Sunny and TrickRoom field effects" in:
+    val movePower = 10
     val damage =
       calculate(
-        battleMoveElectric,
+        electricMove,
         alice.inField.get,
         bob.inField.get,
-        10,
+        movePower,
         battleState
       )
-    println(damage)
-    damage shouldEqual 12
+    val baseDamage =
+      (2 * alice.inField.get.level / 5 + 2) * movePower * (alice.inField.get.base.stats.base(
+        Attack
+      ) / bob.inField.get.base.stats.base(Defense)) / 50 + 2
+    val multiplier = 1.5 * 0.5 * 1.5
+    damage shouldEqual (baseDamage * multiplier).toInt
+
+  it should "calculate damage with same conditions of test above with no field effects" in:
+    val battleState: BattleState = BattleState(trainers, field(trainers)())
+    val movePower = 5
+    val damage =
+      calculate(
+        electricMove,
+        alice.inField.get,
+        bob.inField.get,
+        5,
+        battleState
+      )
+    val baseDamage =
+      (2 * alice.inField.get.level / 5 + 2) * movePower * (alice.inField.get.base.stats.base(
+        Attack
+      ) / bob.inField.get.base.stats.base(Defense)) / 50 + 2
+    val multiplier = 1.5 * 0.5 * 1.0
+    damage shouldEqual (baseDamage * multiplier).toInt
+
+  it should "calculate damage of Grassy-Poison pokemon that attack with Flying " +
+    "Special attack without field effects" in:
+    val move: Move = Move(
+      name = "flyingAttack",
+      priority = 5,
+      moveType = Flying,
+      category = Special,
+      accuracy = Of(100.percent),
+      success = SimpleSingleHitBehavior(10)
+    )
+    val specialFlyingMove: BattleMove = BattleMove(
+      move = move,
+      pp = 10
+    )
+    val alice: Trainer =
+      Trainer("Alice", List(simplePokemon2), Some(simplePokemon2))
+    val bob: Trainer =
+      Trainer("Alice", List(simplePokemon1), Some(simplePokemon1))
+    val trainers: List[Trainer] = alice :: bob :: Nil
+    val battleState: BattleState = BattleState(trainers, field(trainers)())
+    val movePower = 5
+    val damage = calculate(
+      specialFlyingMove,
+      alice.inField.get,
+      bob.inField.get,
+      movePower,
+      battleState
+    )
+    val baseDamage =
+      (2 * alice.inField.get.level / 5 + 2) * movePower * (alice.inField.get.base.stats.base(
+        SpecialAttack
+      ) / bob.inField.get.base.stats.base(SpecialDefense)) / 50 + 2
+    val multiplier = 1.0 * 0.5 * 1.0
+    damage shouldEqual (baseDamage * multiplier).toInt
