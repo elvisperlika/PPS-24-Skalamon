@@ -39,7 +39,7 @@ object BattleHooksConfigurator:
                     case MoveModel.Accuracy.Of(percentage)
                         if !percentage.randomBoolean => move.move.fail
                     case _ => move.move.success
-                move.createContext(result, target, source)(initialState)
+                move.createContext(result, target, source)(s)
               case SwitchAction(pIn, pOut) => s
               case _                       => s
           }
