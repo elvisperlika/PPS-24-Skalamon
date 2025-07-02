@@ -10,7 +10,6 @@ case class TestMove(_attack: Int, _type: Type)
 
 extension (pokemon: TestMutablePokemon)
   def attack(move: TestMove)(other: TestMutablePokemon): Unit =
-    println(other._hp)
     other._hp = other._hp - (move._attack * TypeUtility
       .calculateTypeMultiplier(
         move._type.computeEffectiveness(other._type)
