@@ -15,11 +15,6 @@ def main(): Unit =
   trainer1 = trainer1.copy(_inField = Some(trainer1.team.head))
   trainer2 = trainer2.copy(_inField = Some(trainer2.team.head))
 
-  val inputQueue = scala.collection.mutable.Map(
-    trainer1 -> Option.empty[MoveAction],
-    trainer2 -> Option.empty[MoveAction]
-  )
-
   val battle = Battle(List(trainer1, trainer2))
   val controller = BattleController(battle)
 
@@ -56,28 +51,21 @@ def main(): Unit =
   }
 
   while battle.gameState == GameState.InProgress do
-    if inputQueue(trainer1).isDefined && inputQueue(trainer2).isDefined then
-      controller.registerAction(trainer1, inputQueue(trainer1).get)
-      controller.registerAction(trainer2, inputQueue(trainer2).get)
-      inputQueue(trainer1) = None
-      inputQueue(trainer2) = None
-    else
-      // TODO: cambiare con if controller.isWaitingForActions
-      // println("Waiting for actions from trainers...")
-
+    Thread.sleep(200) // TODO: is it necessary?
+    if !controller.isWaitingForActions then
       controller.update()
 
-  // TODO: move è un option, se non c'è un pokemon in campo
   def handleTrainerAction(
       trainer: Trainer,
       opponent: Trainer,
       moveIndex: Int
   ): Unit =
-    trainer.inField.flatMap(_.moves.lift(moveIndex)).foreach { move =>
-      val action =
-        MoveAction(move, trainer.inField.get, opponent.inField.get)
-      println(
-        s"${trainer.name} selected move '${move.move.name}'"
-      )
-      inputQueue(trainer) = Some(action)
-    }
+    for
+      pokemon <- trainer.inField
+      target <- opponent.inField
+      move <- pokemon.moves.lift(moveIndex)
+    do
+      if controller.isWaitingForActions then
+        val action = MoveAction(move, pokemon, target)
+        println(s"${trainer.name} selected move '${move.move.name}'")
+        controller.registerAction(trainer, action)
