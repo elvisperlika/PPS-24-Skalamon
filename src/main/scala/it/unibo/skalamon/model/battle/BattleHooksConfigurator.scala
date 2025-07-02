@@ -1,11 +1,12 @@
 package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
+import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
-import it.unibo.skalamon.model.move.{Move, MoveModel, createContext}
-import it.unibo.skalamon.model.ability.hookAll
+import it.unibo.skalamon.model.move.{BattleMove, Move, MoveModel, createContext}
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
 
@@ -44,16 +45,36 @@ object BattleHooksConfigurator:
           val finalState = sortedActions.foldLeft(initialState) { (s, a) =>
             a match
               case MoveAction(move, source, target) =>
-                val result: Move => Behavior = _ =>
-                  move.move.accuracy match
-                    case MoveModel.Accuracy.Of(percentage)
-                        if !percentage.randomBoolean => move.move.fail
-                    case _ => move.move.success
-                move.createContext(result, target, source)(s)
-              case SwitchAction(pIn, pOut) => s
-              case _                       => s
+                executeMove(move, source, target, s)
+              case SwitchAction(pIn) => executeSwitch(pIn, s)
+              case _                 => s
           }
           finalState
-
         case _ =>
           initialState
+
+    def executeMove(
+        move: BattleMove,
+        source: BattlePokemon,
+        target: BattlePokemon,
+        current: BattleState
+    ): BattleState =
+      val result: Move => Behavior = _ =>
+        move.move.accuracy match
+          case MoveModel.Accuracy.Of(percentage)
+              if !percentage.randomBoolean => move.move.fail
+          case _ => move.move.success
+      move.createContext(result, target, source)(current)
+
+    def executeSwitch(
+        pIn: BattlePokemon,
+        state: BattleState
+    ): BattleState =
+      val owner =
+        state.trainers.find(_.team.exists(_.id == pIn.id)).get
+      val updatedTrainers =
+        state.trainers.map {
+          case `owner`    => owner.copy(_inField = Some(pIn))
+          case t: Trainer => t
+        }
+      state.copy(trainers = updatedTrainers)
