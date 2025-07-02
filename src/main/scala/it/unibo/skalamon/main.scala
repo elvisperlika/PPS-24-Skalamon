@@ -2,20 +2,25 @@ package it.unibo.skalamon
 
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
-import it.unibo.skalamon.model.battle.{Battle, BattleState}
+import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.MainView
-import it.unibo.skalamon.view.battle.BattleView
+import it.unibo.skalamon.view.battle.{BattleInput, BattleView}
 
 @main
 def main(): Unit =
-  var (trainerAlice, trainerBob) =
+  var (trainer1, trainer2) =
     (PokemonTestUtils.trainerAlice, PokemonTestUtils.trainerBob)
-  trainerAlice = trainerAlice.copy(_inField = Some(trainerAlice.team.head))
-  trainerBob = trainerBob.copy(_inField = Some(trainerBob.team.head))
+  trainer1 = trainer1.copy(_inField = Some(trainer1.team.head))
+  trainer2 = trainer2.copy(_inField = Some(trainer2.team.head))
 
-  val battle = Battle(List(trainerAlice, trainerBob))
+  val inputQueue = scala.collection.mutable.Map(
+    trainer1 -> Option.empty[MoveAction],
+    trainer2 -> Option.empty[MoveAction]
+  )
+
+  val battle = Battle(List(trainer1, trainer2))
   val controller = BattleController(battle)
 
   val mainView: MainView = MainView()
@@ -29,35 +34,50 @@ def main(): Unit =
 
   controller.start()
 
+  mainView.setKeyPressedHandler {
+    case BattleInput.playerMove1 =>
+      handleTrainerAction(trainer1, trainer2, 0)
+    case BattleInput.playerMove2 =>
+      handleTrainerAction(trainer1, trainer2, 1)
+    case BattleInput.playerMove3 =>
+      handleTrainerAction(trainer1, trainer2, 2)
+    case BattleInput.playerMove4 =>
+      handleTrainerAction(trainer1, trainer2, 3)
+
+    case BattleInput.opponentMove1 =>
+      handleTrainerAction(trainer2, trainer1, 0)
+    case BattleInput.opponentMove2 =>
+      handleTrainerAction(trainer2, trainer1, 1)
+    case BattleInput.opponentMove3 =>
+      handleTrainerAction(trainer2, trainer1, 2)
+    case BattleInput.opponentMove4 =>
+      handleTrainerAction(trainer2, trainer1, 3)
+    case _ => None
+  }
+
   while battle.gameState == GameState.InProgress do
-    Thread.sleep(200)
+    if inputQueue(trainer1).isDefined && inputQueue(trainer2).isDefined then
+      controller.registerAction(trainer1, inputQueue(trainer1).get)
+      controller.registerAction(trainer2, inputQueue(trainer2).get)
+      inputQueue(trainer1) = None
+      inputQueue(trainer2) = None
+    else
+      // TODO: cambiare con if controller.isWaitingForActions
+      // println("Waiting for actions from trainers...")
 
-    println(
-      s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}"
-    )
+      controller.update()
 
-    if controller.isWaitingForActions then
-      println("Waiting for actions...")
-      // Simulated action registration
-      val aliceAction = MoveAction(
-        move = trainerAlice.inField.get.moves.head,
-        source = trainerAlice.inField.get,
-        target = trainerBob.inField.get
+  // TODO: move è un option, se non c'è un pokemon in campo
+  def handleTrainerAction(
+      trainer: Trainer,
+      opponent: Trainer,
+      moveIndex: Int
+  ): Unit =
+    trainer.inField.flatMap(_.moves.lift(moveIndex)).foreach { move =>
+      val action =
+        MoveAction(move, trainer.inField.get, opponent.inField.get)
+      println(
+        s"${trainer.name} selected move '${move.move.name}'"
       )
-      val bobAction = MoveAction(
-        move = trainerBob.inField.get.moves.head,
-        source = trainerBob.inField.get,
-        target = trainerAlice.inField.get
-      )
-      controller.registerAction(PokemonTestUtils.trainerAlice, aliceAction)
-      controller.registerAction(PokemonTestUtils.trainerBob, bobAction)
-
-    controller.update()
-
-def moveToAction(
-    move: BattleMove,
-    source: BattlePokemon,
-    target: BattlePokemon
-): MoveAction =
-  val context = move.createContext(_.success, target, source)
-  MoveAction(context)
+      inputQueue(trainer) = Some(action)
+    }
