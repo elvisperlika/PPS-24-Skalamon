@@ -33,7 +33,7 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
       category = Special,
       pp = 10,
       accuracy = Of(100.percent),
-      success = DamageBehavior(Damage)
+      success = SingleHitBehavior(Damage)
     )
   val pikachu: BattlePokemon = BattlePokemon(
     Pokemon.pikachu,
@@ -87,7 +87,6 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     bob.inField shouldBe Some(machamp)
     alice.inField shouldBe Some(pikachu)
 
-    val prevAlakazamHP = bob.team.find(_.id == alakazam.id).get.currentHP
     val bobAction = SwitchAction(pIn = alakazam)
     val aliceAction = MoveAction(
       move = alice.inField.get.moves.head,
@@ -103,4 +102,4 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     ).get.currentHP shouldEqual machamp.currentHP
     bob.team.find(
       _.id == alakazam.id
-    ).get.currentHP shouldEqual alakazam.currentHP - Damage
+    ).get.currentHP shouldBe 54
