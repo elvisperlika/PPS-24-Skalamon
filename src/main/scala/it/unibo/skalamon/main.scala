@@ -35,13 +35,13 @@ def main(): Unit =
       // Simulated action registration
       val aliceAction = MoveAction(
         move = trainerAlice.inField.get.moves.head,
-        source = trainerAlice.inField.get,
-        target = trainerBob.inField.get
+        source = trainerAlice,
+        target = trainerBob
       )
       val bobAction = MoveAction(
         move = trainerBob.inField.get.moves.head,
-        source = trainerBob.inField.get,
-        target = trainerAlice.inField.get
+        source = trainerBob,
+        target = trainerAlice
       )
       controller.registerAction(PokemonTestUtils.trainerAlice, aliceAction)
       controller.registerAction(PokemonTestUtils.trainerBob, bobAction)

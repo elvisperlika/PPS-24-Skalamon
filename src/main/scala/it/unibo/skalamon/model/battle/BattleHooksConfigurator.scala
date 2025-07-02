@@ -45,7 +45,9 @@ object BattleHooksConfigurator:
           val finalState = sortedActions.foldLeft(initialState) { (s, a) =>
             a match
               case MoveAction(move, source, target) =>
-                executeMove(move, source, target, s)
+                val updSource: Trainer = s.trainers.find(_.id == source.id).get
+                val updTarget: Trainer = s.trainers.find(_.id == target.id).get
+                executeMove(move, updSource, updTarget, s)
               case SwitchAction(pIn) => executeSwitch(pIn, s)
               case _                 => s
           }
@@ -55,8 +57,8 @@ object BattleHooksConfigurator:
 
     def executeMove(
         move: BattleMove,
-        source: BattlePokemon,
-        target: BattlePokemon,
+        source: Trainer,
+        target: Trainer,
         current: BattleState
     ): BattleState =
       val result: Move => Behavior = _ =>
@@ -64,7 +66,11 @@ object BattleHooksConfigurator:
           case MoveModel.Accuracy.Of(percentage)
               if !percentage.randomBoolean => move.move.fail
           case _ => move.move.success
-      move.createContext(result, target, source)(current)
+      move.createContext(
+        result,
+        target.inField.get,
+        source.inField.get
+      )(current)
 
     def executeSwitch(
         pIn: BattlePokemon,
