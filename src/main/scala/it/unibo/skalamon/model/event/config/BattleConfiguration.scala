@@ -10,6 +10,7 @@ import it.unibo.skalamon.model.battle.{
 import it.unibo.skalamon.model.event.BattleStateEvents.Finished
 import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.event.TurnStageEvents.Ended
+import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
 import it.unibo.skalamon.model.status.*
 
@@ -57,8 +58,9 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
             afterNonVolatile,
             afterNonVolatile.volatileStatus
           )
+          val cleanedPokemon = removeExpiredStatuses(afterVolatile)
           val updatedTeam = trainer.team.map(p =>
-            if (p.id == afterVolatile.id) afterVolatile else p
+            if (p.id == cleanedPokemon.id) cleanedPokemon else p
           )
           trainer.copy(team = updatedTeam)
         case None => trainer
@@ -70,6 +72,7 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
       status: AssignedStatus[NonVolatileStatus]
   ): BattlePokemon = status.status match
 
+    // TODO: Vedere se lasciare la clusola di "Guts"
     // Deals damage: 1/16 of max HP at end of each turn.
     // Halves physical attack stat (unless the Pokémon has the ability Guts)
     case Burn =>
@@ -142,3 +145,13 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
 
         // Blocks moves that target this Pokémon.
         case ProtectEndure => pk.copy(isProtected = true)
+
+  private def removeExpiredStatuses(
+      pk: BattlePokemon
+  ): BattlePokemon =
+    val updatedVolatileStatuses = pk.volatileStatus.filterNot {
+      case AssignedStatus(status: Expirable, _) =>
+        status.isExpired(battle.turnIndex)
+      case _ => false
+    }
+    pk.copy(volatileStatus = updatedVolatileStatuses)
