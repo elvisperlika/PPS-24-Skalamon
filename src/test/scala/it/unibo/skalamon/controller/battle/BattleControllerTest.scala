@@ -53,9 +53,10 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
 
     controller.update()
     controller.registerAction(alice, action1)
-    controller.registerAction(bob, action2)
 
     controller.hasActionRegistered(alice) shouldBe true
+
+    controller.registerAction(bob, action2)
 
     currentStage shouldBe TurnStage.ActionsReceived(
       ActionBuffer(2).register(alice, action1).register(bob, action2)
@@ -68,16 +69,13 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
     controller.start()
 
     val action1 = SwitchAction(simplePokemon1, simplePokemon2)
-    val action2 = SwitchAction(simplePokemon1, simplePokemon2)
 
     controller.update()
     controller.registerAction(alice, action1)
-    controller.registerAction(bob, action2)
     controller.withdrawAction(alice)
 
-    currentStage shouldBe TurnStage.ActionsReceived(
-      ActionBuffer(2).register(bob, action2)
-    )
+    controller.hasActionRegistered(alice) shouldBe false
+    currentStage shouldBe TurnStage.WaitingForActions
 
   it should "trigger start events" in:
     var eventTriggered = false
