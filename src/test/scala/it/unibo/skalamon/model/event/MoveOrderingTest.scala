@@ -46,7 +46,7 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
       accuracy = Of(100.percent),
       success = EmptyBehavior
     ).battling
-    
+
   private val context5 = move5.createContext(_.success, target, source)
 
   private val move5b =
@@ -80,7 +80,6 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
     source,
     target
   ) :: SwitchAction(
-    simplePokemon1,
     simplePokemon2
   ) :: MoveAction(
     move5,
@@ -99,9 +98,7 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
   "Moves" should "be in order" in:
     import OrderingUtils.given
     val flattenList = actions.sorted
-
     flattenList shouldEqual SwitchAction(
-      simplePokemon1,
       simplePokemon2
     ) :: MoveAction(
       move5,
