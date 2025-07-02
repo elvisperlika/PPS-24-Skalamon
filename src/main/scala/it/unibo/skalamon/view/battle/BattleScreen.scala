@@ -1,9 +1,11 @@
-package it.unibo.skalamon.view.screen
+package it.unibo.skalamon.view.battle
 
-import it.unibo.skalamon.view.Container.*
 import asciiPanel.AsciiPanel
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
+import it.unibo.skalamon.view.Container.*
+import it.unibo.skalamon.view.Screen
+import it.unibo.skalamon.view.screen.BattleScreen
 
 import java.awt.Color
 import java.awt.event.KeyEvent

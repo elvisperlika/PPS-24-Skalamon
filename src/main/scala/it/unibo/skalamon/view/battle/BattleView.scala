@@ -9,7 +9,6 @@ import it.unibo.skalamon.model.battle.{
 }
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-import it.unibo.skalamon.view.screen.BattleScreen
 
 import java.awt.event.KeyListener
 

@@ -4,7 +4,7 @@ import it.unibo.skalamon.view.screen.*
 
 import javax.swing.{JFrame, WindowConstants}
 import asciiPanel.AsciiPanel
-import it.unibo.skalamon.view.battle.{BattleInput, keyEventToBattleInput}
+import it.unibo.skalamon.view.battle.{BattleInput, BattleScreen, keyEventToBattleInput}
 
 import java.awt.event.{KeyAdapter, KeyEvent}
 
