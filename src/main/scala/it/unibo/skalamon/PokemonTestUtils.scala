@@ -3,24 +3,38 @@ package it.unibo.skalamon
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.move.*
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
+import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
+import it.unibo.skalamon.model.move.MoveModel.Category.Special
+import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon}
 import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.types.TypesCollection.{
-  Electric,
-  Fire,
-  Grass,
-  Poison
-}
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 
 // TEMPORARY
 
 object PokemonTestUtils:
+  private val powerPoint: Int = 4
+
   private val moveThunderShock =
-    Move("Thunder Shock", priority = 0, success = DamageBehavior(10))
+    Move(
+      name = "Thunder Shock",
+      moveType = Electric,
+      category = Special,
+      pp = powerPoint,
+      accuracy = Of(100.percent),
+      success = DamageBehavior(10)
+    )
   private val moveElectric =
-    Move("Electric", priority = 0, success = DamageBehavior(5))
+    Move(
+      name = "Electric",
+      moveType = Electric,
+      category = Special,
+      pp = powerPoint,
+      accuracy = Of(100.percent),
+      success = DamageBehavior(5)
+    )
 
   private val genericAbility = Ability(
     "Static",
@@ -33,7 +47,6 @@ object PokemonTestUtils:
   private val blazeAbility = Ability("Blaze", Map.empty)
 
   private val startingHP: Int = 70
-  private val powerPoint: Int = 4
 
   val simplePokemon1: BattlePokemon = BattlePokemon(
     Pokemon.pikachu,

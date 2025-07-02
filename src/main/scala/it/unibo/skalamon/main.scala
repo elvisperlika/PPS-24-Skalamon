@@ -4,7 +4,6 @@ import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.battle.{Battle, BattleState}
 import it.unibo.skalamon.model.event.BattleStateEvents
-import it.unibo.skalamon.model.move.{BattleMove, createContext}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.MainView
 import it.unibo.skalamon.view.battle.BattleView
@@ -31,7 +30,7 @@ def main(): Unit =
   controller.start()
 
   while battle.gameState == GameState.InProgress do
-    Thread.sleep(2000)
+    Thread.sleep(200)
 
     println(
       s"Current turn: ${battle.turnIndex}, stage: ${battle.currentTurn.map(_.state.stage).mkString}"
@@ -40,12 +39,12 @@ def main(): Unit =
     if controller.isWaitingForActions then
       println("Waiting for actions...")
       // Simulated action registration
-      val aliceAction = moveToAction(
+      val aliceAction = MoveAction(
         move = trainerAlice.inField.get.moves.head,
         source = trainerAlice.inField.get,
         target = trainerBob.inField.get
       )
-      val bobAction = moveToAction(
+      val bobAction = MoveAction(
         move = trainerBob.inField.get.moves.head,
         source = trainerBob.inField.get,
         target = trainerAlice.inField.get

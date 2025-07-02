@@ -1,12 +1,16 @@
 package it.unibo.skalamon.model.behavior
 
-import it.unibo.skalamon.model.data.RandomGenerator
-import it.unibo.skalamon.model.move.{BattleMove, Move, MoveContext}
+import it.unibo.skalamon.model.data.{RandomGenerator, percent}
+import it.unibo.skalamon.model.dsl.*
+import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
+import it.unibo.skalamon.model.move.MoveModel.Category.Physical
+import it.unibo.skalamon.model.move.{Move, MoveContext}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.{
   simplePokemon1,
   simplePokemon2
 }
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 
 /** Test utilities for testing behaviors.
   */
@@ -14,13 +18,15 @@ object BehaviorTestUtils:
   /** A mock context for moves. */
   def context(target: BattlePokemon, source: BattlePokemon): MoveContext =
     MoveContext(
-      origin = BattleMove(
-        Move(
-          "TestMove",
-          priority = 5
-        ),
-        pp = 10
-      ),
+      origin = Move(
+        "TestMove",
+        priority = 5,
+        moveType = Electric,
+        category = Physical,
+        pp = 10,
+        accuracy = Of(100.percent),
+        success = EmptyBehavior
+      ).battling,
       target = target,
       source = source
     )

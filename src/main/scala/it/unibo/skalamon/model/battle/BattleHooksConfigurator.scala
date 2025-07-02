@@ -1,13 +1,11 @@
-package it.unibo.skalamon.controller.battle.action
+package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.model.ability.hookAll
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleState,
-  Turn,
-  hookBattleStateUpdate
-}
+import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
+import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
+import it.unibo.skalamon.model.move.{Move, MoveModel, createContext}
+import it.unibo.skalamon.model.ability.hookAll
 
 object BattleHooksConfigurator:
 
@@ -21,7 +19,7 @@ object BattleHooksConfigurator:
     battle.hookBattleStateUpdate(Started) { (state, _) =>
       updateBattleField(state)
     }
-    
+
     battle.trainers.foreach { trainer =>
       trainer.team.foreach { pokemon =>
         pokemon.base.ability.hookAll(battle)(
@@ -38,19 +36,24 @@ object BattleHooksConfigurator:
       )
 
     def executeMoves(turn: Turn): BattleState =
-      var state: BattleState = turn.state.snapshot
-      import it.unibo.skalamon.model.battle.TurnStage
+      val initialState = turn.state.snapshot
       turn.state.stage match
         case TurnStage.ActionsReceived(actionBuffer) =>
           import it.unibo.skalamon.model.event.config.OrderingUtils.given
-          val sortedActions = actionBuffer.actions.values.toSeq.sorted
-
-          sortedActions.foreach {
-            case MoveAction(context) => state = context(state)
-            case SwitchAction()      => () // TODO
-            case _                   => ()
+          val sortedActions = actionBuffer.actions.values.toList.sorted
+          val finalState = sortedActions.foldLeft(initialState) { (s, a) =>
+            a match
+              case MoveAction(move, source, target) =>
+                val result: Move => Behavior = _ =>
+                  move.move.accuracy match
+                    case MoveModel.Accuracy.Of(percentage)
+                        if !percentage.randomBoolean => move.move.fail
+                    case _ => move.move.success
+                move.createContext(result, target, source)(s)
+              case SwitchAction(pIn, pOut) => s
+              case _                       => s
           }
-        case _ => throw new IllegalStateException(
-            s"Cannot execute moves in stage ${turn.state.stage}"
-          )
-      state
+          finalState
+
+        case _ =>
+          initialState
