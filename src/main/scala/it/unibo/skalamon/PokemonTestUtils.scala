@@ -52,7 +52,7 @@ object PokemonTestUtils:
     Pokemon.pikachu,
     Male,
     startingHP,
-    List(BattleMove(moveThunderShock, powerPoint)),
+    List(BattleMove(moveThunderShock, powerPoint), BattleMove(moveElectric, powerPoint)),
     None,
     Set.empty
   )
@@ -61,7 +61,7 @@ object PokemonTestUtils:
     Pokemon.bulbasaur,
     Male,
     startingHP,
-    List(BattleMove(moveElectric, powerPoint)),
+    List(BattleMove(moveElectric, powerPoint), BattleMove(moveThunderShock, powerPoint)),
     Option.empty,
     Set.empty
   )
