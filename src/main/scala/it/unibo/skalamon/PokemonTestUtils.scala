@@ -4,6 +4,7 @@ import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.dsl.*
 import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
@@ -36,15 +37,10 @@ object PokemonTestUtils:
       success = DamageBehavior(5)
     )
 
-  private val genericAbility = Ability(
-    "Static",
-    hooks = Map(
-      TurnStageEvents.Started -> DamageBehavior(
-        1
-      ) // 1HP damage at the start of the turn
-    )
-  )
-  private val blazeAbility = Ability("Blaze", Map.empty)
+  private val genericAbility = ability("Static"):
+    _.on(TurnStageEvents.Started)(_ => DamageBehavior(1)) // 1HP damage at the start of the turn
+
+  private val blazeAbility = Ability("Blaze", List.empty)
 
   private val startingHP: Int = 70
 

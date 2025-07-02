@@ -26,7 +26,7 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
           Stat.Speed -> 100
         )
       ),
-      ability = Ability("Say Hello", Map.empty),
+      ability = Ability("Say Hello", List.empty),
       weightKg = 10,
       moves = Nil
     ),

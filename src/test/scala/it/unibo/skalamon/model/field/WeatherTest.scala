@@ -31,7 +31,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
           Stat.Speed -> 100
         )
       ),
-      ability = Ability("Say Hello", Map.empty),
+      ability = Ability("Say Hello", List.empty),
       weightKg = 10,
       moves = Nil
     ),
@@ -56,7 +56,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
           Stat.Speed -> 60
         )
       ),
-      ability = Ability("Cold Veil", Map.empty),
+      ability = Ability("Cold Veil", List.empty),
       weightKg = 85,
       moves = Nil
     ),
