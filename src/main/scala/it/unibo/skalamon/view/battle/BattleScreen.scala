@@ -5,10 +5,8 @@ import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.Container.*
 import it.unibo.skalamon.view.Screen
-import it.unibo.skalamon.view.screen.BattleScreen
 
 import java.awt.Color
-import java.awt.event.KeyEvent
 
 /** Represents the battle screen in the game. It displays the players' Pokémon,
   * abilities, and other relevant information during a battle.
