@@ -4,7 +4,6 @@ import it.unibo.skalamon.model.battle.turn.BattleEvents
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.TargetModifier
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
-import it.unibo.skalamon.model.dsl.*
 import it.unibo.skalamon.model.event.{BehaviorEvent, EventType}
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
@@ -43,6 +42,9 @@ case class AbilityHook[T](
 /** Factory for abilities.
   */
 object Ability:
+  import it.unibo.skalamon.model.behavior.kind.{+, -}
+import it.unibo.skalamon.model.dsl.*
+
   /** When the Pokémon switches in, lowers the opponent's attack. */
   def intimidate: Ability =
     ability("Intimidate"):
