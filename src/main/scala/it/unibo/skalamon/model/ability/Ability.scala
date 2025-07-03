@@ -3,10 +3,16 @@ package it.unibo.skalamon.model.ability
 import it.unibo.skalamon.model.battle.turn.BattleEvents
 import it.unibo.skalamon.model.behavior.*
 import it.unibo.skalamon.model.behavior.kind.*
-import it.unibo.skalamon.model.behavior.modifier.TargetModifier
-import it.unibo.skalamon.model.event.{BehaviorEvent, EventType}
+import it.unibo.skalamon.model.behavior.modifier.{
+  ProbabilityModifier,
+  TargetModifier
+}
+import it.unibo.skalamon.model.event.{BehaviorEvent, EventType, TurnStageEvents}
 import it.unibo.skalamon.model.field.weather.Rain
+import it.unibo.skalamon.model.move.MoveContext
+import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
+import it.unibo.skalamon.model.status.Paralyze
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -42,7 +48,9 @@ case class AbilityHook[T](
 /** Factory for abilities.
   */
 object Ability:
-  import it.unibo.skalamon.model.dsl.*
+  import it.unibo.skalamon.model.behavior.kind.+
+import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.dsl.*
 
   /** When the Pokémon switches in, lowers the opponent's attack. */
   def intimidate: Ability =
@@ -53,16 +61,22 @@ object Ability:
         else
           EmptyBehavior
 
+  /** At the beginning of each turn, the Pokémon's speed is increased. */
+  def speedBoost: Ability =
+    ability("Intimidate"):
+      _.on(TurnStageEvents.Started): (_, _, _) =>
+        new StatChangeBehavior(Stat.Speed + 1)
+          with TargetModifier(TargetModifier.Type.Self)
+
   /** When rain is created, raises the Pokémon's attack. */
   def swiftSwim: Ability =
     ability("Swift Swim"):
-      _.on(BattleEvents.CreateWeather): (_, _, weather) =>
-        if weather.isInstanceOf[Rain] then
-          import it.unibo.skalamon.model.behavior.kind.+
-          new StatChangeBehavior(Stat.Speed + 1)
-            with TargetModifier(TargetModifier.Type.Self)
-        else
-          EmptyBehavior
+      _.on(BehaviorEvent[WeatherBehavior]()): (_, _, behavior) =>
+        behavior match
+          case (b: WeatherBehavior, _) if b.weather.isInstanceOf[Rain] =>
+            new StatChangeBehavior(Stat.Attack + 1)
+              with TargetModifier(TargetModifier.Type.Self)
+          case _ => EmptyBehavior
 
   /** When the Pokémon is assigned a status, copies it to the opponent.
     */
@@ -81,3 +95,14 @@ object Ability:
           WeatherBehavior(Rain(_))
         else
           EmptyBehavior
+
+  /** If hit by a physical move, the */
+  def static: Ability =
+    ability("Static"):
+      _.on(BehaviorEvent[SingleHitBehavior]()): (source, target, behavior) =>
+        behavior match
+          case (b, context: MoveContext)
+              if (context.target is source) && (context.origin.move.category == Physical) =>
+            new StatusBehavior(_ => Paralyze)
+              with ProbabilityModifier(30.percent)
+          case _ => EmptyBehavior
