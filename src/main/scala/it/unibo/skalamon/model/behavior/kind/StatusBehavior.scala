@@ -6,10 +6,8 @@ import it.unibo.skalamon.model.status.Status
 
 /** Behavior that applies a status to a target Pokémon.
   * @param status
-  *   The status to be applied
-  * @param currentTurnIndex
-  *   The index of the current turn in which the status is applied
+  *   The status to be applied, with the current turn index as a parameter.
   */
-case class StatusBehavior(status: Status, currentTurnIndex: Int)
+case class StatusBehavior(status: (turnIndex: Int) => Status)
     extends Behavior:
   override def accept[T](visitor: BehaviorVisitor[T]): T = visitor.visit(this)

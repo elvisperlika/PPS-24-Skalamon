@@ -58,7 +58,7 @@ class BattleStateUpdaterBehaviorVisitor(
 
   override def visit(behavior: SingleHitBehavior): BattleState =
     val damage: Int = context match
-      case MoveContext(origin, target, source, behaviors) =>
+      case MoveContext(origin, target, source, behaviors, _) =>
         val damageCalculator: DamageCalculator = DamageCalculatorGen1
         damageCalculator.calculate(
           origin,
@@ -81,22 +81,24 @@ class BattleStateUpdaterBehaviorVisitor(
 
   override def visit(behavior: StatChangeBehavior): BattleState = ???
 
-  override def visit(behavior: StatusBehavior): BattleState =
+  override def visit(behavior: StatusBehavior): BattleState = {
+    val turnIndex = context.turnIndex
     updateTarget { pokemon =>
-      behavior.status match
+      behavior.status(turnIndex) match
         case s: VolatileStatus =>
           pokemon.copy(volatileStatus =
             pokemon.volatileStatus +
-              AssignedStatus(s, behavior.currentTurnIndex)
+              AssignedStatus(s, turnIndex)
           )
         case s: NonVolatileStatus if pokemon.nonVolatileStatus.isEmpty =>
           pokemon.copy(nonVolatileStatus =
-            Some(AssignedStatus(s, behavior.currentTurnIndex))
+            Some(AssignedStatus(s, turnIndex))
           )
         case _ => pokemon
     }
+  }
 
   override def visit(behavior: WeatherBehavior): BattleState =
     current.copy(
-      field = current.field.copy(weather = Some(behavior.weather))
+      field = current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
     )

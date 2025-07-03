@@ -20,11 +20,14 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
   * @param behaviors
   *   Ordered behaviors that will be applied during the execution of the
   *   ability, associated with their modifiers.
+  * @param turnIndex
+  *   The index of the turn in which the ability is being executed.
   */
 case class AbilityContext(
     override val origin: Ability,
     override val target: BattlePokemon,
     override val source: BattlePokemon,
+    override val turnIndex: Int = 0,
     override val behaviors: List[(Behavior, BehaviorModifiers)] = List.empty
 ) extends BehaviorsContext[Ability]:
 
@@ -43,13 +46,16 @@ extension (ability: Ability)
     *   The target Pokémon of the ability.
     * @param source
     *   The source Pokémon that owns the ability.
+    * @param turnIndex
+    *   The index of the turn in which the ability is being executed.
     * @return
     *   A new [[AbilityContext]] with the phase's behaviors applied.
     */
   def createContext(
       behavior: Ability => Behavior,
       target: BattlePokemon,
-      source: BattlePokemon
+      source: BattlePokemon,
+      turnIndex: Int = 0
   ): AbilityContext =
     behavior(ability)(AbilityContext(ability, target, source))
 
@@ -74,7 +80,12 @@ extension (ability: Ability)
       battle.hookBattleStateUpdate(hook.eventType): (battleState, data) =>
         (target, source) match
           case (Some(t), Some(s)) =>
-            val context = createContext(_ => hook.behavior(s, t, data), t, s)
+            val context = createContext(
+              _ => hook.behavior(s, t, data),
+              t,
+              s,
+              battle.turnIndex
+            )
             context(battleState)
 
           case _ => battleState

@@ -21,6 +21,9 @@ trait BehaviorsContext[O] extends WithBehaviors:
 
   /** The default Pokémon that is executing the behaviors. */
   val source: BattlePokemon
+  
+  /** Index of the turn in which this context is applied. */
+  val turnIndex: Int
 
   /** Applies the behaviors in this context to the given battle state.
     *

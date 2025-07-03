@@ -42,7 +42,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
 
   "StatusBehavior" should "set volatile status" in:
     val status = Confusion
-    val behavior = StatusBehavior(status, currentTurnIndex = 1)
+    val behavior = StatusBehavior(_ => status)
     val newState = behavior(context)(state)
     getTarget(newState).volatileStatus.map(_.status) shouldBe Set(status)
 
@@ -50,9 +50,9 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     val status1 = Confusion
     val status2 = Yawn
     val newState1 =
-      StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
+      StatusBehavior(_ => status1)(context)(state)
     val newState2 =
-      StatusBehavior(status2, currentTurnIndex = 1)(context)(newState1)
+      StatusBehavior(_ => status2)(context)(newState1)
     getTarget(newState2).volatileStatus.map(_.status) shouldBe Set(
       status1,
       status2
@@ -60,16 +60,16 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
 
   it should "set non-volatile status" in:
     val status = Burn
-    val newState = StatusBehavior(status, currentTurnIndex = 1)(context)(state)
+    val newState = StatusBehavior(_ => status)(context)(state)
     getTarget(newState).nonVolatileStatus.map(_.status) shouldBe Some(status)
 
   it should "not overwrite existing non-volatile status" in:
     val status1 = Burn
     val status2 = Paralyze
     val newState1 =
-      StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
+      StatusBehavior(_ => status1)(context)(state)
     val newState2 =
-      StatusBehavior(status2, currentTurnIndex = 1)(context)(newState1)
+      StatusBehavior(_ => status2)(context)(newState1)
     getTarget(newState2).nonVolatileStatus.map(_.status) shouldBe Some(status1)
 
   it should "trigger state changed events" in:
@@ -90,7 +90,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     given manager: EventManager = EventManager()
 
     val behavior =
-      BehaviorGroup(DamageBehavior(damage), StatusBehavior(Confusion, 1))
+      BehaviorGroup(DamageBehavior(damage), StatusBehavior(_ => Confusion))
 
     var currentState = state
     var count = 0

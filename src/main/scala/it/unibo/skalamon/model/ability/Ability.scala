@@ -76,6 +76,6 @@ object Ability:
     ability("Drizzle"):
       _.on(BattleEvents.PokemonSwitchIn): (source, _, switched) =>
         if switched is source then
-          WeatherBehavior(Rain(0)) // TODO get turn index
+          WeatherBehavior(Rain(_))
         else
           EmptyBehavior
