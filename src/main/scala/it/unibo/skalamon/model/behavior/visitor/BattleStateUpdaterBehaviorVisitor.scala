@@ -95,3 +95,8 @@ class BattleStateUpdaterBehaviorVisitor(
           )
         case _ => pokemon
     }
+
+  override def visit(behavior: WeatherBehavior): BattleState =
+    current.copy(
+      field = current.field.copy(weather = Some(behavior.weather))
+    )

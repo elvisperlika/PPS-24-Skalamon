@@ -1,12 +1,7 @@
 package it.unibo.skalamon.model.ability
 
 import it.unibo.skalamon.model.battle.turn.BattleEvents
-import it.unibo.skalamon.model.behavior.kind.{
-  +,
-  -,
-  StatChangeBehavior,
-  StatusBehavior
-}
+import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.TargetModifier
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.dsl.*
@@ -51,7 +46,7 @@ object Ability:
   /** When the Pokémon switches in, lowers the opponent's attack. */
   def intimidate: Ability =
     ability("Intimidate"):
-      _.on(BattleEvents.PokemonSwitchIn): (source, target, switched) =>
+      _.on(BattleEvents.PokemonSwitchIn): (source, _, switched) =>
         if switched is source then
           StatChangeBehavior(Stat.Attack - 1)
         else
@@ -75,3 +70,12 @@ object Ability:
         behavior match
           case (b, context) if context.target is source => b
           case _                                        => EmptyBehavior
+
+  /** When the Pokémon switches in, sets the weather to rain. */
+  def drizzle: Ability =
+    ability("Drizzle"):
+      _.on(BattleEvents.PokemonSwitchIn): (source, _, switched) =>
+        if switched is source then
+          WeatherBehavior(Rain(0)) // TODO get turn index
+        else
+          EmptyBehavior

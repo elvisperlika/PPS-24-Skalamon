@@ -11,3 +11,4 @@ trait BehaviorVisitor[T]:
   def visit(behavior: HealthBehavior): T
   def visit(behavior: StatChangeBehavior): T
   def visit(behavior: StatusBehavior): T
+  def visit(behavior: WeatherBehavior): T
