@@ -50,6 +50,10 @@ case class AbilityHook[T](
   */
 object Ability:
   import it.unibo.skalamon.model.dsl.*
+  
+  /** An ability with no effect. */
+  def none: Ability =
+    Ability("No Ability", List.empty)
 
   /** When the Pokémon switches in, lowers the opponent's attack. */
   def intimidate: Ability =
@@ -63,7 +67,7 @@ object Ability:
   /** At the beginning of each turn, the Pokémon's speed is increased. */
   def speedBoost: Ability =
     import it.unibo.skalamon.model.behavior.kind.+
-    ability("Intimidate"):
+    ability("Speed Boost"):
       _.on(TurnStageEvents.Started): (_, _, _) =>
         new StatChangeBehavior(Stat.Speed + 1)
           with TargetModifier(TargetModifier.Type.Self)

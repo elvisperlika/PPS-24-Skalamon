@@ -70,6 +70,9 @@ object TurnState:
   def initial(trainers: List[Trainer]): TurnState =
     import it.unibo.skalamon.model.field.field
     TurnState(
-      snapshot = BattleState(trainers, field(trainers)()),
+      snapshot = BattleState(
+        trainers.map(t => t.copy(_inField = t.team.headOption)),
+        field(trainers)()
+      ),
       stage = TurnStage.Started
     )

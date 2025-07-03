@@ -36,6 +36,9 @@ case class Pokemon(
   * Pokémon instances that can be used in the game.
   */
 object Pokemon:
+  import it.unibo.skalamon.model.ability.Ability.*
+import it.unibo.skalamon.model.dsl.*
+import it.unibo.skalamon.model.pokemon.Stat.*
 
   def gengar: Pokemon =
     Pokemon(
@@ -126,27 +129,9 @@ object Pokemon:
 //      )
     )
   def pikachu: Pokemon =
-    Pokemon(
-      name = "Pikachu",
-      types = Electric :: Nil,
-      hp = 35,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 55,
-          Stat.Defense -> 40,
-          Stat.SpecialAttack -> 50,
-          Stat.SpecialDefense -> 50,
-          Stat.Speed -> 90
-        )
-      ),
-      ability = Ability("Static", List.empty),
-      weightKg = 6.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Pikachu"):
+      _ typed Electric hp 35 weighing 6.0.kg ability static stat Attack -> 55 stat Defense -> 40 stat SpecialAttack -> 50 stat SpecialDefense -> 50 stat Speed -> 90
+
   def dragonite: Pokemon =
     Pokemon(
       name = "Dragonite",
@@ -279,72 +264,6 @@ object Pokemon:
 //        Move("Electric")
 //      )
     )
-  def greninja: Pokemon =
-    Pokemon(
-      name = "Greninja",
-      types = List(Water, Dark),
-      hp = 72,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 95,
-          Stat.Defense -> 67,
-          Stat.SpecialAttack -> 103,
-          Stat.SpecialDefense -> 71,
-          Stat.Speed -> 122
-        )
-      ),
-      ability = Ability("Torrent", List.empty),
-      weightKg = 40.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
-  def aegislash: Pokemon =
-    Pokemon(
-      name = "Aegislash",
-      types = List(Steel, Dark),
-      hp = 60,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 50,
-          Stat.Defense -> 140,
-          Stat.SpecialAttack -> 50,
-          Stat.SpecialDefense -> 140,
-          Stat.Speed -> 60
-        )
-      ),
-      ability = Ability("Stance Change", List.empty),
-      weightKg = 53.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
-  def mimikyu: Pokemon =
-    Pokemon(
-      name = "Mimikyu",
-      types = List(Ghost, Fairy),
-      hp = 55,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 90,
-          Stat.Defense -> 80,
-          Stat.SpecialAttack -> 50,
-          Stat.SpecialDefense -> 105,
-          Stat.Speed -> 96
-        )
-      ),
-      ability = Ability("Disguise", List.empty),
-      weightKg = 0.7,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
   def dragapult: Pokemon =
     Pokemon(
       name = "Dragapult",
@@ -368,27 +287,13 @@ object Pokemon:
 //      )
     )
   def bulbasaur: Pokemon =
-    Pokemon(
-      name = "Bulbasaur",
-      types = Grass :: Poison :: Nil,
-      hp = 45,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 49,
-          Stat.Defense -> 49,
-          Stat.SpecialAttack -> 65,
-          Stat.SpecialDefense -> 65,
-          Stat.Speed -> 45
-        )
-      ),
-      ability = Ability("Overgrow", List.empty),
-      weightKg = 6.9,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Bulbasaur"):
+      _ typed Grass + Poison hp 45 weighing 6.9.kg ability naturalCure stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45
+
+  val yanmega: Pokemon =
+    pokemon("Yanmega"):
+      _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95
+
   def charmander: Pokemon =
     Pokemon(
       name = "Charmander",
@@ -411,3 +316,7 @@ object Pokemon:
 //        Move("Electric")
 //      )
     )
+
+  def rattata: Pokemon =
+    pokemon("Rattata"):
+      _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72
