@@ -9,8 +9,11 @@ import it.unibo.skalamon.model.event.config.BattleConfiguration
 /** A battle between trainers.
   * @param trainers
   *   The trainers participating in the battle.
+  * @param rules
+  *   Game rules, like action order.
   */
-case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
+case class Battle(trainers: List[Trainer], rules: BattleRule = Classic())
+    extends EventManagerProvider:
 
   var gameState: GameState = InProgress
 
@@ -37,7 +40,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
   /** Starts the battle by initializing the first turn.
     */
   def start(): Unit =
-    given turn: Turn = Turn(TurnState.initial(trainers))
+    given turn: Turn = Turn(TurnState.initial(trainers, rules))
     turnHistory = turnHistory push turn
     setStage(TurnStage.Started)
 
