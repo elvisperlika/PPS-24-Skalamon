@@ -18,6 +18,15 @@ object MoveModel:
       */
     case Of(value: Percentage)
 
+  extension (a: Accuracy)
+    /** Converts the accuracy to a display string.
+      * @return
+      *   A string representation of the accuracy.
+      */
+    def toDisplayString: String = a match
+      case Accuracy.NeverFail => "Never misses"
+      case Accuracy.Of(p)     => p.toString
+
   /** Represents the category of a [[Move]]. Determines how damage is calculated
     * or if the move affects status.
     */
