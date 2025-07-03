@@ -1,6 +1,6 @@
 package it.unibo.skalamon
 
-import it.unibo.skalamon.controller.battle.action.MoveAction
+import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.{BattleStateEvents, TurnStageEvents}
@@ -24,7 +24,7 @@ def main(): Unit =
   val battleView = BattleView(mainView.getPlayScreen)
 
   // TODO: vedere se lasciarlo. Lo ho messo perche il primo turno a volte non viene visualizzata l'intera view
-  battle.eventManager.watch(TurnStageEvents.Started): (turn) =>
+  battle.eventManager.watch(TurnStageEvents.Started): turn =>
     mainView.repaint()
     battleView.update(turn.state.snapshot)
 
@@ -33,26 +33,46 @@ def main(): Unit =
     battleView.update(state)
 
   controller.start()
+  mainView.setKeyPressedHandler { input =>
+    val trainers = battle.currentTurn.head.state.snapshot.trainers
+    val player = trainers.head
+    val opponent = trainers.last
 
-  mainView.setKeyPressedHandler {
-    case BattleInput.playerMove1 =>
-      handleTrainerAction(trainer1, trainer2, 0)
-    case BattleInput.playerMove2 =>
-      handleTrainerAction(trainer1, trainer2, 1)
-    case BattleInput.playerMove3 =>
-      handleTrainerAction(trainer1, trainer2, 2)
-    case BattleInput.playerMove4 =>
-      handleTrainerAction(trainer1, trainer2, 3)
+    def handleMove(isPlayer: Boolean, index: Int): Unit =
+      if isPlayer then handleTrainerMove(player, opponent, index)
+      else handleTrainerMove(opponent, player, index)
 
-    case BattleInput.opponentMove1 =>
-      handleTrainerAction(trainer2, trainer1, 0)
-    case BattleInput.opponentMove2 =>
-      handleTrainerAction(trainer2, trainer1, 1)
-    case BattleInput.opponentMove3 =>
-      handleTrainerAction(trainer2, trainer1, 2)
-    case BattleInput.opponentMove4 =>
-      handleTrainerAction(trainer2, trainer1, 3)
-    case _ => None
+    def handleSwitch(isPlayer: Boolean, index: Int): Unit =
+      if isPlayer then handlePokemonSwitch(player, index)
+      else handlePokemonSwitch(opponent, index)
+
+    input match
+      case i
+          if BattleInput.playerMove1.ordinal to BattleInput.playerMove4.ordinal contains i.ordinal =>
+        handleMove(isPlayer = true, i.ordinal - BattleInput.playerMove1.ordinal)
+
+      case i
+          if BattleInput.opponentMove1.ordinal to BattleInput.opponentMove4.ordinal contains i.ordinal =>
+        handleMove(
+          isPlayer = false,
+          i.ordinal - BattleInput.opponentMove1.ordinal
+        )
+
+      case i
+          if BattleInput.playerPokemon1.ordinal to BattleInput.playerPokemon5.ordinal contains i.ordinal =>
+        handleSwitch(
+          isPlayer = true,
+          i.ordinal - BattleInput.playerPokemon1.ordinal
+        )
+
+      case i
+          if BattleInput.opponentPokemon1.ordinal to BattleInput.opponentPokemon5.ordinal contains i.ordinal =>
+        handleSwitch(
+          isPlayer = false,
+          i.ordinal - BattleInput.opponentPokemon1.ordinal
+        )
+
+      case _ => ()
   }
 
   while battle.gameState == GameState.InProgress do
@@ -60,7 +80,7 @@ def main(): Unit =
     if !controller.isWaitingForActions then
       controller.update()
 
-  def handleTrainerAction(
+  def handleTrainerMove(
       source: Trainer,
       target: Trainer,
       moveIndex: Int
@@ -73,3 +93,20 @@ def main(): Unit =
         val action = MoveAction(move, source, target)
         println(s"${source.name} selected move '${move.move.name}'")
         controller.registerAction(source, action)
+
+  def handlePokemonSwitch(
+      trainer: Trainer,
+      pokemonIndex: Int
+  ): Unit =
+    if controller.isWaitingForActions then
+      println("team: " + trainer.teamWithoutInField.map(p =>
+        p.base.name
+      ).mkString(
+        ", "
+      ) + s" - inField: ${trainer.inField.map(_.base.name).getOrElse(None)}")
+      trainer.teamWithoutInField.lift(pokemonIndex) match
+        case Some(p) if p != trainer.inField =>
+          println(s"${trainer.name} switched to ${p.base.name}")
+          controller.registerAction(trainer, SwitchAction(p))
+        case _ =>
+          println(s"${trainer.name} cannot switch to that Pokémon")
