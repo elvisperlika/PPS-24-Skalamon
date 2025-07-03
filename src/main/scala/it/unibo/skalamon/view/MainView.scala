@@ -47,6 +47,7 @@ class MainView() extends JFrame:
     BattleScreen(terminal)
 
   override def repaint(): Unit =
+    terminal.clear()
     super.repaint()
 
     /** Sets the key pressed handler to process BattleInput events.
