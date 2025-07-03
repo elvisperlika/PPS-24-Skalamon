@@ -30,18 +30,16 @@ object BattleHooksConfigurator:
 
     battle.trainers.zipWithIndex.foreach { (trainer, trainerIndex) =>
       trainer.team.foreach { pokemon =>
-        val state = () => battle.currentTurn.map(_.state.snapshot).get
-        val sourceTrainer = () => state().trainers(trainerIndex)
-        val targetTrainer =
-          () => state().trainers.find(_ != sourceTrainer()).get
+        val sourceTrainer = (state: BattleState) => state.trainers(trainerIndex)
+        val targetTrainer = (state: BattleState) => state.trainers.find(_ != sourceTrainer(state))
 
         pokemon.base.ability.hookAll(battle)(
-          source =
+          source = state =>
             for
-              field <- sourceTrainer().inField
-              if pokemon is field
+              inField <- sourceTrainer(state).inField
+              if pokemon is inField
             yield pokemon,
-          target = targetTrainer().inField
+          target = targetTrainer(_).flatMap(_.inField)
         )
       }
     }

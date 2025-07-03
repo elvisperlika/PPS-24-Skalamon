@@ -1,6 +1,10 @@
 package it.unibo.skalamon.model.ability
 
-import it.unibo.skalamon.model.battle.{Battle, hookBattleStateUpdate}
+import it.unibo.skalamon.model.battle.{
+  Battle,
+  BattleState,
+  hookBattleStateUpdate
+}
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.behavior.{
   Behavior,
@@ -73,12 +77,12 @@ extension (ability: Ability)
     *   The source Pokémon that owns the ability.
     */
   def hookAll(battle: Battle)(
-      target: => Option[BattlePokemon],
-      source: => Option[BattlePokemon]
+    target: BattleState => Option[BattlePokemon],
+    source: BattleState => Option[BattlePokemon]
   ): Unit =
     ability.hooks.foreach: hook =>
       battle.hookBattleStateUpdate(hook.eventType): (battleState, data) =>
-        (target, source) match
+        (target(battleState), source(battleState)) match
           case (Some(t), Some(s)) =>
             val context = createContext(
               _ => hook.behavior(s, t, data),

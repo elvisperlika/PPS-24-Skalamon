@@ -124,6 +124,10 @@ object Pokemon:
     pokemon("Gyarados"):
       _ typed Water + Flying hp 95 weighing 235.0.kg ability intimidate stat Attack -> 125 stat Defense -> 79 stat SpecialAttack -> 60 stat SpecialDefense -> 100 stat Speed -> 81
 
+  def pelipper: Pokemon =
+    pokemon("Pelipper"):
+      _ typed Water + Flying hp 60 weighing 28.0.kg ability drizzle stat Attack -> 50 stat Defense -> 100 stat SpecialAttack -> 85 stat SpecialDefense -> 70 stat Speed -> 65
+  
   def lucario: Pokemon =
     Pokemon(
       name = "Lucario",

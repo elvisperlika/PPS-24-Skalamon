@@ -113,8 +113,9 @@ class BattleStateUpdaterBehaviorVisitor(
       )
     }
 
-  override def visit(behavior: WeatherBehavior): BattleState =
+  override def visit(behavior: WeatherBehavior): BattleState = {
     current.copy(
       field =
         current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
     )
+  }

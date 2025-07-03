@@ -1,7 +1,9 @@
 package it.unibo.skalamon.controller.battle
 
+import it.unibo.skalamon.controller.battle.action.SwitchAction
 import it.unibo.skalamon.model.battle.{Battle, BattleState, Trainer}
 import it.unibo.skalamon.model.dsl.*
+import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.Stat.Speed
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon}
@@ -32,6 +34,16 @@ class AbilityInBattleTest extends AnyFlatSpec with should.Matchers:
     (battle, controller, alice, bob)
 
   "Speed Boost" should "increase source's speed on turn start" in:
-    val (battle, controller, a, b) = newBattle(yanmega)(neutral)
+    val (battle, controller, _, _) = newBattle(yanmega)(neutral)
     controller.update()
     battle.state.inField._1.statChanges(Speed) shouldBe 1
+
+  "Drizzle" should "set rain" in:
+    val (battle, controller, a, b) = newBattle(neutral, pelipper)(neutral)
+    controller.update()
+    battle.state.field.weather shouldBe None
+
+    controller.registerAction(a, SwitchAction(a.team.last))
+    controller.registerAction(b, SwitchAction(b.team.last))
+
+    battle.state.field.weather shouldBe Some(Rain(0))

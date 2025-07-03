@@ -87,10 +87,10 @@ object PokemonTestUtils:
   )
 
   def trainerAlice: Trainer =
-    Trainer("Alice", List(simplePokemon1))
+    Trainer("Alice", List(simplePokemon1), _inField = Some(simplePokemon1))
 
   def trainerBob: Trainer =
-    Trainer("Bob", List(simplePokemon2))
+    Trainer("Bob", List(simplePokemon2), _inField = Some(simplePokemon2))
 
   def trainerGio: Trainer =
-    Trainer("Gio", List(simplePokemon3))
+    Trainer("Gio", List(simplePokemon3), _inField = Some(simplePokemon3))

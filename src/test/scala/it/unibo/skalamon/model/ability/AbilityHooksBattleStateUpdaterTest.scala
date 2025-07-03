@@ -28,8 +28,8 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     )
 
     ability.hookAll(battle)(
-      Some(target),
-      Some(source)
+      _ => Some(target),
+      _ => Some(source)
     )
 
     battle.start()
@@ -48,8 +48,8 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     )
 
     ability.hookAll(battle)(
-      Some(target),
-      Some(source)
+      _ => Some(target),
+      _ => Some(source)
     )
 
     battle.start()
@@ -67,8 +67,8 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     )
 
     ability.hookAll(battle)(
-      Some(target),
-      Some(source)
+      _ => Some(target),
+      _ => Some(source)
     )
 
     battle.start()
@@ -85,8 +85,8 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     )
 
     ability.hookAll(battle)(
-      Some(target),
-      None
+      _ => Some(target),
+      _ => None
     )
 
     battle.start()
