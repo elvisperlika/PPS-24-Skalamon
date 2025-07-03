@@ -5,7 +5,7 @@ import asciiPanel.AsciiPanel
 import it.unibo.skalamon.view.battle.{
   BattleInput,
   BattleScreen,
-  keyEventToBattleInput
+  BattleKeyBindings
 }
 
 import java.awt.event.{KeyAdapter, KeyEvent}
@@ -37,6 +37,6 @@ class MainView() extends JFrame:
 
   addKeyListener(new KeyAdapter:
     override def keyPressed(e: KeyEvent): Unit =
-      keyEventToBattleInput(e).foreach { battleInput =>
+      BattleKeyBindings.keyEventToBattleInput(e).foreach { battleInput =>
         onKeyPressedCallback.foreach(_(battleInput))
       })
