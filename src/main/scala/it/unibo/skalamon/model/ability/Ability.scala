@@ -10,7 +10,7 @@ import it.unibo.skalamon.model.behavior.kind.{
 import it.unibo.skalamon.model.behavior.modifier.TargetModifier
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.dsl.*
-import it.unibo.skalamon.model.event.EventType
+import it.unibo.skalamon.model.event.{BehaviorEvent, EventType}
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
 
@@ -67,16 +67,11 @@ object Ability:
         else
           EmptyBehavior
 
-  /** When the Pokémon is assigned a non-volatile status, copies it to the
-    * opponent.
+  /** When the Pokémon is assigned a status, copies it to the opponent.
     */
   def synchronize: Ability =
     ability("Synchronize"):
-      _.on(BattleEvents.ChangeStatus): (source, target, status) =>
-        if source.nonVolatileStatus.map(_.status) == Some(status) then
-          StatusBehavior(
-            status,
-            currentTurnIndex = 0
-          ) // TODO turn index from AssignedStatus
-        else
-          EmptyBehavior
+      _.on(BehaviorEvent[StatusBehavior]()): (source, target, behavior) =>
+        behavior match
+          case (b, context) if context.target is source => b
+          case _                                        => EmptyBehavior
