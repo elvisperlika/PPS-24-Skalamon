@@ -2,17 +2,13 @@ package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.PokemonTestUtils
 import it.unibo.skalamon.controller.battle.BattleController
-import it.unibo.skalamon.controller.battle.action.{
-  Action,
-  MoveAction,
-  SwitchAction
-}
+import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.battle.turn.BattleEvents.{
   Hit,
   PokemonSwitchIn,
   PokemonSwitchOut
 }
-import it.unibo.skalamon.model.behavior.kind.{DamageBehavior, SingleHitBehavior}
+import it.unibo.skalamon.model.behavior.kind.SingleHitBehavior
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.dsl.battling
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
@@ -49,11 +45,11 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     Set.empty
   )
 
-  val machamp: BattlePokemon = Pokemon.machamp.battling(Male)
+  val bulbasaur: BattlePokemon = Pokemon.bulbasaur.battling(Male)
   val alakazam: BattlePokemon = Pokemon.alakazam.battling(Male)
   val alakazam2: BattlePokemon = Pokemon.alakazam.battling(Male)
   def init(): Unit =
-    val bobTeam = machamp :: alakazam :: Nil
+    val bobTeam = bulbasaur :: alakazam :: Nil
     val aliceTeam = pikachu :: alakazam2 :: Nil
     trainerBob = trainerBob.copy(team = bobTeam, _inField = Some(bobTeam.head))
     trainerAlice =
@@ -66,7 +62,7 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     controller.start() // started
     controller.update() // waiting actions
     battle.currentTurn.get.state.snapshot.trainers.head.inField shouldBe Some(
-      machamp
+      bulbasaur
     )
 
     val bobAction = SwitchAction(pIn = alakazam)
@@ -100,7 +96,7 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     def alice: Trainer = getTrainerFromState("Alice")
     def bob: Trainer = getTrainerFromState("Bob")
 
-    bob.inField shouldBe Some(machamp)
+    bob.inField shouldBe Some(bulbasaur)
     alice.inField shouldBe Some(pikachu)
 
     val bobAction = SwitchAction(pIn = alakazam)
@@ -114,8 +110,8 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     controller.update() // executing actions
 
     bob.team.find(
-      _.id == machamp.id
-    ).get.currentHP shouldEqual machamp.currentHP
+      _.id == bulbasaur.id
+    ).get.currentHP shouldEqual bulbasaur.currentHP
     bob.team.find(
       _.id == alakazam.id
     ).get.currentHP shouldBe 54
