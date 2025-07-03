@@ -19,6 +19,7 @@ object BattleEvents:
   object PokemonSwitchIn extends EventType[BattlePokemon]
   object PokemonSwitchOut extends EventType[BattlePokemon]
   object Hit extends EventType[MoveContext]
+  object Miss extends EventType[MoveContext]
   object CreateWeather extends EventType[Weather]
   object CreateRoom extends EventType[Room]
   object CreateTerrain extends EventType[Terrain]
