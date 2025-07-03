@@ -1,9 +1,9 @@
 package it.unibo.skalamon.model.ability
 
 import it.unibo.skalamon.model.battle.turn.BattleEvents
+import it.unibo.skalamon.model.behavior.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.TargetModifier
-import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.event.{BehaviorEvent, EventType}
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
