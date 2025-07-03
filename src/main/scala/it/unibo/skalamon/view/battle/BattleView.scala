@@ -40,12 +40,12 @@ object BattleView:
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
       screen.setPokemonTeam(
-        teamWithKeys(player, "player"),
-        teamWithKeys(opponent, "opponent")
+        teamWithKeys(player, PlayerSide.Player),
+        teamWithKeys(opponent, PlayerSide.Opponent)
       )
       screen.setMoves(
-        movesWithKeys(player, "player"),
-        movesWithKeys(opponent, "opponent")
+        movesWithKeys(player, PlayerSide.Player),
+        movesWithKeys(opponent, PlayerSide.Opponent)
       )
 
     /** Returns the team of a trainer without the Pokémon currently in the
@@ -69,7 +69,7 @@ object BattleView:
       */
     private def teamWithKeys(
         trainer: Trainer,
-        side: String
+        side: PlayerSide
     ): List[BattlePokemonWithKey] =
       teamWithoutInField(trainer).zipWithIndex.flatMap { case (poke, i) =>
         BattleKeyBindings.getPokemonKeyChar(side, i).map(key =>
@@ -86,7 +86,7 @@ object BattleView:
       */
     private def movesWithKeys(
         trainer: Trainer,
-        side: String
+        side: PlayerSide
     ): List[BattleMoveWithKey] =
       trainer.inField.map(_.moves).getOrElse(List.empty)
         .zipWithIndex.flatMap { case (move, i) =>
