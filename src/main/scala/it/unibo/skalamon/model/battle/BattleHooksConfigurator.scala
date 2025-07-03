@@ -20,13 +20,14 @@ import it.unibo.skalamon.model.move.{
   createContext
 }
 import it.unibo.skalamon.model.pokemon.BattlePokemon
+import it.unibo.skalamon.model.move.hookAllMove
 
 object BattleHooksConfigurator:
 
   def configure(battle: Battle): Unit =
 
     battle.hookBattleStateUpdate(ActionsReceived) { (state, turn) =>
-      println("EXECUTING ACTIONS\nx\nx")
+      // println("EXECUTING ACTIONS\nx\nx")
       executeMoves(turn)
     }
 
@@ -40,6 +41,9 @@ object BattleHooksConfigurator:
           source = Some(pokemon).filter(trainer.inField.contains),
           target = battle.trainers.find(_ != trainer).flatMap(_.inField)
         )
+        pokemon.moves.foreach { move =>
+          move.hookAllMove(battle)
+        }
       }
     }
 
