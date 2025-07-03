@@ -197,7 +197,7 @@ object BattleScreen:
   private val abilitySlotWidth = 20
   private val abilitySlotHeight = 8
 
-  // Battle Pokemon
+  // Battle Pokémon
   private val battlePokemonWidth = 46
   private val battlePokemonHeight = 3
 
