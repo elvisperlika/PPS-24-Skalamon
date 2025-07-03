@@ -22,5 +22,8 @@ object BattleEvents:
   object Miss extends EventType[MoveContext]
   object CreateWeather extends EventType[Weather]
   object CreateRoom extends EventType[Room]
+  object ExpiredRoom extends EventType[Room]
   object CreateTerrain extends EventType[Terrain]
+  object ExpiredTerrain extends EventType[Terrain]
   object CreateSideCondition extends EventType[SideCondition]
+  object ExpiredSideCondition extends EventType[SideCondition]
