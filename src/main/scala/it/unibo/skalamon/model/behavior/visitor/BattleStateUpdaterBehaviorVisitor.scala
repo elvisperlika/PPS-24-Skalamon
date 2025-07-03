@@ -98,6 +98,14 @@ class BattleStateUpdaterBehaviorVisitor(
     }
   }
 
+  override def visit(behavior: ClearAllStatusBehavior): BattleState = 
+    updateTarget { pokemon =>
+      pokemon.copy(
+        volatileStatus = Set.empty,
+        nonVolatileStatus = None
+      )
+    }
+
   override def visit(behavior: WeatherBehavior): BattleState =
     current.copy(
       field = current.field.copy(weather = Some(behavior.weather(context.turnIndex)))

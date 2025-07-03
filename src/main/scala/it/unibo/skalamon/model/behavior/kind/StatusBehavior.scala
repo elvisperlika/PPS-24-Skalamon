@@ -11,3 +11,8 @@ import it.unibo.skalamon.model.status.Status
 case class StatusBehavior(status: (turnIndex: Int) => Status)
     extends Behavior:
   override def accept[T](visitor: BehaviorVisitor[T]): T = visitor.visit(this)
+
+/** Behavior that clears all statuses from a target Pokémon.
+  */
+class ClearAllStatusBehavior extends Behavior:
+  override def accept[T](visitor: BehaviorVisitor[T]): T = visitor.visit(this)

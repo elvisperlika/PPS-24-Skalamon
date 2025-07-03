@@ -7,6 +7,7 @@ import it.unibo.skalamon.model.behavior.modifier.{
   ProbabilityModifier,
   TargetModifier
 }
+import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.event.{BehaviorEvent, EventType, TurnStageEvents}
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.MoveContext
@@ -48,8 +49,7 @@ case class AbilityHook[T](
 /** Factory for abilities.
   */
 object Ability:
-  import it.unibo.skalamon.model.data.percent
-import it.unibo.skalamon.model.dsl.*
+  import it.unibo.skalamon.model.dsl.*
 
   /** When the Pokémon switches in, lowers the opponent's attack. */
   def intimidate: Ability =
@@ -97,7 +97,7 @@ import it.unibo.skalamon.model.dsl.*
         else
           EmptyBehavior
 
-  /** If hit by a physical move, the */
+  /** If hit by a physical move, the opponent has a chance to be paralyzed */
   def static: Ability =
     ability("Static"):
       _.on(BehaviorEvent[SingleHitBehavior]()): (source, target, behavior) =>
@@ -107,3 +107,13 @@ import it.unibo.skalamon.model.dsl.*
             new StatusBehavior(_ => Paralyze)
               with ProbabilityModifier(30.percent)
           case _ => EmptyBehavior
+
+  /** When the Pokémon switches out, clears all its statuses */
+  def naturalCure: Ability =
+    ability("Natural Cure"):
+      _.on(BattleEvents.PokemonSwitchOut): (source, _, switched) =>
+        if switched is source then
+          new ClearAllStatusBehavior
+            with TargetModifier(TargetModifier.Type.Self)
+        else
+          EmptyBehavior
