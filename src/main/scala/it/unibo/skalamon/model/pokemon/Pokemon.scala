@@ -32,13 +32,14 @@ case class Pokemon(
     moves: List[Move]
 )
 
+import it.unibo.skalamon.model.ability.Ability.*
+import it.unibo.skalamon.model.pokemon.Stat.*
+
 /** Factory object to create Pokémon instances. This object contains predefined
   * Pokémon instances that can be used in the game.
   */
 object Pokemon:
-  import it.unibo.skalamon.model.ability.Ability.*
-import it.unibo.skalamon.model.dsl.*
-import it.unibo.skalamon.model.pokemon.Stat.*
+  import it.unibo.skalamon.model.dsl.*
 
   def gengar: Pokemon =
     Pokemon(
