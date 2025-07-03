@@ -11,6 +11,7 @@ enum BattleInput:
     opponentPokemon5
   case opponentMove1, opponentMove2, opponentMove3, opponentMove4
 
+case class PokemonBinding(input: BattleInput, keyCode: Int)
 case class MoveBinding(input: BattleInput, keyCode: Int)
 
 object BattleKeyBindings:
@@ -30,24 +31,42 @@ object BattleKeyBindings:
     )
   )
 
-  private val staticKeyBindings: Map[Int, BattleInput] = Map(
-    KeyEvent.VK_1 -> BattleInput.playerPokemon1,
-    KeyEvent.VK_2 -> BattleInput.playerPokemon2,
-    KeyEvent.VK_3 -> BattleInput.playerPokemon3,
-    KeyEvent.VK_4 -> BattleInput.playerPokemon4,
-    KeyEvent.VK_5 -> BattleInput.playerPokemon5,
-    KeyEvent.VK_A -> BattleInput.opponentPokemon1,
-    KeyEvent.VK_S -> BattleInput.opponentPokemon2,
-    KeyEvent.VK_D -> BattleInput.opponentPokemon3,
-    KeyEvent.VK_F -> BattleInput.opponentPokemon4,
-    KeyEvent.VK_G -> BattleInput.opponentPokemon5
-  ) ++ moveBindings.values.flatten.map(b => b.keyCode -> b.input)
+  private val pokemonBindings: Map[String, List[PokemonBinding]] = Map(
+    "player" -> List(
+      PokemonBinding(BattleInput.playerPokemon1, KeyEvent.VK_1),
+      PokemonBinding(BattleInput.playerPokemon2, KeyEvent.VK_2),
+      PokemonBinding(BattleInput.playerPokemon3, KeyEvent.VK_3),
+      PokemonBinding(BattleInput.playerPokemon4, KeyEvent.VK_4),
+      PokemonBinding(BattleInput.playerPokemon5, KeyEvent.VK_5)
+    ),
+    "opponent" -> List(
+      PokemonBinding(BattleInput.opponentPokemon1, KeyEvent.VK_A),
+      PokemonBinding(BattleInput.opponentPokemon2, KeyEvent.VK_S),
+      PokemonBinding(BattleInput.opponentPokemon3, KeyEvent.VK_D),
+      PokemonBinding(BattleInput.opponentPokemon4, KeyEvent.VK_F),
+      PokemonBinding(BattleInput.opponentPokemon5, KeyEvent.VK_G)
+    )
+  )
+
+  private val staticKeyBindings: Map[Int, BattleInput] =
+    val moveKeyMap = moveBindings.values.flatten.map(b => b.keyCode -> b.input)
+    val pokemonKeyMap =
+      pokemonBindings.values.flatten.map(b => b.keyCode -> b.input)
+    (moveKeyMap ++ pokemonKeyMap).toMap
 
   def getInput(group: String, index: Int): Option[BattleInput] =
     moveBindings.get(group).flatMap(_.lift(index)).map(_.input)
 
   def getKeyChar(group: String, index: Int): Option[String] =
     moveBindings.get(group).flatMap(_.lift(index)).map(b =>
+      KeyEvent.getKeyText(b.keyCode).head.toString
+    )
+
+  def getPokemonInput(group: String, index: Int): Option[BattleInput] =
+    pokemonBindings.get(group).flatMap(_.lift(index)).map(_.input)
+
+  def getPokemonKeyChar(group: String, index: Int): Option[String] =
+    pokemonBindings.get(group).flatMap(_.lift(index)).map(b =>
       KeyEvent.getKeyText(b.keyCode).head.toString
     )
 

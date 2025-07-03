@@ -56,26 +56,26 @@ class BattleScreen(
 
   /** Sets the Pokémon pool for both players on the screen.
     * @param playerTeam
-    *   The list of Battle Pokémon for the player.
+    *   The list of Battle Pokémon and their keys for the player.
     * @param opponentTeam
-    *   The list of Battle Pokémon for the opponent.
+    *   The list of Battle Pokémon and their keys for the opponent.
     */
   def setPokemonTeam(
-      playerTeam: List[BattlePokemon],
-      opponentTeam: List[BattlePokemon]
+      playerTeam: List[BattlePokemonWithKey],
+      opponentTeam: List[BattlePokemonWithKey]
   ): Unit =
     drawTeamSlots(playerTeam, p1PokemonY)
     drawTeamSlots(opponentTeam, p2PokemonY)
 
   /** Sets the moves for both players on the screen.
     * @param playerMoves
-    *   The list of Battle Moves for the player.
+    *   The list of Battle Moves and their keys for the player.
     * @param opponentMoves
-    *   The list of Battle Moves for the opponent.
+    *   The list of Battle Moves and their keys for the opponent.
     */
   def setMoves(
-      playerMoves: List[BattleMove],
-      opponentMoves: List[BattleMove]
+      playerMoves: List[BattleMoveWithKey],
+      opponentMoves: List[BattleMoveWithKey]
   ): Unit =
     drawMovesSlots(playerMoves, p1AbilitiesY)
     drawMovesSlots(opponentMoves, p2AbilitiesY)
@@ -101,13 +101,15 @@ class BattleScreen(
 
   /** Sets the Pokémon slots for a team on the screen.
     * @param team
-    *   The list of Battle Pokémon for the team.
+    *   The list of Battle Pokémon with their keys for the team.
     * @param y
     *   The vertical position where the Pokémon slots will be displayed.
     */
-  private def drawTeamSlots(team: List[BattlePokemon], y: Int): Unit =
+  private def drawTeamSlots(team: List[BattlePokemonWithKey], y: Int): Unit =
     val filledTeam: Seq[BoxContainerData] =
-      team.map(p => BoxContainerData(Seq(p.base.name), teamColor)) ++
+      team.map { case BattlePokemonWithKey(pokemon, key) =>
+        BoxContainerData(Seq(pokemon.base.name), teamColor)
+      } ++
         Seq.fill(BattleScreen.pokemonSlotNum - team.length)(
           BoxContainerData(Seq(defaultPokemonName), teamEmptyColor)
         )
@@ -122,13 +124,15 @@ class BattleScreen(
 
   /** Sets the moves slots for a team on the screen.
     * @param moves
-    *   The list of Battle Moves for the team.
+    *   The list of Battle Moves with their keys for the team.
     * @param y
     *   The vertical position where the moves slots will be displayed.
     */
-  private def drawMovesSlots(moves: List[BattleMove], y: Int): Unit =
+  private def drawMovesSlots(moves: List[BattleMoveWithKey], y: Int): Unit =
     val filledMoves: Seq[BoxContainerData] =
-      moves.map(m => BoxContainerData(formatMove(m), teamColor)) ++
+      moves.map { case BattleMoveWithKey(m, key) =>
+        BoxContainerData(formatMove(m, key), teamColor)
+      } ++
         Seq.fill(BattleScreen.abilitySlotNum - moves.length)(
           BoxContainerData(Seq(defaultAbilityName), teamEmptyColor)
         )
@@ -163,7 +167,7 @@ class BattleScreen(
     * @return
     *   A sequence of strings representing the formatted move text.
     */
-  private def formatMove(move: BattleMove): Seq[String] =
+  private def formatMove(move: BattleMove, key: String): Seq[String] =
     Seq(
       s"${move.move.name}",
       s"${move.move.moveType}",
@@ -226,3 +230,19 @@ object BattleScreen:
 
   private val teamColor: Color = Color.WHITE
   private val teamEmptyColor: Color = Color.GRAY
+
+/** Represents a Battle Move with an associated key for user input.
+  * @param move
+  *   The Battle Move to be represented.
+  * @param key
+  *   The key associated with the move for user input.
+  */
+case class BattleMoveWithKey(move: BattleMove, key: String)
+
+/** Represents a Battle Pokémon with an associated key for user input.
+  * @param move
+  *   The Battle Pokémon to be represented.
+  * @param key
+  *   The key associated with the Pokémon for user input.
+  */
+case class BattlePokemonWithKey(move: BattlePokemon, key: String)

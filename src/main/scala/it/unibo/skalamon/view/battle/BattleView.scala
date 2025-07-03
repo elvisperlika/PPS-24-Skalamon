@@ -1,16 +1,10 @@
 package it.unibo.skalamon.view.battle
 
-import it.unibo.skalamon.controller.battle.action.*
 import it.unibo.skalamon.model.battle.{
   BattleState,
-  BattleStateContainer,
-  Trainer,
-  extractBattleState
+  Trainer
 }
-import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-
-import java.awt.event.KeyListener
 
 trait BattleView:
 
@@ -32,38 +26,71 @@ object BattleView:
     * @return
     *   A new instance of BattleView.
     */
-  private class BattleViewImpl(
-      screen: BattleScreen
-  ) extends BattleView:
-
-    private var keyHandler: Option[GameKeyEvent => Unit] = None
+  private class BattleViewImpl(screen: BattleScreen) extends BattleView:
 
     override def update(battleState: BattleState): Unit =
       val trainers = battleState.trainers
-      if (trainers.size != BattleScreen.playerNumber) then
-        throw new IllegalArgumentException(
-          s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
-        )
+      require(
+        trainers.size == BattleScreen.playerNumber,
+        s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
+      )
 
       val Seq(player, opponent) = trainers
 
-      def teamWithoutInField(trainer: Trainer): List[BattlePokemon] =
-        trainer.inField.map(p => trainer.team.filterNot(_.id == p.id))
-          .getOrElse(trainer.team)
-
-      val pTeam = teamWithoutInField(player)
-      val oTeam = teamWithoutInField(opponent)
-
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
-      screen.setPokemonTeam(pTeam, oTeam)
+      screen.setPokemonTeam(
+        teamWithKeys(player, "player"),
+        teamWithKeys(opponent, "opponent")
+      )
+      screen.setMoves(
+        movesWithKeys(player, "player"),
+        movesWithKeys(opponent, "opponent")
+      )
 
-      val pMoves: List[BattleMove] =
-        player.inField.map(_.moves).getOrElse(List.empty)
+    /** Returns the team of a trainer without the Pokémon currently in the
+      * field.
+      * @param trainer
+      *   The trainer whose team is to be returned.
+      * @return
+      *   A list of BattlePokemon excluding the one currently in the field.
+      */
+    private def teamWithoutInField(trainer: Trainer): List[BattlePokemon] =
+      trainer.inField.map(p => trainer.team.filterNot(_.id == p.id))
+        .getOrElse(trainer.team)
 
-      val oMoves: List[BattleMove] =
-        opponent.inField.map(_.moves).getOrElse(List.empty)
+    /** Returns the team of a trainer with each Pokémon paired with a key
+      * binding.
+      * @param trainer
+      *   The trainer whose team is to be returned.
+      * @param side
+      *   The side of the trainer, either "player" or "opponent".
+      * @return
+      */
+    private def teamWithKeys(
+        trainer: Trainer,
+        side: String
+    ): List[BattlePokemonWithKey] =
+      teamWithoutInField(trainer).zipWithIndex.flatMap { case (poke, i) =>
+        BattleKeyBindings.getPokemonKeyChar(side, i).map(key =>
+          BattlePokemonWithKey(poke, key)
+        )
+      }
 
-      screen.setMoves(pMoves, oMoves)
-
-case class GameKeyEvent(keyChar: Char, keyCode: Int)
+    /** Returns the moves of a trainer with each move paired with a key binding.
+      * @param trainer
+      *   The trainer whose moves are to be returned.
+      * @param side
+      *   The side of the trainer, either "player" or "opponent".
+      * @return
+      */
+    private def movesWithKeys(
+        trainer: Trainer,
+        side: String
+    ): List[BattleMoveWithKey] =
+      trainer.inField.map(_.moves).getOrElse(List.empty)
+        .zipWithIndex.flatMap { case (move, i) =>
+          BattleKeyBindings.getKeyChar(side, i).map(char =>
+            BattleMoveWithKey(move, char)
+          )
+        }
