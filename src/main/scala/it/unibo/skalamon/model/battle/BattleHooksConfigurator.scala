@@ -3,9 +3,16 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+import it.unibo.skalamon.model.battle.turn.BattleEvents.{
+  Hit,
+  Miss,
+  PokemonSwitchIn,
+  PokemonSwitchOut
+}
 import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
-import it.unibo.skalamon.model.move.{BattleMove, Move, MoveModel, createContext}
+import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
@@ -61,16 +68,15 @@ object BattleHooksConfigurator:
         target: Trainer,
         current: BattleState
     ): BattleState =
-      val result: Move => Behavior = _ =>
+      val result: (Move => Behavior, EventType[MoveContext]) =
         move.move.accuracy match
           case MoveModel.Accuracy.Of(percentage)
-              if !percentage.randomBoolean => move.move.fail
-          case _ => move.move.success
-      move.createContext(
-        result,
-        target.inField.get,
-        source.inField.get
-      )(current)
+              if !percentage.randomBoolean => (_ => move.move.fail, Miss)
+          case _ => (_ => move.move.success, Hit)
+      val context =
+        move.createContext(result._1, target.inField.get, source.inField.get)
+      battle.eventManager.notify(result._2 of context)
+      context(current)
 
     def executeSwitch(
         pIn: BattlePokemon,
@@ -78,9 +84,13 @@ object BattleHooksConfigurator:
     ): BattleState =
       val owner =
         state.trainers.find(_.team.exists(_.id == pIn.id)).get
+      owner.inField match
+        case Some(p) => battle.eventManager.notify(PokemonSwitchOut of p)
+        case _       => ()
       val updatedTrainers =
         state.trainers.map {
           case `owner`    => owner.copy(_inField = Some(pIn))
           case t: Trainer => t
         }
+      battle.eventManager.notify(PokemonSwitchIn of pIn)
       state.copy(trainers = updatedTrainers)
