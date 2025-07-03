@@ -48,8 +48,7 @@ case class AbilityHook[T](
 /** Factory for abilities.
   */
 object Ability:
-  import it.unibo.skalamon.model.behavior.kind.+
-import it.unibo.skalamon.model.data.percent
+  import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.dsl.*
 
   /** When the Pokémon switches in, lowers the opponent's attack. */
@@ -63,6 +62,7 @@ import it.unibo.skalamon.model.dsl.*
 
   /** At the beginning of each turn, the Pokémon's speed is increased. */
   def speedBoost: Ability =
+    import it.unibo.skalamon.model.behavior.kind.+
     ability("Intimidate"):
       _.on(TurnStageEvents.Started): (_, _, _) =>
         new StatChangeBehavior(Stat.Speed + 1)
@@ -70,6 +70,7 @@ import it.unibo.skalamon.model.dsl.*
 
   /** When rain is created, raises the Pokémon's attack. */
   def swiftSwim: Ability =
+    import it.unibo.skalamon.model.behavior.kind.+
     ability("Swift Swim"):
       _.on(BehaviorEvent[WeatherBehavior]()): (_, _, behavior) =>
         behavior match
