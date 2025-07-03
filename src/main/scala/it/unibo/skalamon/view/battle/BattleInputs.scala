@@ -15,7 +15,7 @@ case class MoveBinding(input: BattleInput, keyCode: Int)
 
 object BattleKeyBindings:
 
-  val moveBindings: Map[String, List[MoveBinding]] = Map(
+  private val moveBindings: Map[String, List[MoveBinding]] = Map(
     "player" -> List(
       MoveBinding(BattleInput.playerMove1, KeyEvent.VK_Q),
       MoveBinding(BattleInput.playerMove2, KeyEvent.VK_W),
@@ -30,15 +30,7 @@ object BattleKeyBindings:
     )
   )
 
-  def getInput(group: String, index: Int): Option[BattleInput] =
-    moveBindings.get(group).flatMap(_.lift(index)).map(_.input)
-
-  def getKeyChar(group: String, index: Int): Option[Char] =
-    moveBindings.get(group).flatMap(_.lift(index)).map(b =>
-      KeyEvent.getKeyText(b.keyCode).head
-    )
-
-  val staticKeyBindings: Map[Int, BattleInput] = Map(
+  private val staticKeyBindings: Map[Int, BattleInput] = Map(
     KeyEvent.VK_1 -> BattleInput.playerPokemon1,
     KeyEvent.VK_2 -> BattleInput.playerPokemon2,
     KeyEvent.VK_3 -> BattleInput.playerPokemon3,
@@ -50,6 +42,14 @@ object BattleKeyBindings:
     KeyEvent.VK_F -> BattleInput.opponentPokemon4,
     KeyEvent.VK_G -> BattleInput.opponentPokemon5
   ) ++ moveBindings.values.flatten.map(b => b.keyCode -> b.input)
+
+  def getInput(group: String, index: Int): Option[BattleInput] =
+    moveBindings.get(group).flatMap(_.lift(index)).map(_.input)
+
+  def getKeyChar(group: String, index: Int): Option[String] =
+    moveBindings.get(group).flatMap(_.lift(index)).map(b =>
+      KeyEvent.getKeyText(b.keyCode).head.toString
+    )
 
   def keyEventToBattleInput(event: KeyEvent): Option[BattleInput] =
     staticKeyBindings.get(event.getKeyCode)
