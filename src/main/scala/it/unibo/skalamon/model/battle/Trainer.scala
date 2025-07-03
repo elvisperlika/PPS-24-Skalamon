@@ -28,10 +28,6 @@ case class Trainer(
     * @return
     *   A list of BattlePokemon excluding the one currently in the field.
     */
-  def teamWithoutInField: List[BattlePokemon] =
-    inField match
-      case Some(pokemon) => team.filterNot(_.id == pokemon.id)
-      case None          =>
-        println("inField: " + inField)
-        team
-
+  def teamWithoutInField: List[BattlePokemon] = inField match
+    case Some(pokemon) => team.filterNot(_.id == pokemon.id)
+    case None          => team
