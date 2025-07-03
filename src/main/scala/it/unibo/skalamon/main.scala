@@ -61,16 +61,15 @@ def main(): Unit =
       controller.update()
 
   def handleTrainerAction(
-      trainer: Trainer,
-      opponent: Trainer,
+      source: Trainer,
+      target: Trainer,
       moveIndex: Int
   ): Unit =
     for
-      pokemon <- trainer.inField
-      target <- opponent.inField
+      pokemon <- source.inField
       move <- pokemon.moves.lift(moveIndex)
     do
       if controller.isWaitingForActions then
-        val action = MoveAction(move, pokemon, target)
-        println(s"${trainer.name} selected move '${move.move.name}'")
-        controller.registerAction(trainer, action)
+        val action = MoveAction(move, source, target)
+        println(s"${source.name} selected move '${move.move.name}'")
+        controller.registerAction(source, action)

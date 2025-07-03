@@ -39,7 +39,7 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
 
   it should "not allow action registration in started stage" in:
     controller.start()
-    val action = SwitchAction(simplePokemon1, simplePokemon2)
+    val action = SwitchAction(simplePokemon2)
     an[IllegalStateException] should be thrownBy controller.registerAction(
       alice,
       action
@@ -48,11 +48,14 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
   it should "register actions from trainers" in:
     controller.start()
 
-    val action1 = SwitchAction(simplePokemon1, simplePokemon2)
-    val action2 = SwitchAction(simplePokemon1, simplePokemon2)
+    val action1 = SwitchAction(simplePokemon2)
+    val action2 = SwitchAction(simplePokemon2)
 
     controller.update()
     controller.registerAction(alice, action1)
+
+    controller.hasActionRegistered(alice) shouldBe true
+
     controller.registerAction(bob, action2)
 
     currentStage shouldBe TurnStage.ActionsReceived(
@@ -61,6 +64,18 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
 
     controller.update()
     currentStage shouldBe TurnStage.ExecutingActions
+
+  it should "withdraw actions from trainers" in:
+    controller.start()
+
+    val action1 = SwitchAction(simplePokemon2)
+
+    controller.update()
+    controller.registerAction(alice, action1)
+    controller.withdrawAction(alice)
+
+    controller.hasActionRegistered(alice) shouldBe false
+    currentStage shouldBe TurnStage.WaitingForActions
 
   it should "trigger start events" in:
     var eventTriggered = false
@@ -81,8 +96,8 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
         eventTriggered = true
     }
 
-    val action1 = SwitchAction(simplePokemon1, simplePokemon2)
-    val action2 = SwitchAction(simplePokemon1, simplePokemon2)
+    val action1 = SwitchAction(simplePokemon2)
+    val action2 = SwitchAction(simplePokemon2)
 
     controller.update()
     controller.registerAction(alice, action1)
@@ -104,8 +119,8 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
     controller.update()
     currentStage shouldBe TurnStage.WaitingForActions
 
-    val action1 = SwitchAction(simplePokemon1, simplePokemon2)
-    val action2 = SwitchAction(simplePokemon1, simplePokemon2)
+    val action1 = SwitchAction(simplePokemon2)
+    val action2 = SwitchAction(simplePokemon2)
     controller.registerAction(alice, action1)
     controller.registerAction(bob, action2)
     currentStage shouldBe TurnStage.ActionsReceived(

@@ -2,7 +2,6 @@ package it.unibo.skalamon.model.event.config
 
 import it.unibo.skalamon.controller.battle.GameState.GameOver
 import it.unibo.skalamon.model.battle.{Battle, Turn}
-import it.unibo.skalamon.model.event.BattleStateEvents.Finished
 import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.event.TurnStageEvents.Ended
 

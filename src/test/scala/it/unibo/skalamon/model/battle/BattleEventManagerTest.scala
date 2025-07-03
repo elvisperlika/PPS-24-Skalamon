@@ -11,11 +11,10 @@ import org.scalatest.matchers.should
 
 class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
 
+  /** NB: trainerAsh has all team KO, trainerAlice not
+   */
   def trainerAsh: Trainer =
     Trainer("Ash", simplePokemon1ko :: Nil)
-
-  /** NB: trainerAsh has all team KO, trainerAlice not
-    */
 
   "Battle Event Manager" should "set game state as InProgress if there isn't a winner or a draw" in:
     val battleInProgress: Battle = Battle(trainerAlice :: trainerAlice :: Nil)
@@ -32,7 +31,8 @@ class BattleEventManagerTest extends AnyFlatSpec with should.Matchers:
     battleFinishedWithWinner.eventManager.notify(
       Ended of battleFinishedWithWinner.currentTurn.get
     )
-    battleFinishedWithWinner.gameState shouldEqual GameOver(Some(trainerAlice))
+    val alice = battleFinishedWithWinner.trainers.head
+    battleFinishedWithWinner.gameState shouldEqual GameOver(Some(alice))
 
   it should "set game state as GameOver when there is a draw" in:
     val battleFinishedWithDraw: Battle =

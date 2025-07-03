@@ -51,7 +51,7 @@ object Pokemon:
           Stat.Speed -> 110
         )
       ),
-      ability = Ability("Cursed body", Map.empty),
+      ability = Ability("Cursed body", List.empty),
       weightKg = 40.5,
       moves = Nil
 //      List(
@@ -73,7 +73,7 @@ object Pokemon:
           Stat.Speed -> 55
         )
       ),
-      ability = Ability("Guts", Map.empty),
+      ability = Ability("Guts", List.empty),
       weightKg = 130.0,
       moves = Nil
 //      List(
@@ -95,7 +95,7 @@ object Pokemon:
           Stat.Speed -> 120
         )
       ),
-      ability = Ability("Synchronize", Map.empty),
+      ability = Ability("Synchronize", List.empty),
       weightKg = 48.0,
       moves = Nil
 //      List(
@@ -117,7 +117,7 @@ object Pokemon:
           Stat.Speed -> 61
         )
       ),
-      ability = Ability("Sand Stream", Map.empty),
+      ability = Ability("Sand Stream", List.empty),
       weightKg = 202.0,
       moves = Nil
 //      List(
@@ -139,7 +139,7 @@ object Pokemon:
           Stat.Speed -> 90
         )
       ),
-      ability = Ability("Static", Map.empty),
+      ability = Ability("Static", List.empty),
       weightKg = 6.0,
       moves = Nil
 //      List(
@@ -161,7 +161,7 @@ object Pokemon:
           Stat.Speed -> 80
         )
       ),
-      ability = Ability("Inner Focus", Map.empty),
+      ability = Ability("Inner Focus", List.empty),
       weightKg = 210.0,
       moves = Nil
 //      List(
@@ -183,7 +183,7 @@ object Pokemon:
           Stat.Speed -> 65
         )
       ),
-      ability = Ability("Swarm", Map.empty),
+      ability = Ability("Swarm", List.empty),
       weightKg = 118.0,
       moves = Nil
 //      List(
@@ -205,7 +205,7 @@ object Pokemon:
           Stat.Speed -> 80
         )
       ),
-      ability = Ability("Synchronize", Map.empty),
+      ability = Ability("Synchronize", List.empty),
       weightKg = 48.4,
       moves = Nil
 //      List(
@@ -227,7 +227,7 @@ object Pokemon:
           Stat.Speed -> 81
         )
       ),
-      ability = Ability("Intimidate", Map.empty),
+      ability = Ability("Intimidate", List.empty),
       weightKg = 235.0,
       moves = Nil
 //      List(
@@ -249,7 +249,7 @@ object Pokemon:
           Stat.Speed -> 90
         )
       ),
-      ability = Ability("Steadfast", Map.empty),
+      ability = Ability("Steadfast", List.empty),
       weightKg = 54.0,
       moves = Nil
 //      List(
@@ -271,7 +271,7 @@ object Pokemon:
           Stat.Speed -> 30
         )
       ),
-      ability = Ability("Immunity", Map.empty),
+      ability = Ability("Immunity", List.empty),
       weightKg = 460.0,
       moves = Nil
 //      List(
@@ -293,7 +293,7 @@ object Pokemon:
           Stat.Speed -> 122
         )
       ),
-      ability = Ability("Torrent", Map.empty),
+      ability = Ability("Torrent", List.empty),
       weightKg = 40.0,
       moves = Nil
 //      List(
@@ -315,7 +315,7 @@ object Pokemon:
           Stat.Speed -> 60
         )
       ),
-      ability = Ability("Stance Change", Map.empty),
+      ability = Ability("Stance Change", List.empty),
       weightKg = 53.0,
       moves = Nil
 //      List(
@@ -337,7 +337,7 @@ object Pokemon:
           Stat.Speed -> 96
         )
       ),
-      ability = Ability("Disguise", Map.empty),
+      ability = Ability("Disguise", List.empty),
       weightKg = 0.7,
       moves = Nil
 //      List(
@@ -359,7 +359,7 @@ object Pokemon:
           Stat.Speed -> 142
         )
       ),
-      ability = Ability("Clear Body", Map.empty),
+      ability = Ability("Clear Body", List.empty),
       weightKg = 50.0,
       moves = Nil
 //      List(
@@ -381,7 +381,7 @@ object Pokemon:
           Stat.Speed -> 45
         )
       ),
-      ability = Ability("Overgrow", Map.empty),
+      ability = Ability("Overgrow", List.empty),
       weightKg = 6.9,
       moves = Nil
 //      List(
@@ -403,7 +403,7 @@ object Pokemon:
           Stat.Speed -> 65
         )
       ),
-      ability = Ability("Blaze", Map.empty),
+      ability = Ability("Blaze", List.empty),
       weightKg = 8.5,
       moves = Nil
 //      List(

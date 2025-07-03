@@ -1,5 +1,7 @@
 package it.unibo.skalamon.model.dsl
 
+import it.unibo.skalamon.model.ability.AbilityHook
+import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.behavior.kind.SingleHitBehavior
 import it.unibo.skalamon.model.event.TurnStageEvents
 import org.scalatest.flatspec.AnyFlatSpec
@@ -15,10 +17,12 @@ class AbilityDslTest extends AnyFlatSpec with should.Matchers:
     static.hooks shouldBe empty
 
   it should "allow setting hooks" in :
+    val behavior = (_: Turn) => SingleHitBehavior(10)
+
     val static = ability("Static"):
-      _.on(TurnStageEvents.Started)(SingleHitBehavior(10))
+      _.on(TurnStageEvents.Started)(behavior)
 
     static.name shouldBe "Static"
-    static.hooks shouldBe Map(
-      TurnStageEvents.Started -> SingleHitBehavior(10)
-    )
+    static.hooks shouldBe AbilityHook(
+      TurnStageEvents.Started, behavior
+    ) :: Nil

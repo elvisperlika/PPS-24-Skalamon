@@ -19,38 +19,38 @@ class ActionBufferTest extends AnyFlatSpec with should.Matchers:
 
   "Action buffer" should "allow adding new actions" in:
     val result =
-      buffer.register(alice, SwitchAction(simplePokemon1, simplePokemon2))
-        .register(bob, SwitchAction(simplePokemon1, simplePokemon2))
+      buffer.register(alice, SwitchAction(simplePokemon2))
+        .register(bob, SwitchAction(simplePokemon2))
 
-    result.getAction(alice) shouldBe Some(SwitchAction(simplePokemon1, simplePokemon2))
-    result.getAction(bob) shouldBe Some(SwitchAction(simplePokemon1, simplePokemon2))
+    result.getAction(alice) shouldBe Some(SwitchAction(simplePokemon2))
+    result.getAction(bob) shouldBe Some(SwitchAction(simplePokemon2))
     result.isFull shouldBe true
 
   it should "keep its maximum size" in:
     val result =
-      buffer.register(alice, SwitchAction(simplePokemon1, simplePokemon2))
-        .register(bob, SwitchAction(simplePokemon1, simplePokemon2))
-        .register(gio, SwitchAction(simplePokemon1, simplePokemon2))
+      buffer.register(alice, SwitchAction(simplePokemon2))
+        .register(bob, SwitchAction(simplePokemon2))
+        .register(gio, SwitchAction(simplePokemon2))
 
-    result.getAction(alice) shouldBe Some(SwitchAction(simplePokemon1, simplePokemon2))
-    result.getAction(bob) shouldBe Some(SwitchAction(simplePokemon1, simplePokemon2))
+    result.getAction(alice) shouldBe Some(SwitchAction(simplePokemon2))
+    result.getAction(bob) shouldBe Some(SwitchAction(simplePokemon2))
     result.getAction(gio) shouldBe None
     result.isFull shouldBe true
 
   it should "allow withdrawing actions" in:
     val result =
-      buffer.register(alice, SwitchAction(simplePokemon1, simplePokemon2))
-        .register(bob, SwitchAction(simplePokemon1, simplePokemon2))
+      buffer.register(alice, SwitchAction(simplePokemon2))
+        .register(bob, SwitchAction(simplePokemon2))
         .withdraw(alice)
 
     result.getAction(alice) shouldBe None
-    result.getAction(bob) shouldBe Some(SwitchAction(simplePokemon1, simplePokemon2))
+    result.getAction(bob) shouldBe Some(SwitchAction(simplePokemon2))
     result.isFull shouldBe false
 
   it should "allow clearing all actions" in:
     val result =
-      buffer.register(alice, SwitchAction(simplePokemon1, simplePokemon2))
-        .register(bob, SwitchAction(simplePokemon1, simplePokemon2))
+      buffer.register(alice, SwitchAction(simplePokemon2))
+        .register(bob, SwitchAction(simplePokemon2))
         .clear()
 
     result.getAction(alice) shouldBe None

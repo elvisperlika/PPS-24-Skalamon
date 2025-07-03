@@ -13,7 +13,7 @@ import org.scalatest.matchers.should
 
 /** Tests for building Pokémon via DSL. */
 class PokemonDslTest extends AnyFlatSpec with should.Matchers:
-  private val emptyAbility = Ability("No Ability", Map.empty)
+  private val emptyAbility = Ability("No Ability", List.empty)
   private val baseHp = 100
 
   "Pokemon DSL" should "create with one type" in:
@@ -50,7 +50,7 @@ class PokemonDslTest extends AnyFlatSpec with should.Matchers:
     
   it should "allow setting ability" in:
     val pikachu = pokemon("Pikachu"):
-      _ typed Electric hp baseHp weighing 6.0.kg ability ability("Static")(_.on(TurnStageEvents.Started)(EmptyBehavior))
+      _ typed Electric hp baseHp weighing 6.0.kg ability ability("Static")(_.on(TurnStageEvents.Started)(_ => EmptyBehavior))
 
     pikachu.ability.name shouldBe "Static"
     

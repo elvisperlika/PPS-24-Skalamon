@@ -1,10 +1,7 @@
 package it.unibo.skalamon.controller.battle
 
-import it.unibo.skalamon.controller.battle.action.{
-  Action,
-  ActionBuffer
-}
-import it.unibo.skalamon.model.battle.{Battle, BattleHooksConfigurator, Trainer, Turn, TurnStage}
+import it.unibo.skalamon.controller.battle.action.{Action, ActionBuffer}
+import it.unibo.skalamon.model.battle.*
 
 /** Controller for managing battles in the game.
   *
@@ -39,6 +36,22 @@ trait BattleController:
     *   If the current turn stage does not allow action registration.
     */
   def registerAction(trainer: Trainer, action: Action): Unit
+
+  /** Withdraws the action registered by a trainer, if any.
+    *
+    * @param trainer
+    *   The trainer whose action is to be withdrawn.
+    */
+  def withdrawAction(trainer: Trainer): Unit
+
+  /** Checks if a trainer has registered an action in the current turn.
+    *
+    * @param trainer
+    *   The trainer to check.
+    * @return
+    *   True if the trainer has registered an action, false otherwise.
+    */
+  def hasActionRegistered(trainer: Trainer): Boolean
 
   /** Updates the battle state to the next stage.
     */
@@ -82,5 +95,11 @@ private class BattleControllerImpl(override val battle: Battle)
       case _ => throw new IllegalStateException(
           "Cannot accept actions in the current turn stage."
         )
+
+  override def withdrawAction(trainer: Trainer): Unit =
+    this.actionBuffer = actionBuffer.withdraw(trainer)
+
+  override def hasActionRegistered(trainer: Trainer): Boolean =
+    actionBuffer.getAction(trainer).isDefined
 
   override def update(): Unit = battle.update()
