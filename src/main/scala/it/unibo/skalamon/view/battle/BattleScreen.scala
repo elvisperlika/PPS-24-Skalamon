@@ -1,12 +1,14 @@
 package it.unibo.skalamon.view.battle
 
 import asciiPanel.AsciiPanel
+import it.unibo.skalamon.model.behavior.kind.StatStage
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.Container.*
 import it.unibo.skalamon.view.Screen
 
 import java.awt.Color
+import java.util.Locale
 
 /** Represents the battle screen in the game. It displays the players' Pokémon,
   * abilities, and other relevant information during a battle.
@@ -21,6 +23,8 @@ class BattleScreen(
 
   private val defaultPokemonName = "No Pokemon"
   private val defaultAbilityName = "No Move"
+
+  private val statChangeMaxLength = 3
 
   /** Shows the player's and opponent's names on the screen.
     * @param player
@@ -156,10 +160,31 @@ class BattleScreen(
     bpOpt
       .map(bp =>
         Seq(
-          s"${bp.base.name} ${bp.currentHP}HP Ability: ${bp.base.ability.name}"
+          s"${bp.base.name} ${bp.currentHP}HP Ability: ${bp.base.ability.name}",
+          formatStatChanges(bp)
         )
       )
       .getOrElse(Seq(defaultPokemonName))
+
+  /** Formats the stat changes of a Battle Pokémon.
+    * @param bp
+    *   The Battle Pokémon whose stat changes are to be formatted.
+    * @return
+    *   A string representing the formatted stat changes.
+    */
+  private def formatStatChanges(bp: BattlePokemon): String =
+    bp.statChanges
+      .filter { case (_, stage) => stage != 0 }
+      .map { case (stat, stage) =>
+        val statLabel = stat.toString.substring(
+          0,
+          Math.min(stat.toString.length, statChangeMaxLength)
+        )
+        val multiplier =
+          String.format(Locale.US, "%.1f", StatStage.multiplier(stage))
+        s"$statLabel: $multiplier"
+      }
+      .mkString(" ")
 
   /** Creates the text for a Battle Move.
     * @param move
@@ -213,7 +238,7 @@ object BattleScreen:
 
   // Battle Pokémon
   private val battlePokemonWidth = 46
-  private val battlePokemonHeight = 3
+  private val battlePokemonHeight = 4
 
   // Layout positions (computed)
   private val p1PokemonY = startY
