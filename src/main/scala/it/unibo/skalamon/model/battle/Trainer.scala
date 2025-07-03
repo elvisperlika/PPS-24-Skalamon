@@ -23,3 +23,15 @@ case class Trainer(
   /** The Pokémon currently in the field for this trainer, if any. */
   def inField: Option[BattlePokemon] =
     _inField.flatMap(inField => team.find(_.id == inField.id))
+
+  /** Returns the team of a trainer without the Pokémon currently in the field.
+    * @return
+    *   A list of BattlePokemon excluding the one currently in the field.
+    */
+  def teamWithoutInField: List[BattlePokemon] =
+    inField match
+      case Some(pokemon) => team.filterNot(_.id == pokemon.id)
+      case None          =>
+        println("inField: " + inField)
+        team
+

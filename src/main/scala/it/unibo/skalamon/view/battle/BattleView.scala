@@ -48,17 +48,6 @@ object BattleView:
         movesWithKeys(opponent, PlayerSide.Opponent)
       )
 
-    /** Returns the team of a trainer without the Pokémon currently in the
-      * field.
-      * @param trainer
-      *   The trainer whose team is to be returned.
-      * @return
-      *   A list of BattlePokemon excluding the one currently in the field.
-      */
-    private def teamWithoutInField(trainer: Trainer): List[BattlePokemon] =
-      trainer.inField.map(p => trainer.team.filterNot(_.id == p.id))
-        .getOrElse(trainer.team)
-
     /** Returns the team of a trainer with each Pokémon paired with a key
       * binding.
       * @param trainer
@@ -71,7 +60,7 @@ object BattleView:
         trainer: Trainer,
         side: PlayerSide
     ): List[BattlePokemonWithKey] =
-      teamWithoutInField(trainer).zipWithIndex.flatMap { case (poke, i) =>
+      trainer.teamWithoutInField.zipWithIndex.flatMap { case (poke, i) =>
         BattleKeyBindings.getPokemonKeyChar(side, i).map(key =>
           BattlePokemonWithKey(poke, key)
         )
