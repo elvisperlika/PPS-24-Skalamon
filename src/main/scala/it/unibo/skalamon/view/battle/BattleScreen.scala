@@ -107,8 +107,8 @@ class BattleScreen(
     */
   private def drawTeamSlots(team: List[BattlePokemonWithKey], y: Int): Unit =
     val filledTeam: Seq[BoxContainerData] =
-      team.map { case BattlePokemonWithKey(pokemon, key) =>
-        BoxContainerData(Seq(pokemon.base.name), teamColor)
+      team.map { case BattlePokemonWithKey(p, key) =>
+        BoxContainerData(formatTeam(p, key), teamColor)
       } ++
         Seq.fill(BattleScreen.pokemonSlotNum - team.length)(
           BoxContainerData(Seq(defaultPokemonName), teamEmptyColor)
@@ -177,6 +177,12 @@ class BattleScreen(
       s"Press: $key"
     )
 
+  private def formatTeam(pokemon: BattlePokemon, key: String): Seq[String] =
+    Seq(
+      s"${pokemon.base.name}",
+      s"Press: $key"
+    )
+
   /** Calculates the center X position for a container based on the terminal
     * width.
     * @param containerWidth
@@ -198,7 +204,7 @@ object BattleScreen:
   // Pokemon slots
   private val pokemonSlotNum = 5
   private val pokemonSlotWidth = 15
-  private val pokemonSlotHeight = 3
+  private val pokemonSlotHeight = 4
 
   // Abilities
   private val abilitySlotNum = 4

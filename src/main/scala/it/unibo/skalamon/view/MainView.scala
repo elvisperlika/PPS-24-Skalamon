@@ -14,8 +14,8 @@ import java.awt.event.{KeyAdapter, KeyEvent}
   * sets up the terminal and handles key events for player inputs.
   */
 class MainView() extends JFrame:
-  private val terminalWidth: Int = 86
-  private val terminalHeight: Int = 35
+  private val terminalWidth: Int = 88
+  private val terminalHeight: Int = 37
 
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)
