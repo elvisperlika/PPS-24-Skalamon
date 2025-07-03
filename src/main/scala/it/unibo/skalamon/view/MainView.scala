@@ -11,7 +11,7 @@ import it.unibo.skalamon.view.battle.{
 import java.awt.event.{KeyAdapter, KeyEvent}
 
 class MainView() extends JFrame:
-  private val terminalWidth: Int = 80
+  private val terminalWidth: Int = 86
   private val terminalHeight: Int = 35
 
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)

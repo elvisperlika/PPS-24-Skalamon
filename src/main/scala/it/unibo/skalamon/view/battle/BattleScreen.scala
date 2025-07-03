@@ -90,12 +90,10 @@ class BattleScreen(
       battlePokemonData: BoxContainerData,
       y: Int
   ): Unit =
-    val centerX =
-      (terminal.getWidthInCharacters - BattleScreen.battlePokemonWidth) / 2
     BoxContainer(
       terminal,
       battlePokemonData,
-      centerX,
+      centerX(BattleScreen.battlePokemonWidth),
       y,
       BattleScreen.battlePokemonWidth,
       BattleScreen.battlePokemonHeight
@@ -171,6 +169,16 @@ class BattleScreen(
       s"PP: ${move.pp}"
     )
 
+  /** Calculates the center X position for a container based on the terminal
+    * width.
+    * @param containerWidth
+    *   The width of the container to be centered.
+    * @return
+    *   The X position to center the container in the terminal.
+    */
+  private def centerX(containerWidth: Int): Int =
+    (terminal.getWidthInCharacters - containerWidth) / 2
+
 object BattleScreen:
   /** The number of players in the battle. */
   val playerNumber: Int = 2
@@ -181,12 +189,12 @@ object BattleScreen:
 
   // Pokemon slots
   private val pokemonSlotNum = 5
-  private val pokemonSlotWidth = 14
+  private val pokemonSlotWidth = 15
   private val pokemonSlotHeight = 3
 
   // Abilities
   private val abilitySlotNum = 4
-  private val abilitySlotWidth = 18
+  private val abilitySlotWidth = 20
   private val abilitySlotHeight = 8
 
   // Battle Pokemon
