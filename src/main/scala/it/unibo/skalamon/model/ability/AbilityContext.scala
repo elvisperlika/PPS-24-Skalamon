@@ -74,7 +74,7 @@ extension (ability: Ability)
       battle.hookBattleStateUpdate(hook.eventType): (battleState, data) =>
         (target, source) match
           case (Some(t), Some(s)) =>
-            val context = createContext(_ => hook.behavior(data), t, s)
+            val context = createContext(_ => hook.behavior(s, t, data), t, s)
             context(battleState)
 
           case _ => battleState

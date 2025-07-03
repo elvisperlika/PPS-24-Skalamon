@@ -50,7 +50,7 @@ class PokemonDslTest extends AnyFlatSpec with should.Matchers:
     
   it should "allow setting ability" in:
     val pikachu = pokemon("Pikachu"):
-      _ typed Electric hp baseHp weighing 6.0.kg ability ability("Static")(_.on(TurnStageEvents.Started)(_ => EmptyBehavior))
+      _ typed Electric hp baseHp weighing 6.0.kg ability ability("Static")(_.on(TurnStageEvents.Started)((_, _, _) => EmptyBehavior))
 
     pikachu.ability.name shouldBe "Static"
     
