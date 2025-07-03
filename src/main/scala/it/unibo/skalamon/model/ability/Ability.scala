@@ -58,7 +58,7 @@ object Ability:
         if switched is source then
           StatChangeBehavior(Stat.Attack - 1)
         else
-          EmptyBehavior
+          nothing
 
   /** At the beginning of each turn, the Pokémon's speed is increased. */
   def speedBoost: Ability =
@@ -74,10 +74,10 @@ object Ability:
     ability("Swift Swim"):
       _.on(BehaviorEvent[WeatherBehavior]()): (_, _, behavior) =>
         behavior match
-          case (b: WeatherBehavior, _) if b.weather.isInstanceOf[Rain] =>
+          case (b: WeatherBehavior, _) if b.weather(0).isInstanceOf[Rain] =>
             new StatChangeBehavior(Stat.Attack + 1)
               with TargetModifier(TargetModifier.Type.Self)
-          case _ => EmptyBehavior
+          case _ => nothing
 
   /** When the Pokémon is assigned a status, copies it to the opponent.
     */
@@ -86,7 +86,7 @@ object Ability:
       _.on(BehaviorEvent[StatusBehavior]()): (source, target, behavior) =>
         behavior match
           case (b, context) if context.target is source => b
-          case _                                        => EmptyBehavior
+          case _                                        => nothing
 
   /** When the Pokémon switches in, sets the weather to rain. */
   def drizzle: Ability =
@@ -95,7 +95,7 @@ object Ability:
         if switched is source then
           WeatherBehavior(Rain(_))
         else
-          EmptyBehavior
+          nothing
 
   /** If hit by a physical move, the opponent has a chance to be paralyzed */
   def static: Ability =
@@ -106,7 +106,7 @@ object Ability:
               if (context.target is source) && (context.origin.move.category == Physical) =>
             new StatusBehavior(_ => Paralyze)
               with ProbabilityModifier(30.percent)
-          case _ => EmptyBehavior
+          case _ => nothing
 
   /** When the Pokémon switches out, clears all its statuses */
   def naturalCure: Ability =
@@ -116,4 +116,4 @@ object Ability:
           new ClearAllStatusBehavior
             with TargetModifier(TargetModifier.Type.Self)
         else
-          EmptyBehavior
+          nothing
