@@ -49,20 +49,20 @@ def setBattleState(t: BattleStateContainer, state: BattleState)(using
 
 extension (container: BattleStateContainer with EventManagerProvider)
   /** Hooks a callback to be executed whenever the battle state is updated
-   * through the specified event type.
-   *
-   * When the event is triggered, the callback will receive the current battle
-   * state, which can be altered (through an immutable copy) and returned to
-   * mutate the battle state within the container.
-   *
-   * @param eventType
-   *   The type of event to watch for.
-   * @param callback
-   *   The function to execute with the current battle state and the data
-   *   associated with the event.
-   */
+    * through the specified event type.
+    *
+    * When the event is triggered, the callback will receive the current battle
+    * state, which can be altered (through an immutable copy) and returned to
+    * mutate the battle state within the container.
+    *
+    * @param eventType
+    *   The type of event to watch for.
+    * @param callback
+    *   The function to execute with the current battle state and the data
+    *   associated with the event.
+    */
   def hookBattleStateUpdate[T](eventType: EventType[T])(
-    callback: (BattleState, T) => BattleState
+      callback: (BattleState, T) => BattleState
   ): Unit =
     given EventManager = container.eventManager
     container.eventManager.watch(eventType) { data =>

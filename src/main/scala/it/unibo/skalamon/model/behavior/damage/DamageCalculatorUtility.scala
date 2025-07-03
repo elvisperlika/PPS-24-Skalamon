@@ -15,6 +15,7 @@ import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.move.MoveModel.Category
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.pokemon.Stat.*
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 import it.unibo.skalamon.model.types.{Type, TypeUtility}
 
 object DamageCalculatorUtility:
@@ -140,8 +141,9 @@ object DamageCalculatorUtility:
     // Extract modifiers from side conditions affecting the source's side
     val sidesTypeModifiers: Map[Type, Double] =
       val sourceOwner: Trainer =
-        battleState.trainers.find(_.inField.exists(_.id == source.id)).get
-      val sourceOwnerSide: FieldSide = battleState.field.sides(sourceOwner)
+        battleState.trainers.find(_.inField.contains(source)).get
+      val sourceOwnerSide: FieldSide =
+        battleState.field.sides.find((t, _) => t.id == sourceOwner.id).get._2
       // Combine all type modifiers from applicable side conditions
       sourceOwnerSide.conditions.collect {
         case sc: SideCondition with TypesModifier => sc.typesModifier

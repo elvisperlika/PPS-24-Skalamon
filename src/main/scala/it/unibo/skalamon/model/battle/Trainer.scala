@@ -2,6 +2,8 @@ package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
+import java.util.UUID
+
 /** A trainer in a battle.
   *
   * @param name
@@ -15,7 +17,8 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 case class Trainer(
     name: String,
     team: List[BattlePokemon],
-    private val _inField: Option[BattlePokemon] = None
+    private val _inField: Option[BattlePokemon] = None,
+    id: UUID = UUID.randomUUID()
 ):
   /** The Pokémon currently in the field for this trainer, if any. */
   def inField: Option[BattlePokemon] =
