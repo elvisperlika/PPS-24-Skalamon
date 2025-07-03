@@ -7,6 +7,11 @@ import it.unibo.skalamon.controller.battle.action.{
   MoveAction,
   SwitchAction
 }
+import it.unibo.skalamon.model.battle.turn.BattleEvents.{
+  Hit,
+  PokemonSwitchIn,
+  PokemonSwitchOut
+}
 import it.unibo.skalamon.model.behavior.kind.{DamageBehavior, SingleHitBehavior}
 import it.unibo.skalamon.model.dsl.battling
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
@@ -74,6 +79,17 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
   "Switch" should "be performed before a Move" in:
     init()
     val battle = Battle(trainerBob :: trainerAlice :: Nil)
+    battle.eventManager.watch(PokemonSwitchIn) { p =>
+      println(s"${p.base.name} joins the battle!")
+    }
+    battle.eventManager.watch(PokemonSwitchOut) { p =>
+      println(s"${p.base.name} leaves the battle!")
+    }
+    battle.eventManager.watch(Hit) { m =>
+      println(
+        s"${m.source.base.name} hit ${m.target.base.name} with ${m.origin.move.name}!"
+      )
+    }
     val controller = BattleController(battle)
     controller.start() // started
     controller.update() // waiting actions
