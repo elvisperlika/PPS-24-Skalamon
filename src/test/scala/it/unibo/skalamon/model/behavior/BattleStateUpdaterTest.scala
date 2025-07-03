@@ -9,6 +9,7 @@ import it.unibo.skalamon.model.event.{
   EventManager
 }
 import it.unibo.skalamon.model.field.field
+import it.unibo.skalamon.model.pokemon.Stat
 import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.flatspec.AnyFlatSpec
@@ -39,6 +40,11 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     val newState = behavior(context)(state)
     getTarget(newState).currentHP shouldBe target.currentHP
     getSource(newState).currentHP shouldBe source.currentHP - damage
+
+  "StatChangeBehavior" should "update the target's stats" in:
+    val behavior = StatChangeBehavior(Stat.Attack + 2)
+    val newState = behavior(context)(state)
+    getTarget(newState).statChanges(Stat.Attack) shouldBe 2
 
   "StatusBehavior" should "set volatile status" in:
     val status = Confusion

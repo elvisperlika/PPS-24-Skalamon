@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.behavior.damage.{
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.move.MoveContext
-import it.unibo.skalamon.model.pokemon.BattlePokemon
+import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
 import it.unibo.skalamon.model.status.{
   AssignedStatus,
   NonVolatileStatus,
@@ -79,9 +79,17 @@ class BattleStateUpdaterBehaviorVisitor(
       )
     }
 
-  override def visit(behavior: StatChangeBehavior): BattleState = ???
+  override def visit(behavior: StatChangeBehavior): BattleState =
+    updateTarget { pokemon =>
+      pokemon.copy(statChanges =
+        pokemon.statChanges.updated(
+          behavior.change.stat,
+          pokemon.statChanges.getOrElse(behavior.change.stat, 0) + behavior.change.stage
+        )
+      )
+    }
 
-  override def visit(behavior: StatusBehavior): BattleState = {
+  override def visit(behavior: StatusBehavior): BattleState =
     val turnIndex = context.turnIndex
     updateTarget { pokemon =>
       behavior.status(turnIndex) match
@@ -96,9 +104,8 @@ class BattleStateUpdaterBehaviorVisitor(
           )
         case _ => pokemon
     }
-  }
 
-  override def visit(behavior: ClearAllStatusBehavior): BattleState = 
+  override def visit(behavior: ClearAllStatusBehavior): BattleState =
     updateTarget { pokemon =>
       pokemon.copy(
         volatileStatus = Set.empty,
@@ -108,5 +115,6 @@ class BattleStateUpdaterBehaviorVisitor(
 
   override def visit(behavior: WeatherBehavior): BattleState =
     current.copy(
-      field = current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
+      field =
+        current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
     )
