@@ -166,7 +166,11 @@ class BattleScreen(
   private def formatMove(move: BattleMove): Seq[String] =
     Seq(
       s"${move.move.name}",
-      s"PP: ${move.pp}"
+      s"${move.move.moveType}",
+      s"Cat: ${move.move.category}",
+      s"Acc: ${move.move.accuracy.toDisplayString}",
+      s"PP: ${move.pp}",
+      s"Press: $key"
     )
 
   /** Calculates the center X position for a container based on the terminal
