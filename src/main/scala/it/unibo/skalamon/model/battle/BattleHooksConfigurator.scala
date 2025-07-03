@@ -3,11 +3,22 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
-import it.unibo.skalamon.model.battle.turn.BattleEvents.{Hit, Miss, PokemonSwitchIn, PokemonSwitchOut}
+import it.unibo.skalamon.model.battle.turn.BattleEvents.{
+  Hit,
+  Miss,
+  PokemonSwitchIn,
+  PokemonSwitchOut
+}
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
-import it.unibo.skalamon.model.move.{BattleMove, Move, MoveContext, MoveModel, createContext}
+import it.unibo.skalamon.model.move.{
+  BattleMove,
+  Move,
+  MoveContext,
+  MoveModel,
+  createContext
+}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
@@ -79,12 +90,13 @@ object BattleHooksConfigurator:
     ): BattleState =
       val owner =
         state.trainers.find(_.team.exists(_.id == pIn.id)).get
-      val pOut: BattlePokemon = owner.inField.get 
+      owner.inField match
+        case Some(p) => battle.eventManager.notify(PokemonSwitchOut of p)
+        case _       => ()
       val updatedTrainers =
         state.trainers.map {
           case `owner`    => owner.copy(_inField = Some(pIn))
           case t: Trainer => t
         }
       battle.eventManager.notify(PokemonSwitchIn of pIn)
-      battle.eventManager.notify(PokemonSwitchOut of pOut)
       state.copy(trainers = updatedTrainers)
