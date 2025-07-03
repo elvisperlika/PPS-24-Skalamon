@@ -1,6 +1,10 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
+import it.unibo.skalamon.controller.battle.action.{
+  Action,
+  MoveAction,
+  SwitchAction
+}
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.battle.turn.BattleEvents.{
@@ -10,18 +14,37 @@ import it.unibo.skalamon.model.battle.turn.BattleEvents.{
   PokemonSwitchOut
 }
 import it.unibo.skalamon.model.behavior.Behavior
-import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
+import it.unibo.skalamon.model.event.{ActionEvents, EventType}
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
 
+  private object ExecuteActionEvent extends EventType[Action]
+
   def configure(battle: Battle): Unit =
 
-    battle.hookBattleStateUpdate(ActionsReceived) { (state, turn) =>
+    battle.eventManager.watch(ActionsReceived) { turn =>
       println("EXECUTING ACTIONS\nx\nx")
-      executeMoves(turn)
+      executeActions(turn)
+    }
+
+    battle.eventManager.watch(ExecuteActionEvent) {
+      case action@MoveAction(_, _, _) =>
+        battle.eventManager.notify(ActionEvents.Move of action)
+      case action@SwitchAction(_) =>
+        battle.eventManager.notify(ActionEvents.Switch of action)
+    }
+    
+    battle.hookBattleStateUpdate(ActionEvents.Move) { (state, action) =>
+      val updSource: Trainer = state.trainers.find(_.id == action.source.id).get
+      val updTarget: Trainer = state.trainers.find(_.id == action.target.id).get
+      executeMove(action.move, updSource, updTarget, state)
+    }
+    
+    battle.hookBattleStateUpdate(ActionEvents.Switch) { (state, action) =>
+      executeSwitch(action.in, state)
     }
 
     battle.hookBattleStateUpdate(Started) { (state, _) =>
@@ -31,13 +54,13 @@ object BattleHooksConfigurator:
     battle.trainers.zipWithIndex.foreach { (trainer, trainerIndex) =>
       trainer.team.foreach { pokemon =>
         val sourceTrainer = (state: BattleState) => state.trainers(trainerIndex)
-        val targetTrainer = (state: BattleState) => state.trainers.find(_ != sourceTrainer(state))
+        val targetTrainer =
+          (state: BattleState) => state.trainers.find(_ != sourceTrainer(state))
 
         pokemon.base.ability.hookAll(battle)(
           source = state =>
-            for
-              inField <- sourceTrainer(state).inField
-              if pokemon is inField
+            for inField <- sourceTrainer(state).inField
+            // if pokemon is inField // TODO problem with non-updated state
             yield pokemon,
           target = targetTrainer(_).flatMap(_.inField)
         )
@@ -50,24 +73,14 @@ object BattleHooksConfigurator:
         field = battleState.field.removeExpiredEffects(battle.turnIndex)
       )
 
-    def executeMoves(turn: Turn): BattleState =
-      val initialState = turn.state.snapshot
+    def executeActions(turn: Turn): Unit =
       turn.state.stage match
         case TurnStage.ActionsReceived(actionBuffer) =>
           import it.unibo.skalamon.model.event.config.OrderingUtils.given
           val sortedActions = actionBuffer.actions.values.toList.sorted
-          val finalState = sortedActions.foldLeft(initialState) { (s, a) =>
-            a match
-              case MoveAction(move, source, target) =>
-                val updSource: Trainer = s.trainers.find(_.id == source.id).get
-                val updTarget: Trainer = s.trainers.find(_.id == target.id).get
-                executeMove(move, updSource, updTarget, s)
-              case SwitchAction(pIn) => executeSwitch(pIn, s)
-              case _                 => s
-          }
-          finalState
+          sortedActions.foreach: action =>
+            battle.eventManager.notify(ExecuteActionEvent of action)
         case _ =>
-          initialState
 
     def executeMove(
         move: BattleMove,

@@ -8,7 +8,12 @@ import it.unibo.skalamon.model.behavior.modifier.{
   TargetModifier
 }
 import it.unibo.skalamon.model.data.percent
-import it.unibo.skalamon.model.event.{BehaviorEvent, EventType, TurnStageEvents}
+import it.unibo.skalamon.model.event.{
+  ActionEvents,
+  BehaviorEvent,
+  EventType,
+  TurnStageEvents
+}
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
@@ -50,7 +55,7 @@ case class AbilityHook[T](
   */
 object Ability:
   import it.unibo.skalamon.model.dsl.*
-  
+
   /** An ability with no effect. */
   def none: Ability =
     Ability("No Ability", List.empty)
@@ -58,8 +63,8 @@ object Ability:
   /** When the Pokémon switches in, lowers the opponent's attack. */
   def intimidate: Ability =
     ability("Intimidate"):
-      _.on(BattleEvents.PokemonSwitchIn): (source, _, switched) =>
-        if switched is source then
+      _.on(ActionEvents.Switch): (source, _, switch) =>
+        if switch.in is source then
           StatChangeBehavior(Stat.Attack - 1)
         else
           nothing
@@ -95,8 +100,8 @@ object Ability:
   /** When the Pokémon switches in, sets the weather to rain. */
   def drizzle: Ability =
     ability("Drizzle"):
-      _.on(BattleEvents.PokemonSwitchIn): (source, _, switched) =>
-        if switched is source then
+      _.on(ActionEvents.Switch): (source, _, switch) =>
+        if switch.in is source then
           WeatherBehavior(Rain(_))
         else
           nothing
@@ -115,6 +120,7 @@ object Ability:
   /** When the Pokémon switches out, clears all its statuses */
   def naturalCure: Ability =
     ability("Natural Cure"):
+      // TODO add `out` to ActionEvents.Switch
       _.on(BattleEvents.PokemonSwitchOut): (source, _, switched) =>
         if switched is source then
           new ClearAllStatusBehavior

@@ -65,7 +65,7 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
       bulbasaur
     )
 
-    val bobAction = SwitchAction(pIn = alakazam)
+    val bobAction = SwitchAction(in = alakazam)
     controller.registerAction(trainerBob, bobAction)
     controller.update() // executing actions
     battle.currentTurn.get.state.snapshot.trainers.head.inField shouldBe Some(
@@ -99,7 +99,7 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     bob.inField shouldBe Some(bulbasaur)
     alice.inField shouldBe Some(pikachu)
 
-    val bobAction = SwitchAction(pIn = alakazam)
+    val bobAction = SwitchAction(in = alakazam)
     val aliceAction = MoveAction(
       move = alice.inField.get.moves.head,
       source = alice,
