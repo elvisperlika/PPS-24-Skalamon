@@ -42,8 +42,7 @@ case class AbilityHook[T](
 /** Factory for abilities.
   */
 object Ability:
-  import it.unibo.skalamon.model.behavior.kind.{+, -}
-import it.unibo.skalamon.model.dsl.*
+  import it.unibo.skalamon.model.dsl.*
 
   /** When the Pokémon switches in, lowers the opponent's attack. */
   def intimidate: Ability =
@@ -59,6 +58,7 @@ import it.unibo.skalamon.model.dsl.*
     ability("Swift Swim"):
       _.on(BattleEvents.CreateWeather): (_, _, weather) =>
         if weather.isInstanceOf[Rain] then
+          import it.unibo.skalamon.model.behavior.kind.+
           new StatChangeBehavior(Stat.Speed + 1)
             with TargetModifier(TargetModifier.Type.Self)
         else
