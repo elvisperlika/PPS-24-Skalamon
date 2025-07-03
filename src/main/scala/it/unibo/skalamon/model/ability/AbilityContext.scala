@@ -70,12 +70,11 @@ extension (ability: Ability)
       target: => Option[BattlePokemon],
       source: => Option[BattlePokemon]
   ): Unit =
-    ability.hooks.foreach { case (eventType, behavior) =>
-      battle.hookBattleStateUpdate(eventType): (battleState, _) =>
+    ability.hooks.foreach: hook =>
+      battle.hookBattleStateUpdate(hook.eventType): (battleState, data) =>
         (target, source) match
           case (Some(t), Some(s)) =>
-            val context = createContext(_.hooks(eventType), t, s)
+            val context = createContext(_ => hook.behavior(data), t, s)
             context(battleState)
 
           case _ => battleState
-    }

@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.ability
 
 import it.unibo.skalamon.model.battle.Battle
 import it.unibo.skalamon.model.behavior.kind.*
-import it.unibo.skalamon.model.event.{EventType, TurnStageEvents}
+import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
@@ -24,7 +24,23 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     val behavior = DamageBehavior(damage)
     val ability = Ability(
       "TestAbility",
-      hooks = Map(TurnStageEvents.Started -> behavior)
+      hooks = AbilityHook(TurnStageEvents.Started, _ => behavior) :: Nil
+    )
+
+    ability.hookAll(battle)(
+      Some(target),
+      Some(source),
+    )
+
+    battle.start()
+    getTarget(battle.currentTurn.get.state.snapshot).currentHP shouldEqual target.currentHP - damage
+
+
+  "Ability with hook" should "use the event data to affect behavior" in:
+    val damage = 10
+    val ability = Ability(
+      "TestAbility",
+      hooks = AbilityHook(TurnStageEvents.Started, turn => DamageBehavior(turn.state.stage.ordinal + damage)) :: Nil
     )
 
     ability.hookAll(battle)(
@@ -40,7 +56,7 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     val behavior = DamageBehavior(damage)
     val ability = Ability(
       "TestAbility",
-      hooks = Map(TurnStageEvents.Started -> behavior)
+      hooks = AbilityHook(TurnStageEvents.Started, _ => behavior) :: Nil
     )
 
     ability.hookAll(battle)(

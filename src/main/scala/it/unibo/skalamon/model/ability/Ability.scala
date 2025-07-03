@@ -14,5 +14,7 @@ import it.unibo.skalamon.model.event.EventType
   */
 case class Ability(
     name: String,
-    hooks: Map[EventType[_], Behavior]
+    hooks: List[AbilityHook[_]]
 )
+
+case class AbilityHook[T](eventType: EventType[T], behavior: T => Behavior)

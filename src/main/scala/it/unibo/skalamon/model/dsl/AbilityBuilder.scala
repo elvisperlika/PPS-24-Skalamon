@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.dsl
 
-import it.unibo.skalamon.model.ability.Ability
+import it.unibo.skalamon.model.ability.{Ability, AbilityHook}
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.EventType
 
@@ -10,7 +10,7 @@ import it.unibo.skalamon.model.event.EventType
   *   The name of the move being built.
   */
 class AbilityBuilder(private val name: String) extends DslBuilder[Ability]:
-  private var hooks: Map[EventType[_], Behavior] = Map.empty
+  private var hooks: List[AbilityHook[_]] = List.empty
 
   /** Sets the behavior of the ability in case of an event of the specified
     * type.
@@ -20,8 +20,8 @@ class AbilityBuilder(private val name: String) extends DslBuilder[Ability]:
     * @return
     *   This for chaining.
     */
-  def on(eventType: EventType[_])(behavior: Behavior): AbilityBuilder =
-    this.hooks = this.hooks + (eventType -> behavior)
+  def on[T](eventType: EventType[T])(behavior: T => Behavior): AbilityBuilder =
+    this.hooks = this.hooks :+ AbilityHook(eventType, behavior)
     this
 
   /** Builds the Ability instance with the provided attributes.
