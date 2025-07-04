@@ -10,10 +10,12 @@ import it.unibo.skalamon.view.battle.{BattleInput, BattleView, PlayerSide}
 
 @main
 def main(): Unit =
+  val sleepDurationMillis = 200
+
   var (trainer1, trainer2) =
     (PokemonTestUtils.trainerAlice, PokemonTestUtils.trainerBob)
-  trainer1 = trainer1.copy(_inField = Some(trainer1.team.head))
-  trainer2 = trainer2.copy(_inField = Some(trainer2.team.head))
+  trainer1 = trainer1.copy( /*_inField = Some(trainer1.team.head)*/ )
+  trainer2 = trainer2.copy( /*_inField = Some(trainer2.team.head)*/ )
 
   val battle = Battle(List(trainer1, trainer2))
   val controller = BattleController(battle)
@@ -23,14 +25,9 @@ def main(): Unit =
 
   val battleView = BattleView(mainView.getPlayScreen)
 
-  // TODO: vedere se lasciarlo. Lo ho messo perche il primo turno a volte non viene visualizzata l'intera view
-  battle.eventManager.watch(TurnStageEvents.Started): turn =>
-    mainView.repaint()
-    battleView.update(turn.state.snapshot)
-
   battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
     mainView.repaint()
-    battleView.update(state)
+    battleView.update(state, controller.battle.turnIndex)
 
   controller.start()
   mainView.setKeyPressedHandler { input =>
@@ -49,7 +46,10 @@ def main(): Unit =
     input match
       case i
           if BattleInput.playerMove1.ordinal to BattleInput.playerMove4.ordinal contains i.ordinal =>
-        handleMove(PlayerSide.Player, i.ordinal - BattleInput.playerMove1.ordinal)
+        handleMove(
+          PlayerSide.Player,
+          i.ordinal - BattleInput.playerMove1.ordinal
+        )
 
       case i
           if BattleInput.opponentMove1.ordinal to BattleInput.opponentMove4.ordinal contains i.ordinal =>
@@ -76,7 +76,7 @@ def main(): Unit =
   }
 
   while battle.gameState == GameState.InProgress do
-    Thread.sleep(200) // TODO: is it necessary?
+    Thread.sleep(sleepDurationMillis)
     if !controller.isWaitingForActions then
       controller.update()
 

@@ -15,7 +15,7 @@ import java.awt.event.{KeyAdapter, KeyEvent}
   */
 class MainView() extends JFrame:
   private val terminalWidth: Int = 88
-  private val terminalHeight: Int = 39
+  private val terminalHeight: Int = 50//39
 
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)

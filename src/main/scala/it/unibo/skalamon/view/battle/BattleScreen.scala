@@ -26,6 +26,9 @@ class BattleScreen(
 
   private val statChangeMaxLength = 3
 
+  def setTurn(turn: Int): Unit =
+    terminal.writeCenter(s"Turn: $turn", turnY, turnColor)
+
   /** Shows the player's and opponent's names on the screen.
     * @param player
     *   The name of the player.
@@ -55,7 +58,7 @@ class BattleScreen(
     )
     drawBattlePokemonSlot(
       BoxContainerData(formatBattlePokemon(opponentBP), opponentBPColor),
-      BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerPadding
+      BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerSidePadding
     )
 
   /** Sets the Pokémon pool for both players on the screen.
@@ -222,9 +225,10 @@ object BattleScreen:
   /** The number of players in the battle. */
   val playerNumber: Int = 2
 
-  private val opponentNameY = 1
-  private val startY = 3
-  private val playerPadding = 1
+  private val turnY = 0
+  private val playerNameY = 3
+  private val playerTeamGap = 2
+  private val playerSidePadding = 3
 
   // Pokemon slots
   private val pokemonSlotNum = 5
@@ -241,18 +245,19 @@ object BattleScreen:
   private val battlePokemonHeight = 4
 
   // Layout positions (computed)
-  private val p1PokemonY = startY
+  private val p1PokemonY = playerNameY + playerTeamGap
   private val p1AbilitiesY = p1PokemonY + pokemonSlotHeight
   private val p1BattlePokemonY = p1AbilitiesY + abilitySlotHeight
 
   private val p2BattlePokemonY =
-    p1BattlePokemonY + battlePokemonHeight + playerPadding
+    p1BattlePokemonY + battlePokemonHeight + playerSidePadding
   private val p2AbilitiesY = p2BattlePokemonY + battlePokemonHeight
   private val p2PokemonY = p2AbilitiesY + abilitySlotHeight
 
-  private val playerNameY = p2PokemonY + pokemonSlotHeight + opponentNameY
+  private val opponentNameY = p2PokemonY + pokemonSlotHeight + playerTeamGap
 
   // Colors
+  private val turnColor: Color = Color.WHITE
   private val playerColor: Color = Color.WHITE
   private val opponentColor: Color = Color.WHITE
 

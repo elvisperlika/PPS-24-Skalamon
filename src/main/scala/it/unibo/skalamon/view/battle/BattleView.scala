@@ -12,7 +12,7 @@ trait BattleView:
     * @param battleState
     *   The current state of the battle.
     */
-  def update(battleState: BattleState): Unit
+  def update(battleState: BattleState, turn: Int): Unit
 
 /** Provides a factory method to create a new BattleView instance.
   */
@@ -28,7 +28,7 @@ object BattleView:
     */
   private class BattleViewImpl(screen: BattleScreen) extends BattleView:
 
-    override def update(battleState: BattleState): Unit =
+    override def update(battleState: BattleState, turn: Int): Unit =
       val trainers = battleState.trainers
       require(
         trainers.size == BattleScreen.playerNumber,
@@ -37,6 +37,7 @@ object BattleView:
 
       val Seq(player, opponent) = trainers
 
+      screen.setTurn(turn)
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
       screen.setPokemonTeam(
