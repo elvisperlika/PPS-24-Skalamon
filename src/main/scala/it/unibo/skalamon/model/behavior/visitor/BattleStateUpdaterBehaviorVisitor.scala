@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.behavior.visitor
 
-import it.unibo.skalamon.model.battle.BattleState
+import it.unibo.skalamon.model.battle.{BattleState, Trainer}
 import it.unibo.skalamon.model.behavior.BehaviorsContext
 import it.unibo.skalamon.model.behavior.damage.{
   DamageCalculator,
@@ -8,6 +8,8 @@ import it.unibo.skalamon.model.behavior.damage.{
 }
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
+import it.unibo.skalamon.model.field.FieldEffectMixin.SideCondition
+import it.unibo.skalamon.model.field.fieldside.FieldSide
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.{
@@ -96,4 +98,21 @@ class BattleStateUpdaterBehaviorVisitor(
         case _ => pokemon
     }
 
-  // TODO: implement weather, room, sidefield behaviour visitors -> change the field
+  override def visit(behavior: TerrainBehavior): BattleState =
+    current.copy(field =
+      current.field.copy(terrain = Some(behavior.terrain(context.turnIndex)))
+    )
+
+  override def visit(behavior: RoomBehavior): BattleState =
+    current.copy(field =
+      current.field.copy(room = Some(behavior.room(context.turnIndex)))
+    )
+
+  override def visit(behavior: SideConditionBehavior): BattleState =
+    import it.unibo.skalamon.model.field.fieldside.add
+    val (trainer, condition) = behavior.sideCondition(context.turnIndex)
+    val updatedSides = current.field.sides.map {
+      case (`trainer`, side) => trainer -> side.add(condition)
+      case other             => other
+    }
+    current.copy(field = current.field.copy(sides = updatedSides))
