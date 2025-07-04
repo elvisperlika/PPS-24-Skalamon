@@ -55,3 +55,18 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
 
     battle.state.inField._1.currentHP shouldBe dragonite.hp
     battle.state.inField._2.currentHP shouldBe pelipper.hp
+
+  "Sword Dance" should "increase the user's attack" in:
+    val (battle, controller, _, _) = newBattle(lucario)(lucario)
+    controller.update()
+    registerMoves(swordDance, quickAttack)(controller)
+
+    val deltaHp = lucario.hp - battle.state.inField._1.currentHP
+    battle.state.inField._1.currentHP shouldBe <(lucario.hp)
+    battle.state.inField._2.currentHP shouldBe lucario.hp
+
+    advanceToNextRegistration(controller)
+    registerMoves(quickAttack, swordDance)(controller)
+
+    battle.state.inField._1.currentHP shouldBe lucario.hp - deltaHp
+    battle.state.inField._2.currentHP shouldBe lucario.hp - deltaHp * 2

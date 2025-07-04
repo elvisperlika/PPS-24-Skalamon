@@ -123,27 +123,12 @@ object Pokemon:
       )
   
   def lucario: Pokemon =
-    Pokemon(
-      name = "Lucario",
-      types = List(Flying, Steel),
-      hp = 70,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 110,
-          Stat.Defense -> 70,
-          Stat.SpecialAttack -> 115,
-          Stat.SpecialDefense -> 70,
-          Stat.Speed -> 90
-        )
-      ),
-      ability = Ability("Steadfast", List.empty),
-      weightKg = 54.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Lucario"):
+      _ typed Fighting + Steel hp 70 weighing 54.0.kg ability intimidate stat Attack -> 110 stat Defense -> 70 stat SpecialAttack -> 115 stat SpecialDefense -> 70 stat Speed -> 90 moves(
+        quickAttack,
+        swordDance
+      )
+
   def snorlax: Pokemon =
     Pokemon(
       name = "Snorlax",

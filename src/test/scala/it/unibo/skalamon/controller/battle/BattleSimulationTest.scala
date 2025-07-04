@@ -23,10 +23,17 @@ trait BattleSimulationTest:
     def inField: (BattlePokemon, BattlePokemon) =
       (state.trainers.head.inField.get, state.trainers.tail.head.inField.get)
 
-  def newBattle(teamAlice: Pokemon*)(teamBob: Pokemon*): (Battle, BattleController, Trainer, Trainer) =
+  def newBattle(teamAlice: Pokemon*)(teamBob: Pokemon*)
+      : (Battle, BattleController, Trainer, Trainer) =
     val alice = Trainer("Alice", teamAlice.map(_.b).toList)
     val bob = Trainer("Bob", teamBob.map(_.b).toList)
     val battle = Battle(alice :: bob :: Nil)
     val controller = BattleController(battle)
     controller.start()
     (battle, controller, alice, bob)
+
+  def advanceToNextRegistration(
+      controller: BattleController
+  ): Unit =
+    while !controller.isWaitingForActions do
+      controller.update()

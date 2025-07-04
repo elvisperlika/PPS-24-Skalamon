@@ -1,11 +1,6 @@
 package it.unibo.skalamon.model.move
 
-import it.unibo.skalamon.model.behavior.kind.{
-  DamageBehavior,
-  HealBehavior,
-  SingleHitBehavior,
-  StatusBehavior
-}
+import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.TargetModifier.Type.Self
 import it.unibo.skalamon.model.behavior.modifier.{
   ProbabilityModifier,
@@ -15,6 +10,7 @@ import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
+import it.unibo.skalamon.model.pokemon.Stat.Attack
 import it.unibo.skalamon.model.status.Paralyze
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
@@ -107,3 +103,8 @@ object Move:
       _ pp 10 onSuccess: context =>
         new HealBehavior(context.source.base.hp - context.source.currentHP)
           with TargetModifier(Self)
+
+  def swordDance: Move =
+    import it.unibo.skalamon.model.behavior.kind.+
+    move("Sword Dance", Normal, Status):
+      _ pp 20 onSuccess StatChangeBehavior(Attack + 2)
