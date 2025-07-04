@@ -1,41 +1,86 @@
 package it.unibo.skalamon.view.battle
 
-import it.unibo.skalamon.controller.battle.action.*
-import it.unibo.skalamon.model.battle.Trainer
+import it.unibo.skalamon.model.battle.{
+  BattleState,
+  Trainer
+}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 trait BattleView:
 
-  /** Update turn index.
-    * @param i
-    *   Is the Turn's index.
+  /** Update the whole battle view.
+    * @param battleState
+    *   The current state of the battle.
     */
-  def updateTurn(i: Int): Unit
+  def update(battleState: BattleState, turn: Int): Unit
 
-  /** Show users available actions.
-    * @param map
-    *   Map: Trainer -> Pokémon's in Field actions
+/** Provides a factory method to create a new BattleView instance.
+  */
+object BattleView:
+  def apply(screen: BattleScreen): BattleView =
+    new BattleViewImpl(screen)
+
+  /** Create a new BattleView.
+    * @param screen
+    *   The screen to be used for the battle view.
+    * @return
+    *   A new instance of BattleView.
     */
-  def showActions(map: Map[Trainer, List[Action]]): Unit
+  private class BattleViewImpl(screen: BattleScreen) extends BattleView:
 
-  /** Update Pokémon in field.
-    * @param map
-    *   Map: Trainer -> MutablePokémon
-    */
-  def updatePokemon(map: Map[Trainer, BattlePokemon]): Unit
+    override def update(battleState: BattleState, turn: Int): Unit =
+      val trainers = battleState.trainers
+      require(
+        trainers.size == BattleScreen.playerNumber,
+        s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
+      )
 
-object BattleView {
-  def apply(controllerProxy: ActionBuffer): BattleView =
-    new BattleViewImpl(controllerProxy)
+      val Seq(player, opponent) = trainers
 
-  private class BattleViewImpl(_controllerProxy: ActionBuffer)
-      extends BattleView {
-    private val controllerProxy = _controllerProxy
+      screen.setTurn(turn)
+      screen.setPlayersName(player.name, opponent.name)
+      screen.setBattlePokemon(player.inField, opponent.inField)
+      screen.setPokemonTeam(
+        teamWithKeys(player, PlayerSide.Player),
+        teamWithKeys(opponent, PlayerSide.Opponent)
+      )
+      screen.setMoves(
+        movesWithKeys(player, PlayerSide.Player),
+        movesWithKeys(opponent, PlayerSide.Opponent)
+      )
 
-    override def updateTurn(i: Int): Unit = ???
+    /** Returns the team of a trainer with each Pokémon paired with a key
+      * binding.
+      * @param trainer
+      *   The trainer whose team is to be returned.
+      * @param side
+      *   The side of the trainer, either "player" or "opponent".
+      * @return
+      */
+    private def teamWithKeys(
+        trainer: Trainer,
+        side: PlayerSide
+    ): List[BattlePokemonWithKey] =
+      trainer.teamWithoutInField.zipWithIndex.flatMap { case (poke, i) =>
+        BattleKeyBindings.getPokemonKeyChar(side, i).map(key =>
+          BattlePokemonWithKey(poke, key)
+        )
+      }
 
-    override def showActions(map: Map[Trainer, List[Action]]): Unit = ???
-
-    override def updatePokemon(map: Map[Trainer, BattlePokemon]): Unit = ???
-  }
-}
+    /** Returns the moves of a trainer with each move paired with a key binding.
+      * @param trainer
+      *   The trainer whose moves are to be returned.
+      * @param side
+      *   The side of the trainer, either "player" or "opponent".
+      * @return
+      */
+    private def movesWithKeys(
+        trainer: Trainer,
+        side: PlayerSide
+    ): List[BattleMoveWithKey] =
+      trainer.inField.map(_.moves).getOrElse(List.empty)
+        .zipWithIndex.flatMap { case (move, i) =>
+          BattleKeyBindings.getKeyChar(side, i).map(char =>
+            BattleMoveWithKey(move, char)
+          )
+        }

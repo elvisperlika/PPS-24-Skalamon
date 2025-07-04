@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
 import it.unibo.skalamon.model.move.MoveModel.Category.Special
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon}
+import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.Electric
 
@@ -48,18 +48,31 @@ object PokemonTestUtils:
     Pokemon.pikachu,
     Male,
     startingHP,
-    List(BattleMove(moveThunderShock, powerPoint)),
+    List(
+      BattleMove(moveThunderShock, powerPoint),
+      BattleMove(moveElectric, powerPoint)
+    ),
     None,
-    Set.empty
+    Set.empty,
+    statChanges = Map(
+      Stat.Attack -> 2,
+      Stat.Defense -> -1
+    )
   )
 
   val simplePokemon2: BattlePokemon = BattlePokemon(
     Pokemon.bulbasaur,
     Male,
     startingHP,
-    List(BattleMove(moveElectric, powerPoint)),
+    List(
+      BattleMove(moveElectric, powerPoint),
+      BattleMove(moveThunderShock, powerPoint)
+    ),
     Option.empty,
-    Set.empty
+    Set.empty,
+    statChanges = Map(
+      Stat.Attack -> 0
+    )
   )
 
   private val simplePokemon3: BattlePokemon = BattlePokemon(
@@ -72,7 +85,7 @@ object PokemonTestUtils:
   )
 
   def trainerAlice: Trainer =
-    Trainer("Alice", List(simplePokemon1))
+    Trainer("Alice", List(simplePokemon1, simplePokemon3))
 
   def trainerBob: Trainer =
     Trainer("Bob", List(simplePokemon2))
