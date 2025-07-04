@@ -11,6 +11,7 @@ import it.unibo.skalamon.model.behavior.{
   BehaviorsContext,
   WithBehaviors
 }
+import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** Represents the context of an ability that can be triggered in a battle.
@@ -80,6 +81,7 @@ extension (ability: Ability)
     target: BattleState => Option[BattlePokemon],
     source: BattleState => Option[BattlePokemon]
   ): Unit =
+    given EventManager = battle.eventManager
     ability.hooks.foreach: hook =>
       battle.hookBattleStateUpdate(hook.eventType): (battleState, data) =>
         (target(battleState), source(battleState)) match

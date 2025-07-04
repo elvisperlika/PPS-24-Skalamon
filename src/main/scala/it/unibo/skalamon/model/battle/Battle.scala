@@ -53,6 +53,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
       case _ => throw new IllegalStateException("No active turn to update")
 
   private def update(turn: Turn): Unit =
+    eventManager.notifyQueue()
     import TurnStage.*
     given Turn = turn
     turn.state.stage match

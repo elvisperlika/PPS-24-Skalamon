@@ -204,6 +204,10 @@ object Pokemon:
 //      )
     )
 
+  def squirtle: Pokemon =
+    pokemon("Squirtle"):
+      _ typed Water hp 44 weighing 9.0.kg ability swiftSwim stat Attack -> 48 stat Defense -> 65 stat SpecialAttack -> 50 stat SpecialDefense -> 64 stat Speed -> 43
+
   def rattata: Pokemon =
     pokemon("Rattata"):
       _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72

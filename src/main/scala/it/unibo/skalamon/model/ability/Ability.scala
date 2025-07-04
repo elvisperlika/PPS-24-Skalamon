@@ -86,7 +86,8 @@ object Ability:
           case (b: WeatherBehavior, _) if b.weather(0).isInstanceOf[Rain] =>
             new StatChangeBehavior(Stat.Attack + 1)
               with TargetModifier(TargetModifier.Type.Self)
-          case _ => nothing
+          case _ =>
+            nothing
 
   /** When the Pokémon is assigned a status, copies it to the opponent.
     */

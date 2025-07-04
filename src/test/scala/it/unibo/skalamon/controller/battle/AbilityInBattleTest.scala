@@ -2,10 +2,12 @@ package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.SwitchAction
 import it.unibo.skalamon.model.battle.{Battle, BattleState, Trainer}
+import it.unibo.skalamon.model.behavior.kind.StatChangeBehavior
 import it.unibo.skalamon.model.dsl.*
+import it.unibo.skalamon.model.event.BehaviorEvent
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.pokemon.Pokemon.*
-import it.unibo.skalamon.model.pokemon.Stat.Speed
+import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -47,3 +49,17 @@ class AbilityInBattleTest extends AnyFlatSpec with should.Matchers:
     controller.registerAction(b, SwitchAction(b.team.last))
 
     battle.state.field.weather shouldBe Some(Rain(0))
+
+  "Swift Swim" should "increase source's attack in rain" in:
+    val (battle, controller, a, b) = newBattle(neutral, pelipper)(squirtle)
+    battle.eventManager.watch(BehaviorEvent[StatChangeBehavior]())(println(_))
+    controller.update()
+    battle.state.inField._2.statChanges.getOrElse(Attack, 0) shouldBe 0
+
+    controller.registerAction(a, SwitchAction(a.team.last))
+    controller.registerAction(b, SwitchAction(b.team.last))
+    controller.update()
+
+    battle.state.field.weather shouldBe Some(Rain(0))
+
+    battle.state.inField._2.statChanges(Attack) shouldBe 1

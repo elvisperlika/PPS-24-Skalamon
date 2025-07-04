@@ -89,6 +89,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     }
 
     behavior(context)(state)
+    manager.notifyQueue()
 
     notified shouldBe true
 
@@ -107,6 +108,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     }
 
     behavior(context)(state)
+    manager.notifyQueue()
 
     count shouldBe behavior.behaviors.size
 
@@ -118,5 +120,6 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     }
 
     DamageBehavior(damage)(context)(state)
+    manager.notifyQueue()
 
     notified shouldBe true
