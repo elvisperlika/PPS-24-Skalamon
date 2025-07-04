@@ -3,6 +3,7 @@ package it.unibo.skalamon.model.pokemon
 import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.move.Move.*
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -70,30 +71,20 @@ object Pokemon:
 
   def pikachu: Pokemon =
     pokemon("Pikachu"):
-      _ typed Electric hp 35 weighing 6.0.kg ability static stat Attack -> 55 stat Defense -> 40 stat SpecialAttack -> 50 stat SpecialDefense -> 50 stat Speed -> 90
+      _ typed Electric hp 35 weighing 6.0.kg ability static stat Attack -> 55 stat Defense -> 40 stat SpecialAttack -> 50 stat SpecialDefense -> 50 stat Speed -> 90 moves(
+        tackle,
+        quickAttack,
+        thunderbolt,
+        thunderWave,
+      )
 
   def dragonite: Pokemon =
-    Pokemon(
-      name = "Dragonite",
-      types = Dragon :: Flying :: Nil,
-      hp = 91,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 134,
-          Stat.Defense -> 95,
-          Stat.SpecialAttack -> 100,
-          Stat.SpecialDefense -> 100,
-          Stat.Speed -> 80
-        )
-      ),
-      ability = Ability("Inner Focus", List.empty),
-      weightKg = 210.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Dragonite"):
+      _ typed Dragon + Flying hp 91 weighing 210.0.kg ability speedBoost stat Attack -> 134 stat Defense -> 95 stat SpecialAttack -> 100 stat SpecialDefense -> 100 stat Speed -> 80 moves(
+        dragonRage,
+        roost,
+      )
+
   def scizor: Pokemon =
     Pokemon(
       name = "Scizor",
@@ -126,7 +117,10 @@ object Pokemon:
 
   def pelipper: Pokemon =
     pokemon("Pelipper"):
-      _ typed Water + Flying hp 60 weighing 28.0.kg ability drizzle stat Attack -> 50 stat Defense -> 100 stat SpecialAttack -> 85 stat SpecialDefense -> 70 stat Speed -> 65
+      _ typed Water + Flying hp 60 weighing 28.0.kg ability drizzle stat Attack -> 50 stat Defense -> 100 stat SpecialAttack -> 85 stat SpecialDefense -> 70 stat Speed -> 65 moves(
+        swift,
+        roost
+      )
   
   def lucario: Pokemon =
     Pokemon(
@@ -210,4 +204,8 @@ object Pokemon:
 
   def rattata: Pokemon =
     pokemon("Rattata"):
-      _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72
+      _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72 moves(
+        tackle,
+        quickAttack,
+        bite
+      )

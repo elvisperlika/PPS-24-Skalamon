@@ -1,7 +1,16 @@
 package it.unibo.skalamon.model.move
 
-import it.unibo.skalamon.model.behavior.kind.{SingleHitBehavior, StatusBehavior}
-import it.unibo.skalamon.model.behavior.modifier.ProbabilityModifier
+import it.unibo.skalamon.model.behavior.kind.{
+  DamageBehavior,
+  HealBehavior,
+  SingleHitBehavior,
+  StatusBehavior
+}
+import it.unibo.skalamon.model.behavior.modifier.TargetModifier.Type.Self
+import it.unibo.skalamon.model.behavior.modifier.{
+  ProbabilityModifier,
+  TargetModifier
+}
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Category.*
@@ -74,6 +83,10 @@ object Move:
     move("Swift", Normal, Special):
       _.neverFailing pp 20 onSuccess SingleHitBehavior(60)
 
+  def bite: Move =
+    move("Bite", Dark, Physical):
+      _ pp 25 onSuccess SingleHitBehavior(60)
+
   def thunderbolt: Move =
     move("Thunderbolt", Electric, Special):
       _ pp 15 onSuccess groupOf(
@@ -84,3 +97,13 @@ object Move:
   def thunderWave: Move =
     move("Thunder Wave", Electric, Status):
       _ pp 20 onSuccess StatusBehavior(_ => Paralyze)
+
+  def dragonRage: Move =
+    move("Dragon Rage", Dragon, Special):
+      _ pp 10 onSuccess DamageBehavior(40)
+
+  def roost: Move =
+    move("Roost", Flying, Status):
+      _ pp 10 onSuccess: context =>
+        new HealBehavior(context.source.base.hp - context.source.currentHP)
+          with TargetModifier(Self)
