@@ -16,6 +16,10 @@ trait HealthBehavior extends Behavior:
   def newHealth(currentHealth: Int): Int
 
   override def accept[T](visitor: BehaviorVisitor[T]): T = visitor.visit(this)
+  
+object HealthBehavior:
+  /** Creates a new [[HealthBehavior]] with absolute health. */
+  def apply(health: Int): HealthBehavior = (currentHealth: Int) => health
 
 /** A [[HealthBehavior]] that modifies health by a relative amount, compared to
   * the target's current health.

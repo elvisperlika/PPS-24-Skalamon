@@ -1,8 +1,14 @@
 package it.unibo.skalamon.model.move
 
+import it.unibo.skalamon.model.behavior.kind.{SingleHitBehavior, StatusBehavior}
+import it.unibo.skalamon.model.behavior.modifier.ProbabilityModifier
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
+import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
+import it.unibo.skalamon.model.status.Paralyze
 import it.unibo.skalamon.model.types.Type
+import it.unibo.skalamon.model.types.TypesCollection.*
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -47,3 +53,34 @@ case class Move(
   *   The current Power Points of the move.
   */
 case class BattleMove(move: Move, pp: Int)
+
+/** Factory for moves. */
+object Move:
+  import it.unibo.skalamon.model.dsl.*
+
+  def tackle: Move =
+    move("Tackle", Normal, Physical):
+      _ pp 35 onSuccess SingleHitBehavior(40)
+
+  def quickAttack: Move =
+    move("Quick Attack", Normal, Physical):
+      _ pp 30 priority 1 onSuccess SingleHitBehavior(40)
+
+  def slash: Move =
+    move("Slash", Normal, Physical):
+      _ pp 20 onSuccess SingleHitBehavior(70)
+
+  def swift: Move =
+    move("Swift", Normal, Special):
+      _.neverFailing pp 20 onSuccess SingleHitBehavior(60)
+
+  def thunderbolt: Move =
+    move("Thunderbolt", Electric, Special):
+      _ pp 15 onSuccess groupOf(
+        SingleHitBehavior(90),
+        new StatusBehavior(_ => Paralyze) with ProbabilityModifier(10.percent)
+      )
+
+  def thunderWave: Move =
+    move("Thunder Wave", Electric, Status):
+      _ pp 20 onSuccess StatusBehavior(_ => Paralyze)
