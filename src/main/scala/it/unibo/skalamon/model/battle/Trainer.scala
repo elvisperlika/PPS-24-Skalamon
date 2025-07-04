@@ -22,4 +22,4 @@ case class Trainer(
 ):
   /** The Pokémon currently in the field for this trainer, if any. */
   def inField: Option[BattlePokemon] =
-    _inField.flatMap(inField => team.find(_.id == inField.id))
+    _inField.flatMap(inField => team.find(_ is inField))

@@ -32,77 +32,19 @@ case class Pokemon(
     moves: List[Move]
 )
 
+import it.unibo.skalamon.model.ability.Ability.*
+import it.unibo.skalamon.model.pokemon.Stat.*
+
 /** Factory object to create Pokémon instances. This object contains predefined
   * Pokémon instances that can be used in the game.
   */
 object Pokemon:
+  import it.unibo.skalamon.model.dsl.*
 
-  def gengar: Pokemon =
-    Pokemon(
-      name = "Gengar",
-      types = Ghost :: Poison :: Nil,
-      hp = 60,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 65,
-          Stat.Defense -> 60,
-          Stat.SpecialAttack -> 130,
-          Stat.SpecialDefense -> 75,
-          Stat.Speed -> 110
-        )
-      ),
-      ability = Ability("Cursed body", List.empty),
-      weightKg = 40.5,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
-  def machamp: Pokemon =
-    Pokemon(
-      name = "Machamp ",
-      types = Fighting :: Nil,
-      hp = 90,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 130,
-          Stat.Defense -> 80,
-          Stat.SpecialAttack -> 65,
-          Stat.SpecialDefense -> 85,
-          Stat.Speed -> 55
-        )
-      ),
-      ability = Ability("Guts", List.empty),
-      weightKg = 130.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
   def alakazam: Pokemon =
-    Pokemon(
-      name = "Alakazam",
-      types = Psychic :: Nil,
-      hp = 55,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 50,
-          Stat.Defense -> 45,
-          Stat.SpecialAttack -> 135,
-          Stat.SpecialDefense -> 95,
-          Stat.Speed -> 120
-        )
-      ),
-      ability = Ability("Synchronize", List.empty),
-      weightKg = 48.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Alakazam"):
+      _ typed Psychic hp 55 weighing 48.0.kg ability synchronize stat Attack -> 50 stat Defense -> 45 stat SpecialAttack -> 135 stat SpecialDefense -> 95 stat Speed -> 120
+
   def tyranitar: Pokemon =
     Pokemon(
       name = "Tyranitar",
@@ -125,28 +67,11 @@ object Pokemon:
 //        Move("Electric")
 //      )
     )
+
   def pikachu: Pokemon =
-    Pokemon(
-      name = "Pikachu",
-      types = Electric :: Nil,
-      hp = 35,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 55,
-          Stat.Defense -> 40,
-          Stat.SpecialAttack -> 50,
-          Stat.SpecialDefense -> 50,
-          Stat.Speed -> 90
-        )
-      ),
-      ability = Ability("Static", List.empty),
-      weightKg = 6.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Pikachu"):
+      _ typed Electric hp 35 weighing 6.0.kg ability static stat Attack -> 55 stat Defense -> 40 stat SpecialAttack -> 50 stat SpecialDefense -> 50 stat Speed -> 90
+
   def dragonite: Pokemon =
     Pokemon(
       name = "Dragonite",
@@ -192,49 +117,17 @@ object Pokemon:
 //      )
     )
   def gardevoir: Pokemon =
-    Pokemon(
-      name = "Gardevoir",
-      types = Psychic :: Fairy :: Nil,
-      hp = 68,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 65,
-          Stat.Defense -> 65,
-          Stat.SpecialAttack -> 125,
-          Stat.SpecialDefense -> 115,
-          Stat.Speed -> 80
-        )
-      ),
-      ability = Ability("Synchronize", List.empty),
-      weightKg = 48.4,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Gardevoir"):
+      _ typed Psychic + Fairy hp 68 weighing 48.4.kg ability synchronize stat Attack -> 65 stat Defense -> 65 stat SpecialAttack -> 125 stat SpecialDefense -> 115 stat Speed -> 80
+
   def gyarados: Pokemon =
-    Pokemon(
-      name = "Gyarados",
-      types = Water :: Flying :: Nil,
-      hp = 95,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 125,
-          Stat.Defense -> 79,
-          Stat.SpecialAttack -> 60,
-          Stat.SpecialDefense -> 100,
-          Stat.Speed -> 81
-        )
-      ),
-      ability = Ability("Intimidate", List.empty),
-      weightKg = 235.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Gyarados"):
+      _ typed Water + Flying hp 95 weighing 235.0.kg ability intimidate stat Attack -> 125 stat Defense -> 79 stat SpecialAttack -> 60 stat SpecialDefense -> 100 stat Speed -> 81
+
+  def pelipper: Pokemon =
+    pokemon("Pelipper"):
+      _ typed Water + Flying hp 60 weighing 28.0.kg ability drizzle stat Attack -> 50 stat Defense -> 100 stat SpecialAttack -> 85 stat SpecialDefense -> 70 stat Speed -> 65
+  
   def lucario: Pokemon =
     Pokemon(
       name = "Lucario",
@@ -279,116 +172,15 @@ object Pokemon:
 //        Move("Electric")
 //      )
     )
-  def greninja: Pokemon =
-    Pokemon(
-      name = "Greninja",
-      types = List(Water, Dark),
-      hp = 72,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 95,
-          Stat.Defense -> 67,
-          Stat.SpecialAttack -> 103,
-          Stat.SpecialDefense -> 71,
-          Stat.Speed -> 122
-        )
-      ),
-      ability = Ability("Torrent", List.empty),
-      weightKg = 40.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
-  def aegislash: Pokemon =
-    Pokemon(
-      name = "Aegislash",
-      types = List(Steel, Dark),
-      hp = 60,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 50,
-          Stat.Defense -> 140,
-          Stat.SpecialAttack -> 50,
-          Stat.SpecialDefense -> 140,
-          Stat.Speed -> 60
-        )
-      ),
-      ability = Ability("Stance Change", List.empty),
-      weightKg = 53.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
-  def mimikyu: Pokemon =
-    Pokemon(
-      name = "Mimikyu",
-      types = List(Ghost, Fairy),
-      hp = 55,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 90,
-          Stat.Defense -> 80,
-          Stat.SpecialAttack -> 50,
-          Stat.SpecialDefense -> 105,
-          Stat.Speed -> 96
-        )
-      ),
-      ability = Ability("Disguise", List.empty),
-      weightKg = 0.7,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
-  def dragapult: Pokemon =
-    Pokemon(
-      name = "Dragapult",
-      types = List(Dragon, Ghost),
-      hp = 88,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 120,
-          Stat.Defense -> 75,
-          Stat.SpecialAttack -> 100,
-          Stat.SpecialDefense -> 75,
-          Stat.Speed -> 142
-        )
-      ),
-      ability = Ability("Clear Body", List.empty),
-      weightKg = 50.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+
   def bulbasaur: Pokemon =
-    Pokemon(
-      name = "Bulbasaur",
-      types = Grass :: Poison :: Nil,
-      hp = 45,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 49,
-          Stat.Defense -> 49,
-          Stat.SpecialAttack -> 65,
-          Stat.SpecialDefense -> 65,
-          Stat.Speed -> 45
-        )
-      ),
-      ability = Ability("Overgrow", List.empty),
-      weightKg = 6.9,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Bulbasaur"):
+      _ typed Grass + Poison hp 45 weighing 6.9.kg ability naturalCure stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45
+
+  val yanmega: Pokemon =
+    pokemon("Yanmega"):
+      _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95
+
   def charmander: Pokemon =
     Pokemon(
       name = "Charmander",
@@ -411,3 +203,11 @@ object Pokemon:
 //        Move("Electric")
 //      )
     )
+
+  def squirtle: Pokemon =
+    pokemon("Squirtle"):
+      _ typed Water hp 44 weighing 9.0.kg ability swiftSwim stat Attack -> 48 stat Defense -> 65 stat SpecialAttack -> 50 stat SpecialDefense -> 64 stat Speed -> 43
+
+  def rattata: Pokemon =
+    pokemon("Rattata"):
+      _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72

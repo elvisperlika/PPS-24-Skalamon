@@ -3,8 +3,13 @@ package it.unibo.skalamon.model.behavior
 import it.unibo.skalamon.model.battle.{BattleState, Classic}
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
-import it.unibo.skalamon.model.event.{BattleStateEvents, BehaviorEvent, EventManager}
+import it.unibo.skalamon.model.event.{
+  BattleStateEvents,
+  BehaviorEvent,
+  EventManager
+}
 import it.unibo.skalamon.model.field.field
+import it.unibo.skalamon.model.pokemon.Stat
 import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.flatspec.AnyFlatSpec
@@ -40,9 +45,14 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     getTarget(newState).currentHP shouldBe target.currentHP
     getSource(newState).currentHP shouldBe source.currentHP - damage
 
+  "StatChangeBehavior" should "update the target's stats" in:
+    val behavior = StatChangeBehavior(Stat.Attack + 2)
+    val newState = behavior(context)(state)
+    getTarget(newState).statChanges(Stat.Attack) shouldBe 2
+
   "StatusBehavior" should "set volatile status" in:
     val status = Confusion
-    val behavior = StatusBehavior(status, currentTurnIndex = 1)
+    val behavior = StatusBehavior(_ => status)
     val newState = behavior(context)(state)
     getTarget(newState).volatileStatus.map(_.status) shouldBe Set(status)
 
@@ -50,9 +60,9 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     val status1 = Confusion
     val status2 = Yawn
     val newState1 =
-      StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
+      StatusBehavior(_ => status1)(context)(state)
     val newState2 =
-      StatusBehavior(status2, currentTurnIndex = 1)(context)(newState1)
+      StatusBehavior(_ => status2)(context)(newState1)
     getTarget(newState2).volatileStatus.map(_.status) shouldBe Set(
       status1,
       status2
@@ -60,16 +70,16 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
 
   it should "set non-volatile status" in:
     val status = Burn
-    val newState = StatusBehavior(status, currentTurnIndex = 1)(context)(state)
+    val newState = StatusBehavior(_ => status)(context)(state)
     getTarget(newState).nonVolatileStatus.map(_.status) shouldBe Some(status)
 
   it should "not overwrite existing non-volatile status" in:
     val status1 = Burn
     val status2 = Paralyze
     val newState1 =
-      StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
+      StatusBehavior(_ => status1)(context)(state)
     val newState2 =
-      StatusBehavior(status2, currentTurnIndex = 1)(context)(newState1)
+      StatusBehavior(_ => status2)(context)(newState1)
     getTarget(newState2).nonVolatileStatus.map(_.status) shouldBe Some(status1)
 
   it should "trigger state changed events" in:
@@ -83,6 +93,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     }
 
     behavior(context)(state)
+    manager.notifyQueue()
 
     notified shouldBe true
 
@@ -90,7 +101,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     given manager: EventManager = EventManager()
 
     val behavior =
-      BehaviorGroup(DamageBehavior(damage), StatusBehavior(Confusion, 1))
+      BehaviorGroup(DamageBehavior(damage), StatusBehavior(_ => Confusion))
 
     var currentState = state
     var count = 0
@@ -101,6 +112,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     }
 
     behavior(context)(state)
+    manager.notifyQueue()
 
     count shouldBe behavior.behaviors.size
 
@@ -112,5 +124,6 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     }
 
     DamageBehavior(damage)(context)(state)
+    manager.notifyQueue()
 
     notified shouldBe true

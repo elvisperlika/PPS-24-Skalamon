@@ -9,8 +9,8 @@ import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.battle.turn.BattleEvents.*
 import it.unibo.skalamon.model.behavior.Behavior
-import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
+import it.unibo.skalamon.model.event.{ActionEvents, EventType}
 import it.unibo.skalamon.model.field.FieldEffectMixin
 import it.unibo.skalamon.model.field.FieldEffectMixin.MutatedBattleRule
 import it.unibo.skalamon.model.move.*
@@ -19,6 +19,11 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 object BattleHooksConfigurator:
 
   def configure(battle: Battle): Unit =
+
+    battle.eventManager.watch(ActionsReceived) { turn =>
+      println("EXECUTING ACTIONS\nx\nx")
+      executeActions(turn)
+    }
 
     battle.hookBattleStateUpdate(ExpiredRoom) { (state, room) =>
       state.copy(rules = battle.rules)
@@ -31,20 +36,32 @@ object BattleHooksConfigurator:
         case _ => state
     }
 
-    battle.hookBattleStateUpdate(ActionsReceived) { (state, turn) =>
-      println("EXECUTING ACTIONS\nx\nx")
-      executeMoves(turn)
+    battle.hookBattleStateUpdate(ActionEvents.Move) { (state, action) =>
+      val updSource: Trainer = state.trainers.find(_.id == action.source.id).get
+      val updTarget: Trainer = state.trainers.find(_.id == action.target.id).get
+      executeMove(action.move, updSource, updTarget, state)
+    }
+
+    battle.hookBattleStateUpdate(ActionEvents.Switch) { (state, action) =>
+      executeSwitch(action.in, state)
     }
 
     battle.hookBattleStateUpdate(Started) { (state, _) =>
       updateBattleField(state)
     }
 
-    battle.trainers.foreach { trainer =>
+    battle.trainers.zipWithIndex.foreach { (trainer, trainerIndex) =>
       trainer.team.foreach { pokemon =>
+        val sourceTrainer = (state: BattleState) => state.trainers(trainerIndex)
+        val targetTrainer =
+          (state: BattleState) => state.trainers.find(_ != sourceTrainer(state))
+
         pokemon.base.ability.hookAll(battle)(
-          source = Some(pokemon).filter(trainer.inField.contains),
-          target = battle.trainers.find(_ != trainer).flatMap(_.inField)
+          source = state =>
+            for inField <- sourceTrainer(state).inField
+            // if pokemon is inField // TODO problem with non-updated state
+            yield pokemon,
+          target = targetTrainer(_).flatMap(_.inField)
         )
       }
     }
@@ -55,26 +72,20 @@ object BattleHooksConfigurator:
         field = battleState.field.removeExpiredEffects(battle.turnIndex)
       )
 
-    def executeMoves(turn: Turn): BattleState =
-      val initialState = turn.state.snapshot
+    def executeActions(turn: Turn): Unit =
       turn.state.stage match
         case TurnStage.ActionsReceived(actionBuffer) =>
           val orderStrategy: Ordering[Action] =
             turn.state.snapshot.rules.actionOrderStrategy
           val sortedActions =
             actionBuffer.actions.values.toList.sorted(orderStrategy)
-          val finalState = sortedActions.foldLeft(initialState) { (s, a) =>
-            a match
-              case MoveAction(move, source, target) =>
-                val updSource: Trainer = s.trainers.find(_.id == source.id).get
-                val updTarget: Trainer = s.trainers.find(_.id == target.id).get
-                executeMove(move, updSource, updTarget, s)
-              case SwitchAction(pIn) => executeSwitch(pIn, s)
-              case _                 => s
+          sortedActions.foreach {
+            case action @ MoveAction(_, _, _) =>
+              battle.eventManager.notify(ActionEvents.Move of action)
+            case action @ SwitchAction(_) =>
+              battle.eventManager.notify(ActionEvents.Switch of action)
           }
-          finalState
         case _ =>
-          initialState
 
     def executeMove(
         move: BattleMove,

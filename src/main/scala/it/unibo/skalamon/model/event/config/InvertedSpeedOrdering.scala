@@ -11,6 +11,6 @@ object InvertedSpeedOrdering:
     *   - If priorities are equal and both are MoveActions, the slower Pokémon
     *     acts first
     */
-  import OrderingUtils._
+  import OrderingUtils.*
   given Ordering[Action] =
     actionOrdering((s1, s2) => s1.compareTo(s2)) // velocità crescente

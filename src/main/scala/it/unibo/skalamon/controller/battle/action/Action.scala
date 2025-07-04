@@ -28,10 +28,10 @@ case class MoveAction(
   override val priority: Int = move.move.priority
 
 /** Represents a switch action where one Pokémon is replaced by another.
-  * @param pIn
+  * @param in
   *   The Pokémon entering the battle.
   */
-case class SwitchAction(pIn: BattlePokemon) extends Action:
+case class SwitchAction(in: BattlePokemon) extends Action:
   /** Priority is fixed for all switch actions. */
   override val priority: Int = SwitchAction.Priority
 

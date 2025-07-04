@@ -21,6 +21,6 @@ object ClassicOrdering:
     * @return
     *   an [[Ordering]] instance for sorting [[Action]] elements
     */
-  import OrderingUtils._
+  import OrderingUtils.*
   given Ordering[Action] =
     actionOrdering((s1, s2) => s2.compareTo(s1))
