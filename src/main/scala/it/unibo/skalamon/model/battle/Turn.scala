@@ -63,13 +63,19 @@ object TurnState:
     *
     * @param trainers
     *   The list of trainers participating in the turn.
+    * @param rules
+    *   Initial battle rules.
     * @return
     *   A new TurnState with the initial Pokémon in the field and the stage set
     *   to `Started`.
     */
-  def initial(trainers: List[Trainer]): TurnState =
+  def initial(trainers: List[Trainer], rules: BattleRule): TurnState =
     import it.unibo.skalamon.model.field.field
     TurnState(
-      snapshot = BattleState(trainers, field(trainers)()),
+      snapshot = BattleState(
+        trainers.map(t => t.copy(_inField = t.team.headOption)),
+        field(trainers)(),
+        rules
+      ),
       stage = TurnStage.Started
     )

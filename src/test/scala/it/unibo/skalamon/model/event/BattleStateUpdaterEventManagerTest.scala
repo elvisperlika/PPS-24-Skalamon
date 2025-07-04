@@ -99,4 +99,5 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
 
     given EventManager = battle.eventManager
     context(battle.currentTurn.get.state.snapshot)
+    battle.eventManager.notifyQueue()
     notified shouldBe true

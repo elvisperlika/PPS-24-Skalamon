@@ -1,7 +1,8 @@
 package it.unibo.skalamon.model.behavior.kind
 
-import it.unibo.skalamon.model.pokemon.*
 import it.unibo.skalamon.model.behavior.*
+import it.unibo.skalamon.model.behavior.visitor.BehaviorVisitor
+import it.unibo.skalamon.model.pokemon.*
 
 /** A change in a Pokémon's stats.
   * @param stat
@@ -23,13 +24,22 @@ extension (stat: Stat)
     *   The stage of the change.
     */
   def +(stage: Int): StatChange = StatChange(stat, stage)
+  
+  /** Creates a [[StatChange]] with the given stage.
+    * @param stage
+    *   The stage of the change.
+    */
+  def -(stage: Int): StatChange = StatChange(stat, stage)
+  
+  
 
 /** Behavior that changes a statistic of a Pokémon.
   * @param change
   *   The stat change to apply
   */
 case class StatChangeBehavior(change: StatChange) extends HitBehavior:
-  override protected def delegates: List[Behavior] = List(this)
+  override def accept[T](visitor: BehaviorVisitor[T]): T =
+    visitor.visit(this)
 
 /** Utility object for stat stage clamping and conversion.
   */

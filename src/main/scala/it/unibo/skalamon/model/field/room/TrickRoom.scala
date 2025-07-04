@@ -1,15 +1,18 @@
 package it.unibo.skalamon.model.field.room
 
+import it.unibo.skalamon.model.battle.{BattleRule, Tricky}
 import it.unibo.skalamon.model.field.FieldEffectMixin
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,
+  MutatedBattleRule,
   Room
 }
 
 case class TrickRoom(t: Int) extends Room with FieldEffect(t)
-    with Expirable(t, TrickRoom.Duration):
+    with Expirable(t, TrickRoom.Duration) with MutatedBattleRule:
   override val description: String = TrickRoom.Description
+  override val rule: BattleRule = Tricky()
 
 object TrickRoom:
   val Description =

@@ -2,7 +2,12 @@ package it.unibo.skalamon.model.battle.turn
 
 import it.unibo.skalamon.model.battle.{Trainer, Turn}
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.field.FieldEffectMixin.{Room, SideCondition, Terrain, Weather}
+import it.unibo.skalamon.model.field.FieldEffectMixin.{
+  Room,
+  SideCondition,
+  Terrain,
+  Weather
+}
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.Status
@@ -17,5 +22,8 @@ object BattleEvents:
   object Miss extends EventType[MoveContext]
   object CreateWeather extends EventType[Weather]
   object CreateRoom extends EventType[Room]
+  object ExpiredRoom extends EventType[Room]
   object CreateTerrain extends EventType[Terrain]
-  object CreateSideCondition extends EventType[(Trainer, SideCondition)]
+  object ExpiredTerrain extends EventType[Terrain]
+  object CreateSideCondition extends EventType[SideCondition]
+  object ExpiredSideCondition extends EventType[SideCondition]

@@ -68,7 +68,7 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
   it should "withdraw actions from trainers" in:
     controller.start()
 
-    val action1 = SwitchAction(simplePokemon2)
+    val action1 = SwitchAction(simplePokemon1)
 
     controller.update()
     controller.registerAction(alice, action1)
@@ -139,5 +139,5 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
   it should "add new turn" in:
     controller.start()
     battle.currentTurn shouldEqual Some(
-      Turn(TurnState.initial(battle.trainers))
+      Turn(TurnState.initial(battle.trainers, Classic()))
     )

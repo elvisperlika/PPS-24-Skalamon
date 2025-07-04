@@ -2,7 +2,12 @@ package it.unibo.skalamon.model.behavior
 
 import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.visitor.BattleStateUpdaterBehaviorVisitor
-import it.unibo.skalamon.model.event.{BattleStateEvents, EventManager, event}
+import it.unibo.skalamon.model.event.{
+  BattleStateEvents,
+  BehaviorEvent,
+  EventManager,
+  event
+}
 import it.unibo.skalamon.model.pokemon.*
 
 /** Represents the context of an executable procedure in a battle.
@@ -21,6 +26,9 @@ trait BehaviorsContext[O] extends WithBehaviors:
 
   /** The default Pokémon that is executing the behaviors. */
   val source: BattlePokemon
+  
+  /** Index of the turn in which this context is applied. */
+  val turnIndex: Int
 
   /** Applies the behaviors in this context to the given battle state.
     *
@@ -45,11 +53,11 @@ trait BehaviorsContext[O] extends WithBehaviors:
 
       val newState = behavior.accept(visitor)
 
-      eventManager.notify(behavior.event(this))
-      eventManager.notify(BattleStateEvents.Changed of (
+      eventManager.queue += behavior.event(this)
+      eventManager.queue += BattleStateEvents.Changed of(
         currentState,
         newState
-      ))
+      )
 
       newState
     }

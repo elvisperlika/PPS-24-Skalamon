@@ -1,9 +1,16 @@
 package it.unibo.skalamon.model.event
 
+import scala.collection.mutable
+
 /** An event manager that allows watching and triggering [[Event]]s.
   */
 class EventManager:
   private var watchers: Map[EventType[_], List[Any => Unit]] = Map.empty
+
+  /** A queue of events that have been triggered but not yet notified to
+    * watchers. They can be notified later using [[notifyQueue()]].
+    */
+  val queue: mutable.Queue[Event[_]] = mutable.Queue.empty
 
   /** Registers a callback to be called when an event of the specified type is
     * triggered.
@@ -28,6 +35,13 @@ class EventManager:
   def notify[T](event: Event[T]): Unit =
     watchers.get(event.eventType) foreach:
       _.foreach(callback => callback(event.data))
+
+  /** Empties the event queue and notifies all watchers of the events in the
+    * queue.
+    */
+  def notifyQueue(): Unit =
+    while queue.nonEmpty do
+      notify(queue.dequeue())
 
 /** A provider of a constant [[EventManager]] instance. */
 trait EventManagerProvider:
