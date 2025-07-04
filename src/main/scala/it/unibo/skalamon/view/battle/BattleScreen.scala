@@ -4,8 +4,8 @@ import asciiPanel.AsciiPanel
 import it.unibo.skalamon.model.behavior.kind.StatStage
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-import it.unibo.skalamon.view.Container.*
 import it.unibo.skalamon.view.Screen
+import it.unibo.skalamon.view.container.*
 
 import java.awt.Color
 import java.util.Locale

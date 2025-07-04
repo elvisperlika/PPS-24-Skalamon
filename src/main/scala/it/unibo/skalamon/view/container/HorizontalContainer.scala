@@ -1,4 +1,4 @@
-package it.unibo.skalamon.view.Container
+package it.unibo.skalamon.view.container
 
 import asciiPanel.AsciiPanel
 

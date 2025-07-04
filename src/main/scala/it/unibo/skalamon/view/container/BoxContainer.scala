@@ -1,8 +1,8 @@
-package it.unibo.skalamon.view.Container
+package it.unibo.skalamon.view.container
 
-import java.awt.Color
 import asciiPanel.AsciiPanel
 
+import java.awt.Color
 import scala.annotation.tailrec
 
 /** Creates a box in the terminal that can contain text.

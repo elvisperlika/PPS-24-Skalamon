@@ -3,7 +3,7 @@ package it.unibo.skalamon
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
-import it.unibo.skalamon.model.event.{BattleStateEvents, TurnStageEvents}
+import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.MainView
 import it.unibo.skalamon.view.battle.{BattleInput, BattleView, PlayerSide}
@@ -12,10 +12,8 @@ import it.unibo.skalamon.view.battle.{BattleInput, BattleView, PlayerSide}
 def main(): Unit =
   val sleepDurationMillis = 200
 
-  var (trainer1, trainer2) =
+  val (trainer1, trainer2) =
     (PokemonTestUtils.trainerAlice, PokemonTestUtils.trainerBob)
-  trainer1 = trainer1.copy( /*_inField = Some(trainer1.team.head)*/ )
-  trainer2 = trainer2.copy( /*_inField = Some(trainer2.team.head)*/ )
 
   val battle = Battle(List(trainer1, trainer2))
   val controller = BattleController(battle)
@@ -31,7 +29,7 @@ def main(): Unit =
 
   controller.start()
   mainView.setKeyPressedHandler { input =>
-    val trainers = battle.currentTurn.head.state.snapshot.trainers
+    val trainers = battle.currentTurn.get.state.snapshot.trainers
     val player = trainers.head
     val opponent = trainers.last
 
