@@ -41,8 +41,8 @@ case class Move(
     category: Category,
     accuracy: Accuracy,
     pp: Int,
-    success: Behavior = EmptyBehavior,
-    fail: Behavior = EmptyBehavior
+    success: MoveContext => Behavior = _ => EmptyBehavior,
+    fail: MoveContext => Behavior = _ => EmptyBehavior
 )
 
 /** A move in the context of a battle.

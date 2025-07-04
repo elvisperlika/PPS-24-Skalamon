@@ -25,7 +25,7 @@ object BehaviorTestUtils:
         category = Physical,
         pp = 10,
         accuracy = Of(100.percent),
-        success = EmptyBehavior
+        success = _ => EmptyBehavior
       ).battling,
       target = target,
       source = source

@@ -1,12 +1,13 @@
 package it.unibo.skalamon.model.dsl
 
-import it.unibo.skalamon.model.behavior.EmptyBehavior
+import it.unibo.skalamon.model.behavior.BehaviorTestUtils.context
 import it.unibo.skalamon.model.behavior.kind.{
   HealBehavior,
   SimpleSingleHitBehavior,
   SingleHitBehavior
 }
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
+import it.unibo.skalamon.model.behavior.{BehaviorTestUtils, EmptyBehavior}
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.types.TypesCollection.{Electric, Normal}
@@ -24,8 +25,8 @@ class MoveDslTest extends AnyFlatSpec with should.Matchers:
     tackle.moveType shouldBe Normal
     tackle.category shouldBe Category.Physical
     tackle.accuracy shouldBe Accuracy.Of(100.percent)
-    tackle.success shouldBe EmptyBehavior
-    tackle.fail shouldBe EmptyBehavior
+    tackle.success(context) shouldBe EmptyBehavior
+    tackle.fail(context) shouldBe EmptyBehavior
 
   it should "allow setting pp" in:
     val tackle = move("Tackle", Normal, Category.Physical):
@@ -55,8 +56,8 @@ class MoveDslTest extends AnyFlatSpec with should.Matchers:
     val thunderbolt = move("Thunderbolt", Electric, Category.Special):
       _ onSuccess SingleHitBehavior(10) onFail HealBehavior(5)
 
-    thunderbolt.success shouldBe SingleHitBehavior(10)
-    thunderbolt.fail shouldBe HealBehavior(5)
+    thunderbolt.success(context) shouldBe SingleHitBehavior(10)
+    thunderbolt.fail(context) shouldBe HealBehavior(5)
 
   it should "allow multiple behaviors" in:
     val thunderbolt = move("Thunderbolt", Electric, Category.Special):
@@ -65,11 +66,11 @@ class MoveDslTest extends AnyFlatSpec with should.Matchers:
         HealBehavior(5)
       )
 
-    thunderbolt.success shouldBe BehaviorGroup(SingleHitBehavior(10), HealBehavior(5))
-    thunderbolt.fail shouldBe EmptyBehavior
+    thunderbolt.success(context) shouldBe BehaviorGroup(SingleHitBehavior(10), HealBehavior(5))
+    thunderbolt.fail(context) shouldBe EmptyBehavior
 
   it should "allow modified behaviors" in:
     val thunderbolt = move("Thunderbolt", Electric, Category.Special):
       _ onSuccess new SimpleSingleHitBehavior(10) with TargetModifier(TargetModifier.Type.Self)
 
-    thunderbolt.success shouldBe new SimpleSingleHitBehavior(10) with TargetModifier(TargetModifier.Type.Self)
+    thunderbolt.success(context) shouldBe new SimpleSingleHitBehavior(10) with TargetModifier(TargetModifier.Type.Self)

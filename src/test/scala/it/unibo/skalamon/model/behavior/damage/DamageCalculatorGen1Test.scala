@@ -32,7 +32,7 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
     category = Physical,
     accuracy = Of(100.percent),
     pp = 10,
-    success = SimpleSingleHitBehavior(10)
+    success = _ => SimpleSingleHitBehavior(10)
   )
   val electricMove: BattleMove = move.battling
 
@@ -113,7 +113,7 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
       category = Special,
       pp = 10,
       accuracy = Of(100.percent),
-      success = SimpleSingleHitBehavior(10)
+      success = _ => SimpleSingleHitBehavior(10)
     )
     val specialFlyingMove: BattleMove = move.battling
 

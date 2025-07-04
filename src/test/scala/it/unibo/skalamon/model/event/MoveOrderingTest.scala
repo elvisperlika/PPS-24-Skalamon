@@ -33,7 +33,7 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
       category = Physical,
       pp = pp,
       accuracy = Of(100.percent),
-      success = EmptyBehavior
+      success = _ => EmptyBehavior
     ).battling
 
   private val move5 =
@@ -44,7 +44,7 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
       category = Physical,
       pp = pp,
       accuracy = Of(100.percent),
-      success = EmptyBehavior
+      success = _ => EmptyBehavior
     ).battling
   
   private val move5b =
@@ -55,7 +55,7 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
       category = Physical,
       pp = pp,
       accuracy = Of(100.percent),
-      success = EmptyBehavior
+      success = _ => EmptyBehavior
     ).battling
   
   private val move2 =
@@ -66,7 +66,7 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
       category = Physical,
       pp = pp,
       accuracy = Of(100.percent),
-      success = EmptyBehavior
+      success = _ => EmptyBehavior
     ).battling
   
   private val actions = MoveAction(

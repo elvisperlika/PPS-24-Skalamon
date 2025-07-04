@@ -50,9 +50,10 @@ extension (move: BattleMove)
     *   A new [[MoveContext]] with the phase's behaviors applied.
     */
   def createContext(
-      behavior: Move => Behavior,
+      behavior: Move => MoveContext => Behavior,
       target: BattlePokemon,
       source: BattlePokemon,
       turnIndex: Int = 0
   ): MoveContext =
-    behavior(move.move)(MoveContext(move, target, source, turnIndex))
+    val context = MoveContext(move, target, source, turnIndex)
+    behavior(move.move)(context)(context)

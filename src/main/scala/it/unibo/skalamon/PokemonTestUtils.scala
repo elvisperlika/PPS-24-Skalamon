@@ -25,7 +25,7 @@ object PokemonTestUtils:
       category = Special,
       pp = powerPoint,
       accuracy = Of(100.percent),
-      success = DamageBehavior(10)
+      success = _ => DamageBehavior(10)
     )
   private val moveElectric =
     Move(
@@ -34,7 +34,7 @@ object PokemonTestUtils:
       category = Special,
       pp = powerPoint,
       accuracy = Of(100.percent),
-      success = DamageBehavior(5)
+      success = _ => DamageBehavior(5)
     )
 
   private val genericAbility = ability("Static"):
