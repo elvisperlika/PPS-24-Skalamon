@@ -4,10 +4,8 @@ import it.unibo.skalamon.controller.battle.GameState.GameOver
 import it.unibo.skalamon.model.battle.{
   Battle,
   BattleState,
-  Turn,
-  hookBattleStateUpdate
+  Turn
 }
-import it.unibo.skalamon.model.event.BattleStateEvents.Finished
 import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.event.TurnStageEvents.Ended
 import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
@@ -96,14 +94,12 @@ object StatusExecutor:
         status: AssignedStatus[NonVolatileStatus]
     ): BattlePokemon = status.status match
 
-      // TODO: Vedere se lasciare la clusola di "Guts"
       // Deals damage: 1/16 of max HP at end of each turn.
-      // Halves physical attack stat (unless the Pokémon has the ability Guts)
+      // Halves physical attack stat
       case Burn =>
         val updatedStats = pk.base.baseStats.base.updatedWith(Stat.Attack) {
-          case Some(value) if pk.base.ability.name != "Guts" =>
-            Some(value / BurnAttackReduction)
-          case other => other
+          case Some(value) => Some(value / BurnAttackReduction)
+          case other       => other
         }
         pk.copy(
           currentHP = pk.currentHP - (pk.base.hp / BurnDamageReduction),
