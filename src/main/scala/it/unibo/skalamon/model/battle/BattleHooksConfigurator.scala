@@ -1,17 +1,18 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
+import it.unibo.skalamon.controller.battle.action.{
+  Action,
+  MoveAction,
+  SwitchAction
+}
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
-import it.unibo.skalamon.model.battle.turn.BattleEvents.{
-  Hit,
-  Miss,
-  PokemonSwitchIn,
-  PokemonSwitchOut
-}
+import it.unibo.skalamon.model.battle.turn.BattleEvents.*
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
 import it.unibo.skalamon.model.event.{ActionEvents, EventType}
+import it.unibo.skalamon.model.field.FieldEffectMixin
+import it.unibo.skalamon.model.field.FieldEffectMixin.MutatedBattleRule
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
@@ -23,13 +24,24 @@ object BattleHooksConfigurator:
       println("EXECUTING ACTIONS\nx\nx")
       executeActions(turn)
     }
-    
+
+    battle.hookBattleStateUpdate(ExpiredRoom) { (state, room) =>
+      state.copy(rules = battle.rules)
+    }
+
+    battle.hookBattleStateUpdate(CreateRoom) { (state, room) =>
+      room match
+        case r: FieldEffectMixin.Room with MutatedBattleRule =>
+          state.copy(rules = r.rule)
+        case _ => state
+    }
+
     battle.hookBattleStateUpdate(ActionEvents.Move) { (state, action) =>
       val updSource: Trainer = state.trainers.find(_.id == action.source.id).get
       val updTarget: Trainer = state.trainers.find(_.id == action.target.id).get
       executeMove(action.move, updSource, updTarget, state)
     }
-    
+
     battle.hookBattleStateUpdate(ActionEvents.Switch) { (state, action) =>
       executeSwitch(action.in, state)
     }
@@ -63,12 +75,14 @@ object BattleHooksConfigurator:
     def executeActions(turn: Turn): Unit =
       turn.state.stage match
         case TurnStage.ActionsReceived(actionBuffer) =>
-          import it.unibo.skalamon.model.event.config.OrderingUtils.given
-          val sortedActions = actionBuffer.actions.values.toList.sorted
+          val orderStrategy: Ordering[Action] =
+            turn.state.snapshot.rules.actionOrderStrategy
+          val sortedActions =
+            actionBuffer.actions.values.toList.sorted(orderStrategy)
           sortedActions.foreach {
-            case action@MoveAction(_, _, _) =>
+            case action @ MoveAction(_, _, _) =>
               battle.eventManager.notify(ActionEvents.Move of action)
-            case action@SwitchAction(_) =>
+            case action @ SwitchAction(_) =>
               battle.eventManager.notify(ActionEvents.Switch of action)
           }
         case _ =>

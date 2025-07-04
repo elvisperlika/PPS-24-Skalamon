@@ -139,5 +139,5 @@ class BattleControllerTest extends AnyFlatSpec with should.Matchers
   it should "add new turn" in:
     controller.start()
     battle.currentTurn shouldEqual Some(
-      Turn(TurnState.initial(battle.trainers))
+      Turn(TurnState.initial(battle.trainers, Classic()))
     )

@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.behavior
 
-import it.unibo.skalamon.model.battle.BattleState
+import it.unibo.skalamon.model.battle.{BattleState, Classic}
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
 import it.unibo.skalamon.model.event.{
@@ -19,7 +19,11 @@ import org.scalatest.matchers.should
 class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     with MockTrainers:
   private val state =
-    BattleState(alice :: bob :: Nil, field = field(alice :: bob :: Nil)())
+    BattleState(
+      alice :: bob :: Nil,
+      field = field(alice :: bob :: Nil)(),
+      Classic()
+    )
 
   private val context = BehaviorTestUtils.context(
     target = target,
