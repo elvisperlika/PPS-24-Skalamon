@@ -6,6 +6,7 @@ import it.unibo.skalamon.model.move.Move.*
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
+import it.unibo.skalamon.model.status.{Burn, Paralyze}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -70,3 +71,17 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
 
     battle.state.inField._1.currentHP shouldBe lucario.hp - deltaHp
     battle.state.inField._2.currentHP shouldBe lucario.hp - deltaHp * 2
+    
+  "Thunderwave" should "paralyze the target" in:
+    val (battle, controller, _, _) = newBattle(pikachu)(rattata)
+    controller.update()
+    registerMoves(thunderWave, tackle)(controller)
+
+    battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Paralyze)
+    
+  "Will-O-Wisp" should "burn the target" in:
+    val (battle, controller, _, _) = newBattle(charmander)(rattata)
+    controller.update()
+    registerMoves(willOWisp, tackle)(controller)
+    
+    battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Burn)

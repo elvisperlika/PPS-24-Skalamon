@@ -71,18 +71,18 @@ object Pokemon:
 
   def pikachu: Pokemon =
     pokemon("Pikachu"):
-      _ typed Electric hp 35 weighing 6.0.kg ability static stat Attack -> 55 stat Defense -> 40 stat SpecialAttack -> 50 stat SpecialDefense -> 50 stat Speed -> 90 moves(
+      _ typed Electric hp 35 weighing 6.0.kg ability static stat Attack -> 55 stat Defense -> 40 stat SpecialAttack -> 50 stat SpecialDefense -> 50 stat Speed -> 90 moves (
         tackle,
         quickAttack,
         thunderbolt,
-        thunderWave,
+        thunderWave
       )
 
   def dragonite: Pokemon =
     pokemon("Dragonite"):
-      _ typed Dragon + Flying hp 91 weighing 210.0.kg ability speedBoost stat Attack -> 134 stat Defense -> 95 stat SpecialAttack -> 100 stat SpecialDefense -> 100 stat Speed -> 80 moves(
+      _ typed Dragon + Flying hp 91 weighing 210.0.kg ability speedBoost stat Attack -> 134 stat Defense -> 95 stat SpecialAttack -> 100 stat SpecialDefense -> 100 stat Speed -> 80 moves (
         dragonRage,
-        roost,
+        roost
       )
 
   def scizor: Pokemon =
@@ -117,14 +117,14 @@ object Pokemon:
 
   def pelipper: Pokemon =
     pokemon("Pelipper"):
-      _ typed Water + Flying hp 60 weighing 28.0.kg ability drizzle stat Attack -> 50 stat Defense -> 100 stat SpecialAttack -> 85 stat SpecialDefense -> 70 stat Speed -> 65 moves(
+      _ typed Water + Flying hp 60 weighing 28.0.kg ability drizzle stat Attack -> 50 stat Defense -> 100 stat SpecialAttack -> 85 stat SpecialDefense -> 70 stat Speed -> 65 moves (
         swift,
         roost
       )
-  
+
   def lucario: Pokemon =
     pokemon("Lucario"):
-      _ typed Fighting + Steel hp 70 weighing 54.0.kg ability intimidate stat Attack -> 110 stat Defense -> 70 stat SpecialAttack -> 115 stat SpecialDefense -> 70 stat Speed -> 90 moves(
+      _ typed Fighting + Steel hp 70 weighing 54.0.kg ability intimidate stat Attack -> 110 stat Defense -> 70 stat SpecialAttack -> 115 stat SpecialDefense -> 70 stat Speed -> 90 moves (
         quickAttack,
         swordDance
       )
@@ -161,35 +161,25 @@ object Pokemon:
       _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95
 
   def charmander: Pokemon =
-    Pokemon(
-      name = "Charmander",
-      types = Fire :: Nil,
-      hp = 39,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 52,
-          Stat.Defense -> 43,
-          Stat.SpecialAttack -> 60,
-          Stat.SpecialDefense -> 50,
-          Stat.Speed -> 65
-        )
-      ),
-      ability = Ability("Blaze", List.empty),
-      weightKg = 8.5,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Charmander"):
+      _ typed Fire hp 39 weighing 8.5.kg ability none stat Attack -> 52 stat Defense -> 43 stat SpecialAttack -> 60 stat SpecialDefense -> 50 stat Speed -> 65 moves (
+        tackle,
+        slash,
+        flamethrower,
+        willOWisp
+      )
 
   def squirtle: Pokemon =
     pokemon("Squirtle"):
-      _ typed Water hp 44 weighing 9.0.kg ability swiftSwim stat Attack -> 48 stat Defense -> 65 stat SpecialAttack -> 50 stat SpecialDefense -> 64 stat Speed -> 43
+      _ typed Water hp 44 weighing 9.0.kg ability swiftSwim stat Attack -> 48 stat Defense -> 65 stat SpecialAttack -> 50 stat SpecialDefense -> 64 stat Speed -> 43 moves (
+        tackle,
+        aquaJet,
+        surf
+      )
 
   def rattata: Pokemon =
     pokemon("Rattata"):
-      _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72 moves(
+      _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72 moves (
         tackle,
         quickAttack,
         bite

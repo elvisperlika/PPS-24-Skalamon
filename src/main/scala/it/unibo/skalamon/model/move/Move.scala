@@ -11,7 +11,7 @@ import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.pokemon.Stat.Attack
-import it.unibo.skalamon.model.status.Paralyze
+import it.unibo.skalamon.model.status.{Burn, Paralyze}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -108,3 +108,22 @@ object Move:
     import it.unibo.skalamon.model.behavior.kind.+
     move("Sword Dance", Normal, Status):
       _ pp 20 onSuccess StatChangeBehavior(Attack + 2)
+      
+  def surf: Move =
+    move("Surf", Water, Special):
+      _ pp 15 onSuccess SingleHitBehavior(90)
+      
+  def aquaJet: Move =
+    move("Aqua Jet", Water, Physical):
+      _ pp 20 priority 1 onSuccess SingleHitBehavior(40)
+      
+  def flamethrower: Move =
+    move("Flamethrower", Fire, Special):
+      _ pp 15 onSuccess groupOf(
+        SingleHitBehavior(90),
+        new StatusBehavior(_ => Burn) with ProbabilityModifier(10.percent)
+      )
+      
+  def willOWisp: Move =
+    move("Will-O-Wisp", Fire, Status):
+      _ pp 15 onSuccess StatusBehavior(_ => Burn)
