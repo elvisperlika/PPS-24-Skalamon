@@ -3,6 +3,7 @@ package it.unibo.skalamon.model.dsl
 import it.unibo.skalamon.model.ability.{Ability, AbilityHook}
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.EventType
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** A builder for creating Ability instances using a DSL-like syntax.
   *
@@ -20,7 +21,11 @@ class AbilityBuilder(private val name: String) extends DslBuilder[Ability]:
     * @return
     *   This for chaining.
     */
-  def on[T](eventType: EventType[T])(behavior: T => Behavior): AbilityBuilder =
+  def on[T](eventType: EventType[T])(behavior: (
+      source: BattlePokemon,
+      target: BattlePokemon,
+      data: T
+  ) => Behavior): AbilityBuilder =
     this.hooks = this.hooks :+ AbilityHook(eventType, behavior)
     this
 

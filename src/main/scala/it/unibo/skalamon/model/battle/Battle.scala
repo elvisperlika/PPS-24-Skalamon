@@ -9,8 +9,11 @@ import it.unibo.skalamon.model.event.config.BattleConfiguration
 /** A battle between trainers.
   * @param trainers
   *   The trainers participating in the battle.
+  * @param rules
+  *   Game rules, like action order.
   */
-case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
+case class Battle(trainers: List[Trainer], rules: BattleRule = Classic())
+    extends EventManagerProvider:
 
   var gameState: GameState = InProgress
 
@@ -23,7 +26,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
     * Not to be used as an index to access elements in turnHistory. For that,
     * use: `turnHistory(turnIndex - 1)` or other safe accessors.
     */
-  var turnIndex: Int = turnHistory.size
+  def turnIndex: Int = turnHistory.size
 
   /** The current turn of the battle.
     */
@@ -37,7 +40,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
   /** Starts the battle by initializing the first turn.
     */
   def start(): Unit =
-    given turn: Turn = Turn(TurnState.initial(trainers))
+    given turn: Turn = Turn(TurnState.initial(trainers, rules))
     turnHistory = turnHistory push turn
     setStage(TurnStage.Started)
 
@@ -53,6 +56,7 @@ case class Battle(trainers: List[Trainer]) extends EventManagerProvider:
       case _ => throw new IllegalStateException("No active turn to update")
 
   private def update(turn: Turn): Unit =
+    eventManager.notifyQueue()
     import TurnStage.*
     given Turn = turn
     turn.state.stage match

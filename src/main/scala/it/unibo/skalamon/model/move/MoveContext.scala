@@ -16,6 +16,8 @@ import it.unibo.skalamon.model.pokemon.*
   *   The target Pokémon of the move.
   * @param source
   *   The source Pokémon that is executing the move.
+  * @param turnIndex
+  *   The index of the turn in which the move is being executed.
   * @param behaviors
   *   Ordered behaviors that will be applied during the execution of the move,
   *   associated with their modifiers.
@@ -24,6 +26,7 @@ case class MoveContext(
     override val origin: BattleMove,
     override val target: BattlePokemon,
     override val source: BattlePokemon,
+    override val turnIndex: Int = 0,
     override val behaviors: List[(Behavior, BehaviorModifiers)] = List.empty
 ) extends BehaviorsContext[BattleMove]:
 
@@ -41,12 +44,15 @@ extension (move: BattleMove)
     *   The target Pokémon of the move.
     * @param source
     *   The source Pokémon that is executing the move.
+    * @param turnIndex
+    *   The index of the turn in which the move is being executed.
     * @return
     *   A new [[MoveContext]] with the phase's behaviors applied.
     */
   def createContext(
       behavior: Move => Behavior,
       target: BattlePokemon,
-      source: BattlePokemon
+      source: BattlePokemon,
+      turnIndex: Int = 0
   ): MoveContext =
-    behavior(move.move)(MoveContext(move, target, source))
+    behavior(move.move)(MoveContext(move, target, source, turnIndex))

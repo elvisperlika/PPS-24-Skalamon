@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.behavior.damage.{
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.move.MoveContext
-import it.unibo.skalamon.model.pokemon.BattlePokemon
+import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
 import it.unibo.skalamon.model.status.{
   AssignedStatus,
   NonVolatileStatus,
@@ -42,7 +42,7 @@ class BattleStateUpdaterBehaviorVisitor(
       trainers = current.trainers.map { trainer =>
         trainer.copy(
           team = trainer.team.map { pokemon =>
-            if (pokemon.id == target.id) map(pokemon) else pokemon
+            if (pokemon is target) map(pokemon) else pokemon
           }
         )
       }
@@ -58,7 +58,7 @@ class BattleStateUpdaterBehaviorVisitor(
 
   override def visit(behavior: SingleHitBehavior): BattleState =
     val damage: Int = context match
-      case MoveContext(origin, target, source, behaviors) =>
+      case MoveContext(origin, target, source, behaviors, _) =>
         val damageCalculator: DamageCalculator = DamageCalculatorGen1
         damageCalculator.calculate(
           origin,
@@ -79,19 +79,43 @@ class BattleStateUpdaterBehaviorVisitor(
       )
     }
 
-  override def visit(behavior: StatChangeBehavior): BattleState = ???
+  override def visit(behavior: StatChangeBehavior): BattleState =
+    updateTarget { pokemon =>
+      pokemon.copy(statChanges =
+        pokemon.statChanges.updated(
+          behavior.change.stat,
+          pokemon.statChanges.getOrElse(behavior.change.stat, 0) + behavior.change.stage
+        )
+      )
+    }
 
   override def visit(behavior: StatusBehavior): BattleState =
+    val turnIndex = context.turnIndex
     updateTarget { pokemon =>
-      behavior.status match
+      behavior.status(turnIndex) match
         case s: VolatileStatus =>
           pokemon.copy(volatileStatus =
             pokemon.volatileStatus +
-              AssignedStatus(s, behavior.currentTurnIndex)
+              AssignedStatus(s, turnIndex)
           )
         case s: NonVolatileStatus if pokemon.nonVolatileStatus.isEmpty =>
           pokemon.copy(nonVolatileStatus =
-            Some(AssignedStatus(s, behavior.currentTurnIndex))
+            Some(AssignedStatus(s, turnIndex))
           )
         case _ => pokemon
     }
+
+  override def visit(behavior: ClearAllStatusBehavior): BattleState =
+    updateTarget { pokemon =>
+      pokemon.copy(
+        volatileStatus = Set.empty,
+        nonVolatileStatus = None
+      )
+    }
+
+  override def visit(behavior: WeatherBehavior): BattleState = {
+    current.copy(
+      field =
+        current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
+    )
+  }

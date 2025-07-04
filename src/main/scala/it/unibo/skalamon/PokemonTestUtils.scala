@@ -38,9 +38,7 @@ object PokemonTestUtils:
     )
 
   private val genericAbility = ability("Static"):
-    _.on(TurnStageEvents.Started)(_ =>
-      DamageBehavior(1)
-    ) // 1HP damage at the start of the turn
+    _.on(TurnStageEvents.Started)((_, _, _) => DamageBehavior(1)) // 1HP damage at the start of the turn
 
   private val blazeAbility = Ability("Blaze", List.empty)
 

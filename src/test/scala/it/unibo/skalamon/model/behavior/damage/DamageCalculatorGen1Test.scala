@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.behavior.damage
 
-import it.unibo.skalamon.model.battle.{BattleState, Trainer}
+import it.unibo.skalamon.model.battle.{BattleState, Classic, Trainer}
 import it.unibo.skalamon.model.behavior.damage.DamageCalculatorGen1.calculate
 import it.unibo.skalamon.model.behavior.kind.SimpleSingleHitBehavior
 import it.unibo.skalamon.model.data.percent
@@ -59,7 +59,8 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
       /** No type modifiers
         */
       b.setRoom(TrickRoom(1))
-    }
+    },
+    Classic()
   )
 
   /** Calculate damage to an Electric Pokémon that attack with Electric move a
@@ -84,7 +85,8 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
   /** Calculate damage with same conditions of test above with no field effects.
     */
   it should "calculate damage (2)" in:
-    val battleState: BattleState = BattleState(trainers, field(trainers)())
+    val battleState: BattleState =
+      BattleState(trainers, field(trainers)(), Classic())
     val movePower = 5
     val damage =
       calculate(
@@ -114,13 +116,14 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
       success = SimpleSingleHitBehavior(10)
     )
     val specialFlyingMove: BattleMove = move.battling
-    
+
     val alice: Trainer =
       Trainer("Alice", List(simplePokemon2), Some(simplePokemon2))
     val bob: Trainer =
       Trainer("Alice", List(simplePokemon1), Some(simplePokemon1))
     val trainers: List[Trainer] = alice :: bob :: Nil
-    val battleState: BattleState = BattleState(trainers, field(trainers)())
+    val battleState: BattleState =
+      BattleState(trainers, field(trainers)(), Classic())
     val movePower = 5
     val damage = calculate(
       specialFlyingMove,

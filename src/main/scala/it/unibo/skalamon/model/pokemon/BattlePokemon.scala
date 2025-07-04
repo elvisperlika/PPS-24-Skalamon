@@ -43,6 +43,12 @@ case class BattlePokemon(
     statChanges: Map[Stat, Int] = Map.empty,
     id: UUID = UUID.randomUUID()
 ):
+  /** @return
+    *   Whether the Pokémon is the same as [[other]] based on its ID.
+    */
+  def is(other: BattlePokemon): Boolean =
+    this.id == other.id
+
   /** Return the current stats of the Pokémon.
     *
     * @return

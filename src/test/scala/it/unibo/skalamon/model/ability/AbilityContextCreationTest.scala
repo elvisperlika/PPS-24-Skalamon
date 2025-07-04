@@ -19,12 +19,12 @@ class AbilityContextCreationTest extends AnyFlatSpec with should.Matchers:
 
   "Ability with one hook" should "create a context with that behavior" in:
     val behavior = SingleHitBehavior(10)
-    val hook = AbilityHook(TestEventType, _ => behavior)
+    val hook = AbilityHook(TestEventType, (_, _, _) => behavior)
     val ability = Ability(
       "TestAbility",
       hooks = hook :: Nil
     )
-    val context = ability.createContext(_ => hook.behavior(0), target, source)
+    val context = ability.createContext(_ => hook.behavior(source, target, 0), target, source)
 
     context.origin shouldEqual ability
     context.target shouldEqual target
@@ -35,12 +35,12 @@ class AbilityContextCreationTest extends AnyFlatSpec with should.Matchers:
     val behavior = SingleHitBehavior(10)
     val hook = AbilityHook(
       TestEventType,
-      _ => BehaviorGroup(behavior, behavior, behavior)
+      (_, _, _) => BehaviorGroup(behavior, behavior, behavior)
     )
     val ability = Ability(
       "TestAbility",
       hooks = hook :: Nil
     )
-    val context = ability.createContext(_ => hook.behavior(0), target, source)
+    val context = ability.createContext(_ => hook.behavior(source, target, 0), target, source)
 
     getPlainBehaviors(context) shouldEqual List(behavior, behavior, behavior)
