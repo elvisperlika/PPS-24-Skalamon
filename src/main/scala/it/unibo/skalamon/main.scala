@@ -6,7 +6,7 @@ import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.{BattleStateEvents, TurnStageEvents}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.MainView
-import it.unibo.skalamon.view.battle.{BattleInput, BattleView}
+import it.unibo.skalamon.view.battle.{BattleInput, BattleView, PlayerSide}
 
 @main
 def main(): Unit =
@@ -38,37 +38,37 @@ def main(): Unit =
     val player = trainers.head
     val opponent = trainers.last
 
-    def handleMove(isPlayer: Boolean, index: Int): Unit =
-      if isPlayer then handleTrainerMove(player, opponent, index)
-      else handleTrainerMove(opponent, player, index)
+    def handleMove(side: PlayerSide, index: Int): Unit = side match
+      case PlayerSide.Player   => handleTrainerMove(player, opponent, index)
+      case PlayerSide.Opponent => handleTrainerMove(opponent, player, index)
 
-    def handleSwitch(isPlayer: Boolean, index: Int): Unit =
-      if isPlayer then handlePokemonSwitch(player, index)
-      else handlePokemonSwitch(opponent, index)
+    def handleSwitch(side: PlayerSide, index: Int): Unit = side match
+      case PlayerSide.Player   => handlePokemonSwitch(player, index)
+      case PlayerSide.Opponent => handlePokemonSwitch(opponent, index)
 
     input match
       case i
           if BattleInput.playerMove1.ordinal to BattleInput.playerMove4.ordinal contains i.ordinal =>
-        handleMove(isPlayer = true, i.ordinal - BattleInput.playerMove1.ordinal)
+        handleMove(PlayerSide.Player, i.ordinal - BattleInput.playerMove1.ordinal)
 
       case i
           if BattleInput.opponentMove1.ordinal to BattleInput.opponentMove4.ordinal contains i.ordinal =>
         handleMove(
-          isPlayer = false,
+          PlayerSide.Opponent,
           i.ordinal - BattleInput.opponentMove1.ordinal
         )
 
       case i
           if BattleInput.playerPokemon1.ordinal to BattleInput.playerPokemon5.ordinal contains i.ordinal =>
         handleSwitch(
-          isPlayer = true,
+          PlayerSide.Player,
           i.ordinal - BattleInput.playerPokemon1.ordinal
         )
 
       case i
           if BattleInput.opponentPokemon1.ordinal to BattleInput.opponentPokemon5.ordinal contains i.ordinal =>
         handleSwitch(
-          isPlayer = false,
+          PlayerSide.Opponent,
           i.ordinal - BattleInput.opponentPokemon1.ordinal
         )
 
