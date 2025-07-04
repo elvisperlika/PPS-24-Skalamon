@@ -11,11 +11,9 @@ import it.unibo.skalamon.model.battle.turn.BattleEvents.*
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
 import it.unibo.skalamon.model.event.{ActionEvents, EventType}
-import it.unibo.skalamon.model.field.FieldEffectMixin
-import it.unibo.skalamon.model.field.FieldEffectMixin.MutatedBattleRule
+import it.unibo.skalamon.model.field.Field
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
-import it.unibo.skalamon.model.move.hookAllMove
 
 object BattleHooksConfigurator:
 
@@ -24,17 +22,6 @@ object BattleHooksConfigurator:
     battle.eventManager.watch(ActionsReceived) { turn =>
       println("EXECUTING ACTIONS\nx\nx")
       executeActions(turn)
-    }
-
-    battle.hookBattleStateUpdate(ExpiredRoom) { (state, room) =>
-      state.copy(rules = battle.rules)
-    }
-
-    battle.hookBattleStateUpdate(CreateRoom) { (state, room) =>
-      room match
-        case r: FieldEffectMixin.Room with MutatedBattleRule =>
-          state.copy(rules = r.rule)
-        case _ => state
     }
 
     battle.hookBattleStateUpdate(ActionEvents.Move) { (state, action) =>
@@ -48,7 +35,7 @@ object BattleHooksConfigurator:
     }
 
     battle.hookBattleStateUpdate(Started) { (state, _) =>
-      updateBattleField(state)
+      updateBattlefield(state)
     }
 
     battle.trainers.zipWithIndex.foreach { (trainer, trainerIndex) =>
@@ -64,13 +51,10 @@ object BattleHooksConfigurator:
             yield pokemon,
           target = targetTrainer(_).flatMap(_.inField)
         )
-        pokemon.moves.foreach { move =>
-          move.hookAllMove(battle)
-        }
       }
     }
 
-    def updateBattleField(battleState: BattleState): BattleState =
+    def updateBattlefield(battleState: BattleState): BattleState =
       import it.unibo.skalamon.model.battle.ExpirableSystem.removeExpiredEffects
       battleState.copy(
         field = battleState.field.removeExpiredEffects(battle.turnIndex)
