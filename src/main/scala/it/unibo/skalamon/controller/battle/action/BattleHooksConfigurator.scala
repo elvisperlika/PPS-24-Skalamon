@@ -1,27 +1,26 @@
 package it.unibo.skalamon.controller.battle.action
 
 import it.unibo.skalamon.model.ability.hookAll
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleState,
-  Turn,
-  hookBattleStateUpdate
-}
-import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
+import it.unibo.skalamon.model.battle.{Battle, BattleState, Turn, hookBattleStateUpdate}
+import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Ended, Started}
+import it.unibo.skalamon.model.event.config.StatusExecutor
 
 object BattleHooksConfigurator:
 
   def configure(battle: Battle): Unit =
 
     battle.hookBattleStateUpdate(ActionsReceived) { (state, turn) =>
-      println("EXECUTING ACTIONS\nx\nx")
       executeMoves(turn)
     }
 
     battle.hookBattleStateUpdate(Started) { (state, _) =>
       updateBattleField(state)
     }
-    
+
+    battle.hookBattleStateUpdate(Ended) { (state, _) =>
+      StatusExecutor.executeStatus(battle)(state)
+    }
+
     battle.trainers.foreach { trainer =>
       trainer.team.foreach { pokemon =>
         pokemon.base.ability.hookAll(battle)(
