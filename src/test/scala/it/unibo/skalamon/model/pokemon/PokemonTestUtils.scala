@@ -60,12 +60,25 @@ object PokemonTestUtils:
     Set.empty
   )
 
-  private val simplePokemon3: BattlePokemon = BattlePokemon(
+  val simplePokemon3: BattlePokemon = BattlePokemon(
     Pokemon.charmander,
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Sleep, 4)),
+    Set(
+      AssignedStatus(Flinch, 4),
+      AssignedStatus(ProtectEndure, 3),
+      AssignedStatus(Yawn, 8)
+    )
+  )
+
+  val simplePokemon4: BattlePokemon = BattlePokemon(
+    Pokemon.gyarados,
+    Male,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option.empty,
     Set(
       AssignedStatus(Flinch, 4),
       AssignedStatus(ProtectEndure, 3),
