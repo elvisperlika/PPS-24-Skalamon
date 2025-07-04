@@ -1,10 +1,6 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.action.{
-  Action,
-  MoveAction,
-  SwitchAction
-}
+import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.battle.turn.BattleEvents.{
@@ -21,20 +17,11 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
 
-  private object ExecuteActionEvent extends EventType[Action]
-
   def configure(battle: Battle): Unit =
 
     battle.eventManager.watch(ActionsReceived) { turn =>
       println("EXECUTING ACTIONS\nx\nx")
       executeActions(turn)
-    }
-
-    battle.eventManager.watch(ExecuteActionEvent) {
-      case action@MoveAction(_, _, _) =>
-        battle.eventManager.notify(ActionEvents.Move of action)
-      case action@SwitchAction(_) =>
-        battle.eventManager.notify(ActionEvents.Switch of action)
     }
     
     battle.hookBattleStateUpdate(ActionEvents.Move) { (state, action) =>
@@ -78,8 +65,12 @@ object BattleHooksConfigurator:
         case TurnStage.ActionsReceived(actionBuffer) =>
           import it.unibo.skalamon.model.event.config.OrderingUtils.given
           val sortedActions = actionBuffer.actions.values.toList.sorted
-          sortedActions.foreach: action =>
-            battle.eventManager.notify(ExecuteActionEvent of action)
+          sortedActions.foreach {
+            case action@MoveAction(_, _, _) =>
+              battle.eventManager.notify(ActionEvents.Move of action)
+            case action@SwitchAction(_) =>
+              battle.eventManager.notify(ActionEvents.Switch of action)
+          }
         case _ =>
 
     def executeMove(
