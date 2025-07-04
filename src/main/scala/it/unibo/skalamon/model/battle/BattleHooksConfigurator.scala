@@ -1,29 +1,35 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
+import it.unibo.skalamon.controller.battle.action.{
+  Action,
+  MoveAction,
+  SwitchAction
+}
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
-import it.unibo.skalamon.model.battle.turn.BattleEvents.{
-  Hit,
-  Miss,
-  PokemonSwitchIn,
-  PokemonSwitchOut
-}
+import it.unibo.skalamon.model.battle.turn.BattleEvents.*
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
-import it.unibo.skalamon.model.move.{
-  BattleMove,
-  Move,
-  MoveContext,
-  MoveModel,
-  createContext
-}
+import it.unibo.skalamon.model.field.FieldEffectMixin
+import it.unibo.skalamon.model.field.FieldEffectMixin.MutatedBattleRule
+import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
 
   def configure(battle: Battle): Unit =
+
+    battle.hookBattleStateUpdate(ExpiredRoom) { (state, room) =>
+      state.copy(rules = battle.rules)
+    }
+
+    battle.hookBattleStateUpdate(CreateRoom) { (state, room) =>
+      room match
+        case r: FieldEffectMixin.Room with MutatedBattleRule =>
+          state.copy(rules = r.rule)
+        case _ => state
+    }
 
     battle.hookBattleStateUpdate(ActionsReceived) { (state, turn) =>
       println("EXECUTING ACTIONS\nx\nx")
@@ -53,8 +59,10 @@ object BattleHooksConfigurator:
       val initialState = turn.state.snapshot
       turn.state.stage match
         case TurnStage.ActionsReceived(actionBuffer) =>
-          import it.unibo.skalamon.model.event.config.OrderingUtils.given
-          val sortedActions = actionBuffer.actions.values.toList.sorted
+          val orderStrategy: Ordering[Action] =
+            turn.state.snapshot.rules.actionOrderStrategy
+          val sortedActions =
+            actionBuffer.actions.values.toList.sorted(orderStrategy)
           val finalState = sortedActions.foldLeft(initialState) { (s, a) =>
             a match
               case MoveAction(move, source, target) =>

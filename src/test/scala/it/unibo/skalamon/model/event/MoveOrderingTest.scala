@@ -5,7 +5,7 @@ import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.EmptyBehavior
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.dsl.*
-import it.unibo.skalamon.model.event.config.OrderingUtils
+import it.unibo.skalamon.model.event.config.ClassicOrdering
 import it.unibo.skalamon.model.move.Move
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
@@ -90,7 +90,7 @@ class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
   ) :: Nil
 
   "Moves" should "be in order" in:
-    import OrderingUtils.given
+    import ClassicOrdering.given
     val flattenList = actions.sorted
     flattenList shouldEqual SwitchAction(
       simplePokemon2
