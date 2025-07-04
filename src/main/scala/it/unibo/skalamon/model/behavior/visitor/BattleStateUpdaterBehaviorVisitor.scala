@@ -95,3 +95,5 @@ class BattleStateUpdaterBehaviorVisitor(
           )
         case _ => pokemon
     }
+
+  // TODO: implement weather, room, sidefield behaviour visitors -> change the field

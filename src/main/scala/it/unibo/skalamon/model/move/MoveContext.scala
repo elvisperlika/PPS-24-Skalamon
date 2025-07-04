@@ -71,20 +71,19 @@ extension (move: BattleMove)
   /** @param battle
     */
   def hookAllMove(battle: Battle): Unit =
-    val state = battle.currentTurn.get.state.snapshot
-    move.move.success match
-      case wb: WeatherBehavior => wb.weather match
-          case w: Weather with PokemonRules =>
-            hookWeatherRules(w)
-          case _ => ()
-      case tb: TerrainBehavior => tb.terrain match
-          case t: Terrain with PokemonRules =>
-            hookTerrainRules(t)
-          case _ => ()
-      case rb: RoomBehavior => rb.room match
-          case r: Room with PokemonRules =>
-            hookRoomRules(r)
-          case _ => ()
+//    move.move.success match
+//      case wb: WeatherBehavior => wb.weather match
+//          case w: Weather with PokemonRules =>
+//            hookWeatherRules(w)
+//          case _ => ()
+//      case tb: TerrainBehavior => tb.terrain match
+//          case t: Terrain with PokemonRules =>
+//            hookTerrainRules(t)
+//          case _ => ()
+//      case rb: RoomBehavior => rb.room match
+//          case r: Room with PokemonRules =>
+//            hookRoomRules(r)
+//          case _ => ()
 
     def hookTerrainRules(terrain: Terrain with PokemonRules): Unit =
       terrain.rules.foreach: (event, rule) =>
