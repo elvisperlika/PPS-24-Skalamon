@@ -71,17 +71,35 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
 
     battle.state.inField._1.currentHP shouldBe lucario.hp - deltaHp
     battle.state.inField._2.currentHP shouldBe lucario.hp - deltaHp * 2
-    
+
   "Thunderwave" should "paralyze the target" in:
     val (battle, controller, _, _) = newBattle(pikachu)(rattata)
     controller.update()
     registerMoves(thunderWave, tackle)(controller)
 
     battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Paralyze)
-    
+
   "Will-O-Wisp" should "burn the target" in:
     val (battle, controller, _, _) = newBattle(charmander)(rattata)
     controller.update()
     registerMoves(willOWisp, tackle)(controller)
-    
+
     battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Burn)
+
+  "Earthquake" should "not affect flying Pokémon" in:
+    val (battle, controller, _, _) = newBattle(gyarados)(dragonite)
+    controller.update()
+    registerMoves(earthquake, dragonClaw)(controller)
+
+    battle.state.inField._1.currentHP shouldBe <(gyarados.hp)
+    battle.state.inField._2.currentHP shouldBe dragonite.hp
+
+  "Grass Knot" should "deal damage based on the target's weight" in:
+    val (battle, controller, _, _) = newBattle(bulbasaur)(bulbasaur.copy(weightKg = bulbasaur.weightKg * 2))
+    controller.update()
+    registerMoves(grassKnot, grassKnot)(controller)
+
+    val lightweightDeltaHp = bulbasaur.hp - battle.state.inField._1.currentHP
+    val heavyweightDeltaHp = gyarados.hp - battle.state.inField._2.currentHP
+
+    lightweightDeltaHp shouldBe <(heavyweightDeltaHp)

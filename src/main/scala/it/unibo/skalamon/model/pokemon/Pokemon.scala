@@ -82,6 +82,8 @@ object Pokemon:
     pokemon("Dragonite"):
       _ typed Dragon + Flying hp 91 weighing 210.0.kg ability speedBoost stat Attack -> 134 stat Defense -> 95 stat SpecialAttack -> 100 stat SpecialDefense -> 100 stat Speed -> 80 moves (
         dragonRage,
+        dragonClaw,
+        swift,
         roost
       )
 
@@ -113,7 +115,11 @@ object Pokemon:
 
   def gyarados: Pokemon =
     pokemon("Gyarados"):
-      _ typed Water + Flying hp 95 weighing 235.0.kg ability intimidate stat Attack -> 125 stat Defense -> 79 stat SpecialAttack -> 60 stat SpecialDefense -> 100 stat Speed -> 81
+      _ typed Water + Flying hp 95 weighing 235.0.kg ability intimidate stat Attack -> 125 stat Defense -> 79 stat SpecialAttack -> 60 stat SpecialDefense -> 100 stat Speed -> 81 moves (
+        surf,
+        earthquake,
+        grassKnot
+      )
 
   def pelipper: Pokemon =
     pokemon("Pelipper"):
@@ -154,7 +160,11 @@ object Pokemon:
 
   def bulbasaur: Pokemon =
     pokemon("Bulbasaur"):
-      _ typed Grass + Poison hp 45 weighing 6.9.kg ability naturalCure stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45
+      _ typed Grass + Poison hp 45 weighing 6.9.kg ability naturalCure stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45 moves(
+        tackle,
+        grassKnot,
+        razorLeaf,
+      )
 
   val yanmega: Pokemon =
     pokemon("Yanmega"):

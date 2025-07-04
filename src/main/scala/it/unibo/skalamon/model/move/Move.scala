@@ -98,6 +98,10 @@ object Move:
     move("Dragon Rage", Dragon, Special):
       _ pp 10 onSuccess DamageBehavior(40)
 
+  def dragonClaw: Move =
+    move("Dragon Claw", Dragon, Physical):
+      _ pp 15 onSuccess SingleHitBehavior(80)
+
   def roost: Move =
     move("Roost", Flying, Status):
       _ pp 10 onSuccess: context =>
@@ -108,22 +112,37 @@ object Move:
     import it.unibo.skalamon.model.behavior.kind.+
     move("Sword Dance", Normal, Status):
       _ pp 20 onSuccess StatChangeBehavior(Attack + 2)
-      
+
   def surf: Move =
     move("Surf", Water, Special):
       _ pp 15 onSuccess SingleHitBehavior(90)
-      
+
   def aquaJet: Move =
     move("Aqua Jet", Water, Physical):
       _ pp 20 priority 1 onSuccess SingleHitBehavior(40)
-      
+
   def flamethrower: Move =
     move("Flamethrower", Fire, Special):
       _ pp 15 onSuccess groupOf(
         SingleHitBehavior(90),
         new StatusBehavior(_ => Burn) with ProbabilityModifier(10.percent)
       )
-      
+
   def willOWisp: Move =
     move("Will-O-Wisp", Fire, Status):
       _ pp 15 onSuccess StatusBehavior(_ => Burn)
+
+  def earthquake: Move =
+    move("Earthquake", Ground, Physical):
+      _ pp 10 onSuccess SingleHitBehavior(100)
+
+  def razorLeaf: Move =
+    move("Razor Leaf", Grass, Physical):
+      _ pp 25 onSuccess SingleHitBehavior(55)
+
+  def grassKnot: Move =
+    move("Grass Knot", Grass, Special):
+      import scala.math.{log10, max, min}
+      _ pp 20 onSuccess: context =>
+        val power = 10 * min(120, max(20, 60 * log10(context.target.base.weightKg) - 40))
+        SingleHitBehavior(power.toInt)
