@@ -80,11 +80,11 @@ object Pokemon:
 
   def dragonite: Pokemon =
     pokemon("Dragonite"):
-      _ typed Dragon + Flying hp 91 weighing 210.0.kg ability speedBoost stat Attack -> 134 stat Defense -> 95 stat SpecialAttack -> 100 stat SpecialDefense -> 100 stat Speed -> 80 moves (
+      _ typed Dragon + Flying hp 91 weighing 210.0.kg ability none stat Attack -> 134 stat Defense -> 95 stat SpecialAttack -> 100 stat SpecialDefense -> 100 stat Speed -> 80 moves (
         dragonRage,
         dragonClaw,
         swift,
-        roost
+        dragonDance
       )
 
   def scizor: Pokemon =
@@ -118,14 +118,16 @@ object Pokemon:
       _ typed Water + Flying hp 95 weighing 235.0.kg ability intimidate stat Attack -> 125 stat Defense -> 79 stat SpecialAttack -> 60 stat SpecialDefense -> 100 stat Speed -> 81 moves (
         surf,
         earthquake,
-        grassKnot
+        grassKnot,
+        dragonDance,
       )
 
   def pelipper: Pokemon =
     pokemon("Pelipper"):
       _ typed Water + Flying hp 60 weighing 28.0.kg ability drizzle stat Attack -> 50 stat Defense -> 100 stat SpecialAttack -> 85 stat SpecialDefense -> 70 stat Speed -> 65 moves (
         swift,
-        roost
+        roost,
+        aquaJet,
       )
 
   def lucario: Pokemon =
@@ -164,6 +166,7 @@ object Pokemon:
         tackle,
         grassKnot,
         razorLeaf,
+        bulletSeed
       )
 
   val yanmega: Pokemon =
@@ -192,6 +195,6 @@ object Pokemon:
       _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72 moves (
         tackle,
         quickAttack,
-        bite,
+        growl,
         superFang
       )

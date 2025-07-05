@@ -3,14 +3,16 @@ package it.unibo.skalamon.model.move
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.TargetModifier.Type.Self
 import it.unibo.skalamon.model.behavior.modifier.{
+  BehaviorGroup,
   ProbabilityModifier,
+  RandomModifier,
   TargetModifier
 }
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
-import it.unibo.skalamon.model.pokemon.Stat.Attack
+import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
 import it.unibo.skalamon.model.status.{Burn, Paralyze}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
@@ -111,7 +113,19 @@ object Move:
   def swordDance: Move =
     import it.unibo.skalamon.model.behavior.kind.+
     move("Sword Dance", Normal, Status):
-      _ pp 20 onSuccess StatChangeBehavior(Attack + 2)
+      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2) //with TargetModifier(Self)
+
+  def growl: Move =
+    move("Growl", Normal, Status):
+      _ pp 40 onSuccess StatChangeBehavior(Attack - 1)
+
+  def dragonDance: Move =
+    import it.unibo.skalamon.model.behavior.kind.+
+    move("Dragon Dance", Dragon, Status):
+      _ pp 20 onSuccess new BehaviorGroup(
+        StatChangeBehavior(Attack + 1),
+        StatChangeBehavior(Speed + 1)
+      ) with TargetModifier(Self)
 
   def surf: Move =
     move("Surf", Water, Special):
@@ -151,3 +165,13 @@ object Move:
     move("Super Fang", Normal, Physical):
       _ pp 10 onSuccess: context =>
         DamageBehavior(context.target.currentHP / 2)
+
+  def fissure: Move =
+    move("Fissure", Ground, Physical):
+      _ pp 5 accuracyOf 30.percent onSuccess: context =>
+          DamageBehavior(context.target.currentHP)
+
+  def bulletSeed: Move =
+    move("Bullet Seed", Grass, Physical):
+      _ pp 30 onSuccess: context =>
+        RandomModifier(2, 5)(_ => SingleHitBehavior(10))

@@ -2,9 +2,11 @@ package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
+import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.move.Move.*
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.Pokemon.*
+import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
 import it.unibo.skalamon.model.status.{Burn, Paralyze}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -72,6 +74,21 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     battle.state.inField._1.currentHP shouldBe lucario.hp - deltaHp
     battle.state.inField._2.currentHP shouldBe lucario.hp - deltaHp * 2
 
+  "Dragon Dance" should "increase the user's attack and speed" in:
+    val (battle, controller, _, _) = newBattle(dragonite)(rattata)
+    controller.update()
+    registerMoves(dragonDance, tackle)(controller)
+
+    battle.state.inField._1.statChanges(Attack) shouldBe 1
+    battle.state.inField._1.statChanges(Speed) shouldBe 1
+
+  "Growl" should "cancel out Dragon Dance's attack boost" in:
+    val (battle, controller, _, _) = newBattle(dragonite)(rattata)
+    controller.update()
+    registerMoves(dragonDance, growl)(controller)
+
+    battle.state.inField._1.statChanges(Attack) shouldBe 0
+
   "Thunderwave" should "paralyze the target" in:
     val (battle, controller, _, _) = newBattle(pikachu)(rattata)
     controller.update()
@@ -103,10 +120,22 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     val heavyweightDeltaHp = gyarados.hp - battle.state.inField._2.currentHP
 
     lightweightDeltaHp shouldBe <(heavyweightDeltaHp)
-    
+
   "Super Fang" should "halve the target's HP" in:
     val (battle, controller, _, _) = newBattle(rattata)(rattata)
     controller.update()
     registerMoves(superFang, tackle)(controller)
 
     battle.state.inField._2.currentHP shouldBe rattata.hp / 2
+
+  "Bullet Seed" should "hit multiple times" in {
+    val (battle, controller, _, _) = newBattle(bulbasaur)(rattata)
+
+    var counter = 0
+    battle.eventManager.watch(BattleStateEvents.Changed)(_ => counter += 1)
+
+    controller.update()
+    registerMoves(bulletSeed, growl)(controller)
+
+    counter should be > 1
+  }
