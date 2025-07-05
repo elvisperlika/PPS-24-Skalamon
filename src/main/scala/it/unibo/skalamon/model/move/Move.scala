@@ -10,6 +10,7 @@ import it.unibo.skalamon.model.behavior.modifier.{
 }
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
@@ -175,3 +176,7 @@ object Move:
     move("Bullet Seed", Grass, Physical):
       _ pp 30 onSuccess: context =>
         RandomModifier(2, 5)(_ => SingleHitBehavior(10))
+        
+  def rainDance: Move =
+    move("Rain Dance", Water, Status):
+      _ pp 5 onSuccess WeatherBehavior(Rain(_))

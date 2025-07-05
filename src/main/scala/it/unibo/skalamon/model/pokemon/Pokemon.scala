@@ -128,6 +128,7 @@ object Pokemon:
         swift,
         roost,
         aquaJet,
+        rainDance
       )
 
   def lucario: Pokemon =

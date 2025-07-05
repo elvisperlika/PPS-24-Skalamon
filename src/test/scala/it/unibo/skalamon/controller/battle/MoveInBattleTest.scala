@@ -3,6 +3,7 @@ package it.unibo.skalamon.controller.battle
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.BattleStateEvents
+import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.Move.*
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.Pokemon.*
@@ -63,7 +64,7 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     val (battle, controller, _, _) = newBattle(lucario)(lucario)
     controller.update()
     registerMoves(swordDance, quickAttack)(controller)
-    
+
     battle.state.inField._1.statChanges(Attack) shouldBe 2
 
   "Dragon Dance" should "increase the user's attack and speed" in:
@@ -120,7 +121,7 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
 
     battle.state.inField._2.currentHP shouldBe rattata.hp / 2
 
-  "Bullet Seed" should "hit multiple times" in {
+  "Bullet Seed" should "hit multiple times" in:
     val (battle, controller, _, _) = newBattle(bulbasaur)(rattata)
 
     var counter = 0
@@ -130,4 +131,26 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     registerMoves(bulletSeed, growl)(controller)
 
     counter should be > 1
-  }
+
+  "Rain Dance" should "cause rain" in:
+    val (battle, controller, _, _) = newBattle(pelipper)(pelipper)
+    controller.update()
+    registerMoves(rainDance, aquaJet)(controller)
+
+    battle.state.field.weather shouldBe Some(Rain(0))
+
+  "Rain" should "boost Water moves" in:
+    val (battle, controller, _, _) = newBattle(pelipper)(pelipper)
+    controller.update()
+    registerMoves(aquaJet, aquaJet)(controller)
+
+    val deltaHpBeforeRain = pelipper.hp - battle.state.inField._1.currentHP
+
+    advanceToNextRegistration(controller)
+    registerMoves(rainDance, rainDance)(controller)
+    advanceToNextRegistration(controller)
+
+    registerMoves(aquaJet, aquaJet)(controller)
+    val deltaHpAfterRain = pelipper.hp - deltaHpBeforeRain - battle.state.inField._1.currentHP
+
+    deltaHpAfterRain should be > deltaHpBeforeRain
