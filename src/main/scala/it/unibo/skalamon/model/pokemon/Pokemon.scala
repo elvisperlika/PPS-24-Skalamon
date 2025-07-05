@@ -47,27 +47,12 @@ object Pokemon:
       _ typed Psychic hp 55 weighing 48.0.kg ability synchronize stat Attack -> 50 stat Defense -> 45 stat SpecialAttack -> 135 stat SpecialDefense -> 95 stat Speed -> 120
 
   def tyranitar: Pokemon =
-    Pokemon(
-      name = "Tyranitar",
-      types = Rock :: Dark :: Nil,
-      hp = 100,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 134,
-          Stat.Defense -> 110,
-          Stat.SpecialAttack -> 95,
-          Stat.SpecialDefense -> 100,
-          Stat.Speed -> 61
-        )
-      ),
-      ability = Ability("Sand Stream", List.empty),
-      weightKg = 202.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Tyranitar"):
+      _ typed Rock + Dark hp 100 weighing 202.0.kg ability sandStream stat Attack -> 134 stat Defense -> 110 stat SpecialAttack -> 95 stat SpecialDefense -> 100 stat Speed -> 61 moves (
+        bite,
+        earthquake,
+        dragonDance
+      )
 
   def pikachu: Pokemon =
     pokemon("Pikachu"):
