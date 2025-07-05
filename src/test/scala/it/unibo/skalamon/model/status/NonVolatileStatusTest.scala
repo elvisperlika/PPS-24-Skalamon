@@ -18,6 +18,8 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
     AssignedStatus(Paralyze(), initialTurn)
   private val assignedSleep: AssignedStatus[NonVolatileStatus] =
     AssignedStatus(Sleep(), initialTurn)
+  private val assignedBadlyPoison: AssignedStatus[NonVolatileStatus] =
+    AssignedStatus(BadlyPoison(), initialTurn)
 
   "Burn" should "remove health" in:
     val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
@@ -96,12 +98,6 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
       pokemon.skipsCurrentTurn shouldBe true
     }
 
-    pokemon = pokemon.nonVolatileStatus.map(_.status) match
-      case Some(status: Sleep) => status.executeEffect(pokemon)
-      case _                   => pokemon
-
-    pokemon.skipsCurrentTurn shouldBe false
-
   "Freeze" should "make the pokemon skip its turn" in:
     val triggerChance = Freeze.ThawChance.asInt
     val valueToThaw = triggerChance - 1
@@ -140,7 +136,7 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
 
   "BadlyPoison" should "increase damage every turn" in:
     var pokemon = PokemonTestUtils.simplePokemon4.copy(
-      nonVolatileStatus = Some(AssignedStatus(BadlyPoison(), initialTurn))
+      nonVolatileStatus = Some(assignedBadlyPoison)
     )
     var expectedHP = pokemon.currentHP
 

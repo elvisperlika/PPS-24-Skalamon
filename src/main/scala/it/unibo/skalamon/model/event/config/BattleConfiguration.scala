@@ -57,8 +57,11 @@ object StatusExecutor:
             val afterVolatile =
               afterNonVolatile.volatileStatus.foldLeft(afterNonVolatile) {
                 (current, assignedStatus) =>
-                  assignedStatus.status match
-                    case _ => current
+                  assignedStatus.status.executeEffect(
+                    current,
+                    battle.turnIndex,
+                    assignedStatus.turnAssigned
+                  )
               }
             val cleaned = removeExpiredStatuses(afterVolatile)
 
