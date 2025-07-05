@@ -113,7 +113,7 @@ object Move:
   def swordDance: Move =
     import it.unibo.skalamon.model.behavior.kind.+
     move("Sword Dance", Normal, Status):
-      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2) //with TargetModifier(Self)
+      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2) with TargetModifier(Self)
 
   def growl: Move =
     move("Growl", Normal, Status):
