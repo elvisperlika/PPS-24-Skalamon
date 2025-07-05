@@ -5,7 +5,11 @@ import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.status.*
 import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Sleep}
-import it.unibo.skalamon.model.status.volatileStatus.{Yawn, ProtectEndure}
+import it.unibo.skalamon.model.status.volatileStatus.{
+  Flinch,
+  ProtectEndure,
+  Yawn
+}
 
 /** Test utilities for testing Pokémon.
   */
@@ -23,9 +27,8 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Burn(), 1)),
     Set(
-      AssignedStatus(Substitute, 4),
-      AssignedStatus(ProtectEndure(), 3),
-      AssignedStatus(Substitute, 8)
+      AssignedStatus(Flinch(), 4),
+      AssignedStatus(ProtectEndure(), 3)
     )
   )
 
@@ -38,9 +41,8 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Burn(), 1)),
     Set(
-      AssignedStatus(Substitute, 4),
-      AssignedStatus(ProtectEndure(), 3),
-      AssignedStatus(Substitute, 8)
+      AssignedStatus(Flinch(), 4),
+      AssignedStatus(ProtectEndure(), 3)
     )
   )
 
@@ -60,7 +62,7 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Sleep(), 4)),
     Set(
-      AssignedStatus(Flinch, 4),
+      AssignedStatus(Flinch(), 4),
       AssignedStatus(ProtectEndure(), 3),
       AssignedStatus(Yawn(), 8)
     )
@@ -73,7 +75,7 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option.empty,
     Set(
-      AssignedStatus(Flinch, 4),
+      AssignedStatus(Flinch(), 4),
       AssignedStatus(ProtectEndure(), 3),
       AssignedStatus(Yawn(), 8)
     )
