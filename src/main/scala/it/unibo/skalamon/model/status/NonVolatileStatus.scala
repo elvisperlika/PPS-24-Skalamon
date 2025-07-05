@@ -1,7 +1,6 @@
 package it.unibo.skalamon.model.status
 
-import it.unibo.skalamon.model.data.RandomGenerator
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 trait NonVolatileStatus extends Status:
   /** Executes the effect of the non-volatile status on the given Pokémon.
@@ -13,14 +12,3 @@ trait NonVolatileStatus extends Status:
   def executeEffect(
       pokemon: BattlePokemon
   ): BattlePokemon
-
-
-case object Freeze extends NonVolatileStatus
-  override def executeEffect(
-      pokemon: BattlePokemon
-  ): BattlePokemon =
-    )
-
-case object Poison extends NonVolatileStatus
-
-case object BadlyPoison extends NonVolatileStatus

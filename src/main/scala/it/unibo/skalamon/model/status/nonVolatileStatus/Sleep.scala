@@ -9,7 +9,6 @@ import it.unibo.skalamon.model.status.{AssignedStatus, NonVolatileStatus}
   *   Sleep.SleepTurns.
   */
 case class Sleep(turnsLeft: Int = Sleep.DefaultTurns) extends NonVolatileStatus:
-
   override def executeEffect(pokemon: BattlePokemon): BattlePokemon =
     if turnsLeft > 1 then
       pokemon.copy(

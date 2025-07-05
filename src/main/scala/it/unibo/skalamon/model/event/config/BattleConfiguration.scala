@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.battle.{
 import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.event.TurnStageEvents.Ended
 import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.*
 
 trait BattleConfiguration(battle: Battle) extends EventManager:
@@ -31,15 +31,6 @@ trait BattleConfiguration(battle: Battle) extends EventManager:
 
 object StatusExecutor:
 
-  private val BurnAttackReduction = 2
-  private val BurnDamageReduction = 16
-  private val ParalyzeAttackReduction = 2
-  private val ParalyzeTriggerChance = 0.25
-  private val SleepTurns = 3
-  private val FreezeThawChance = 0.2
-  private val PoisonedDamageReduction = 16
-  private val BadlyPoisonedDamageReduction = 16
-
   extension (battle: Battle)
     /** Executes the status effects for each Pokémon in the battle state. This
       * method is called at the end of each turn to apply non-volatile and
@@ -59,8 +50,9 @@ object StatusExecutor:
               original.copy(isProtected = false, skipsCurrentTurn = false)
 
             val afterNonVolatile = resetFlags.nonVolatileStatus match
-              case Some(status) => executeNonVolatileStatus(resetFlags, status)
-              case None         => resetFlags
+              case Some(assignedStatus) =>
+                assignedStatus.status.executeEffect(resetFlags)
+              case None => resetFlags
 
             val afterVolatile = executeVolatileStatus(
               afterNonVolatile,
@@ -79,81 +71,6 @@ object StatusExecutor:
       }
 
       bt.copy(trainers = updatedTrainers)
-
-    /** Executes the non-volatile status effects for a Pokémon.
-      *
-      * @param pk
-      *   The Pokémon whose non-volatile status is being executed.
-      * @param status
-      *   The non-volatile status assigned to the Pokémon.
-      * @return
-      *   The updated Pokémon after applying the non-volatile status effects.
-      */
-    private def executeNonVolatileStatus(
-        pk: BattlePokemon,
-        status: AssignedStatus[NonVolatileStatus]
-    ): BattlePokemon = status.status match
-
-      // Deals damage: 1/16 of max HP at end of each turn.
-      // Halves physical attack stat
-      case Burn =>
-        val updatedStats = pk.base.baseStats.base.updatedWith(Stat.Attack) {
-          case Some(value) => Some(value / BurnAttackReduction)
-          case other       => other
-        }
-        pk.copy(
-          currentHP = pk.currentHP - (pk.base.hp / BurnDamageReduction),
-          base =
-            pk.base.copy(baseStats =
-              pk.base.baseStats.copy(base = updatedStats)
-            )
-        )
-
-      // 25% chance to be fully unable to act each turn.
-      // Reduces Speed to 50%.
-      case Paralyze =>
-        val updatedStats = pk.base.baseStats.base.updatedWith(Stat.Speed) {
-          case Some(value) => Some(value / ParalyzeAttackReduction)
-          case other       => other
-        }
-        pk.copy(
-          base =
-            pk.base.copy(baseStats =
-              pk.base.baseStats.copy(base = updatedStats)
-            ),
-          skipsCurrentTurn =
-            scala.util.Random.nextDouble() < ParalyzeTriggerChance
-        )
-
-      // Pokémon cannot act for 3 turns.
-      // Turns spent asleep are tracked even if switched out.
-      case Sleep =>
-        if battle.turnIndex - status.turnAssigned < SleepTurns then
-          pk.copy(skipsCurrentTurn = true)
-        else pk
-
-      // Pokémon cannot move while frozen.
-      // 20% chance each turn to thaw naturally.
-      case Freeze =>
-        if scala.util.Random.nextDouble() < FreezeThawChance then
-          pk.copy(nonVolatileStatus = None)
-        else pk
-
-      // Takes 1/16 max HP damage per turn.
-      // Persists indefinitely until cured.
-      case Poison =>
-        pk.copy(currentHP =
-          pk.currentHP - (pk.base.hp / PoisonedDamageReduction)
-        )
-
-      // Damage escalates: 1/16 HP first turn, then increases by 1/16 each turn on the field (e.g., 1/8, 3/16, etc.).
-      // Caused only by the Toxic move or its variants (e.g., Toxic Spikes).
-      case BadlyPoison =>
-        val turnsPoisoned = battle.turnIndex - status.turnAssigned
-        val damage = pk.base.hp * turnsPoisoned / BadlyPoisonedDamageReduction
-        pk.copy(currentHP = pk.currentHP - damage)
-
-      case _ => pk
 
     /** Executes the volatile status effects for a Pokémon.
       *
