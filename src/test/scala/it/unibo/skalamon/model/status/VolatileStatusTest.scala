@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.status
 
-import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, PokemonTestUtils}
 import it.unibo.skalamon.model.status.volatileStatus.Yawn
 import org.scalatest.flatspec.AnyFlatSpec
@@ -19,6 +18,14 @@ class VolatileStatusTest extends AnyFlatSpec with should.Matchers:
       volatileStatus = Set(assignedYawn)
     )
 
-    pokemon.volatileStatus.head.status.executeEffect(pokemon, initialTurn, initialTurn).skipsCurrentTurn shouldBe false
+    pokemon.volatileStatus.head.status.executeEffect(
+      pokemon,
+      initialTurn,
+      initialTurn
+    ).skipsCurrentTurn shouldBe false
 
-    pokemon.volatileStatus.head.status.executeEffect(pokemon, secondTurn, initialTurn).skipsCurrentTurn shouldBe true
+    pokemon.volatileStatus.head.status.executeEffect(
+      pokemon,
+      secondTurn,
+      initialTurn
+    ).skipsCurrentTurn shouldBe true
