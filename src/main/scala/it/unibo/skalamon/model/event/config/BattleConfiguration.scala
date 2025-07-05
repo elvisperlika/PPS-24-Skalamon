@@ -54,10 +54,12 @@ object StatusExecutor:
                 assignedStatus.status.executeEffect(resetFlags)
               case None => resetFlags
 
-            val afterVolatile = executeVolatileStatus(
-              afterNonVolatile,
-              afterNonVolatile.volatileStatus
-            )
+            val afterVolatile =
+              afterNonVolatile.volatileStatus.foldLeft(afterNonVolatile) {
+                (current, assignedStatus) =>
+                  assignedStatus.status match
+                    case _ => current
+              }
             val cleaned = removeExpiredStatuses(afterVolatile)
 
             val updatedTeam = trainer.team.map {
@@ -71,33 +73,6 @@ object StatusExecutor:
       }
 
       bt.copy(trainers = updatedTrainers)
-
-    /** Executes the volatile status effects for a Pokémon.
-      *
-      * @param pk
-      *   The Pokémon whose volatile status is being executed.
-      * @param statuses
-      *   The set of volatile statuses assigned to the Pokémon.
-      * @return
-      *   The updated Pokémon after applying the volatile status effects.
-      */
-    private def executeVolatileStatus(
-        pk: BattlePokemon,
-        statuses: Set[AssignedStatus[VolatileStatus]]
-    ): BattlePokemon =
-      statuses.foldLeft(pk) { (current, assignedStatus) =>
-        assignedStatus.status match
-
-          // After 1 turn, the target Pokémon will fall asleep, unless switched out.
-          case Yawn if battle.turnIndex == assignedStatus.turnAssigned + 1 =>
-            current.copy(skipsCurrentTurn = true)
-
-          // Blocks moves that target this Pokémon.
-          case ProtectEndure =>
-            current.copy(isProtected = true)
-
-          case _ => current
-      }
 
     /** Removes expired volatile statuses from a Pokémon.
       *
