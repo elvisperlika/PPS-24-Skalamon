@@ -29,7 +29,7 @@ extension (stat: Stat)
     * @param stage
     *   The stage of the change.
     */
-  def -(stage: Int): StatChange = StatChange(stat, stage)
+  def -(stage: Int): StatChange = StatChange(stat, -stage)
   
   
 

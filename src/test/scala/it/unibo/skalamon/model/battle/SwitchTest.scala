@@ -34,7 +34,7 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
       category = Special,
       pp = 10,
       accuracy = Of(100.percent),
-      success = SingleHitBehavior(Damage)
+      success = _ => SingleHitBehavior(Damage)
     )
   val pikachu: BattlePokemon = BattlePokemon(
     Pokemon.pikachu,

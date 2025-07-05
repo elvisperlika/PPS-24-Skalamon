@@ -2,8 +2,8 @@ package it.unibo.skalamon.model.dsl
 
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.data.{Percentage, percent}
-import it.unibo.skalamon.model.move.Move
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
+import it.unibo.skalamon.model.move.{Move, MoveContext}
 import it.unibo.skalamon.model.types.Type
 
 /** A builder for creating Move instances using a DSL-like syntax.
@@ -23,8 +23,8 @@ class MoveBuilder(
   private var priority = 0
   private var accuracy: Accuracy = Accuracy.Of(100.percent)
   private var pp: Int = 40
-  private var success: Behavior = EmptyBehavior
-  private var fail: Behavior = EmptyBehavior
+  private var success: MoveContext => Behavior = _ => EmptyBehavior
+  private var fail: MoveContext => Behavior = _ => EmptyBehavior
 
   /** Sets the priority of the move.
     *
@@ -80,8 +80,20 @@ class MoveBuilder(
     * @return
     *   This for chaining.
     */
-  def onSuccess(success: Behavior): MoveBuilder =
+  def onSuccess(success: MoveContext => Behavior): MoveBuilder =
     this.success = success
+    this
+
+  /** Sets the behavior of the move in case of success, independently of the
+    * context.
+    *
+    * @param success
+    *   The behavior to execute on success.
+    * @return
+    *   This for chaining.
+    */
+  def onSuccess(success: Behavior): MoveBuilder =
+    this.success = _ => success
     this
 
   /** Sets the behavior of the move in case of failure.
@@ -91,8 +103,20 @@ class MoveBuilder(
     * @return
     *   This for chaining.
     */
-  def onFail(fail: Behavior): MoveBuilder =
+  def onFail(fail: MoveContext => Behavior): MoveBuilder =
     this.fail = fail
+    this
+
+  /** Sets the behavior of the move in case of failure, independently of the
+    * context.
+    *
+    * @param fail
+    *   The behavior to execute on failure.
+    * @return
+    *   This for chaining.
+    */
+  def onFail(fail: Behavior): MoveBuilder =
+    this.fail = _ => fail
     this
 
   /** Builds the Move instance with the provided attributes.

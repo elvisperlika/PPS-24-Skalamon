@@ -21,7 +21,7 @@ object PokemonTestUtils:
     category = Special,
     pp = 5,
     accuracy = Of(100.percent),
-    success = EmptyBehavior
+    success = _ => EmptyBehavior
   )
   private val moveElectric = Move(
     name = "Electric",
@@ -30,7 +30,7 @@ object PokemonTestUtils:
     category = Physical,
     pp = 5,
     accuracy = Of(100.percent),
-    success = EmptyBehavior
+    success = _ => EmptyBehavior
   )
 
   private val startingHP: Int = 70

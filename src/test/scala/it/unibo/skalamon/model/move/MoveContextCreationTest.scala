@@ -27,7 +27,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
       category = Physical,
       pp = 10,
       accuracy = Of(100.percent),
-      success = EmptyBehavior
+      success = _ => EmptyBehavior
     ).battling
 
     val context = move.createContext(_.success, target, source)
@@ -46,7 +46,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
         category = Physical,
         pp = 10,
         accuracy = Of(100.percent),
-        success = SingleHitBehavior(10)
+        success = _ => SingleHitBehavior(10)
       ).battling
 
     val context = move.createContext(_.success, target, source)
@@ -64,7 +64,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
         category = Physical,
         pp = 10,
         accuracy = Of(100.percent),
-        success =
+        success = _ =>
           new SimpleSingleHitBehavior(10)
             with ProbabilityModifier(100.percent)
             with TargetModifier(TargetModifier.Type.Self)
@@ -85,7 +85,7 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
         pp = 10,
         accuracy = Of(100.percent),
         priority = 5,
-        success = BehaviorGroup(SingleHitBehavior(10), SingleHitBehavior(20))
+        success = _ => BehaviorGroup(SingleHitBehavior(10), SingleHitBehavior(20))
       ).battling
 
     val context = move.createContext(_.success, target, source)
@@ -93,3 +93,25 @@ class MoveContextCreationTest extends AnyFlatSpec with should.Matchers:
       SingleHitBehavior(10),
       SingleHitBehavior(20)
     )
+
+  "Move with context-depending behaviors" should "be affected" in:
+    val move =
+      Move(
+        name = "TestMove",
+        moveType = Electric,
+        category = Physical,
+        pp = 10,
+        accuracy = Of(100.percent),
+        priority = 5,
+        success = context =>
+          if context.source.currentHP < 50 then
+            SingleHitBehavior(30)
+          else
+            SingleHitBehavior(10)
+      ).battling
+
+    val context1 = move.createContext(_.success, target, source.copy(currentHP = 40))
+    val context2 = move.createContext(_.success, target, source.copy(currentHP = 60))
+
+    getPlainBehaviors(context1) shouldEqual List(SingleHitBehavior(30))
+    getPlainBehaviors(context2) shouldEqual List(SingleHitBehavior(10))
