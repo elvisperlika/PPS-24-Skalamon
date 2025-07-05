@@ -12,7 +12,12 @@ import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.*
 
+/** Mixin of [[EventManager]] for events pre-configuration.
+  */
 trait BattleConfiguration(battle: Battle) extends EventManager:
+  watch(Ended) { t =>
+    checkGameOver(t)
+  }
 
   watch(Ended) { turn => checkGameOver(turn) }
 

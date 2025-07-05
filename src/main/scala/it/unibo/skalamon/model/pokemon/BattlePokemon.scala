@@ -45,14 +45,20 @@ case class BattlePokemon(
     skipsCurrentTurn: Boolean = false,
     id: UUID = UUID.randomUUID()
 ):
+  /** @return
+    *   Whether the Pokémon is the same as [[other]] based on its ID.
+    */
+  def is(other: BattlePokemon): Boolean =
+    this.id == other.id
+
   /** Return the current stats of the Pokémon.
     *
     * @return
     *   the current stats of the Pokémon.
     */
   def actualStats: Stats =
-    base.baseStats.copy(
-      base = base.baseStats.base.map { case (stat, value) =>
+    base.stats.copy(
+      base = base.stats.base.map { case (stat, value) =>
         stat -> (StatStage.multiplier(statChanges.getOrElse(
           stat,
           0

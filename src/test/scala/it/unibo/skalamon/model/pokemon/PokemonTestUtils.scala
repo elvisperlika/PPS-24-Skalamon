@@ -1,21 +1,42 @@
 package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.model
+import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
+import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
+import it.unibo.skalamon.model.move.MoveModel.Category.{Physical, Special}
 import it.unibo.skalamon.model.status.*
-import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Sleep}
-import it.unibo.skalamon.model.status.volatileStatus.{
-  Flinch,
-  ProtectEndure,
-  Yawn
+import it.unibo.skalamon.model.types.*
+import it.unibo.skalamon.model.types.TypesCollection.{
+  Electric,
+  Fire,
+  Grass,
+  Poison
 }
 
 /** Test utilities for testing Pokémon.
   */
 object PokemonTestUtils:
-  private val moveThunderShock = Move("Thunder Shock", priority = 5)
-  private val moveElectric = Move("Electric", priority = 5)
+  private val moveThunderShock = Move(
+    name = "Thunder Shock",
+    priority = 5,
+    moveType = Electric,
+    category = Special,
+    pp = 5,
+    accuracy = Of(100.percent),
+    success = _ => EmptyBehavior
+  )
+  private val moveElectric = Move(
+    name = "Electric",
+    priority = 5,
+    moveType = Electric,
+    category = Physical,
+    pp = 5,
+    accuracy = Of(100.percent),
+    success = _ => EmptyBehavior
+  )
 
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
@@ -82,10 +103,10 @@ object PokemonTestUtils:
   )
 
   def trainerAlice: Trainer =
-    Trainer("Alice", List(simplePokemon1))
+    Trainer("Alice", List(simplePokemon1), _inField = Some(simplePokemon1))
 
   def trainerBob: Trainer =
-    Trainer("Bob", List(simplePokemon2))
+    Trainer("Bob", List(simplePokemon2), _inField = Some(simplePokemon2))
 
   def trainerGio: Trainer =
-    Trainer("Gio", List(simplePokemon3))
+    Trainer("Gio", List(simplePokemon3), _inField = Some(simplePokemon3))

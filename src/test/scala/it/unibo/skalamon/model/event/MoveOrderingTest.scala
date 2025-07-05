@@ -1,69 +1,113 @@
 package it.unibo.skalamon.model.event
 
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
+import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.EmptyBehavior
-import it.unibo.skalamon.model.event.config.OrderingUtils
-import it.unibo.skalamon.model.move.{BattleMove, Move, createContext}
+import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.dsl.*
+import it.unibo.skalamon.model.event.config.ClassicOrdering
+import it.unibo.skalamon.model.move.Move
+import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
+import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.simplePokemon2
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 class MoveOrderingTest extends AnyFlatSpec with should.Matchers:
 
-  private val target = PokemonTestUtils.simplePokemon1
-  private val source = PokemonTestUtils.simplePokemon2
+  private val target: Trainer = PokemonTestUtils.trainerAlice.copy(_inField =
+    Some(PokemonTestUtils.trainerAlice.team.head)
+  )
+  private val source: Trainer = PokemonTestUtils.trainerBob.copy(_inField =
+    Some(PokemonTestUtils.trainerBob.team.head))
 
-  extension (move: Move)
-    def battleMove(): BattleMove = BattleMove(move, pp = 10)
+  private val pp = 10
 
-  val move1 =
+  private val move1 =
     Move(
       "TestMove1",
       priority = 1,
-      success = EmptyBehavior
-    ).battleMove()
-  val context1 = move1.createContext(_.success, target, source)
+      moveType = Electric,
+      category = Physical,
+      pp = pp,
+      accuracy = Of(100.percent),
+      success = _ => EmptyBehavior
+    ).battling
 
-  val move5 =
+  private val move5 =
     Move(
       "TestMove5",
       priority = 5,
-      success = EmptyBehavior
-    ).battleMove()
-  val context5 = move5.createContext(_.success, target, source)
-
-  val move5b =
+      moveType = Electric,
+      category = Physical,
+      pp = pp,
+      accuracy = Of(100.percent),
+      success = _ => EmptyBehavior
+    ).battling
+  
+  private val move5b =
     Move(
       "TestMove5b",
       priority = 5,
-      success = EmptyBehavior
-    ).battleMove()
-  val context5b = move5b.createContext(_.success, target, source)
-
-  val move2 =
+      moveType = Electric,
+      category = Physical,
+      pp = pp,
+      accuracy = Of(100.percent),
+      success = _ => EmptyBehavior
+    ).battling
+  
+  private val move2 =
     Move(
       "TestMove2",
       priority = 2,
-      success = EmptyBehavior
-    ).battleMove()
-  val context2 = move2.createContext(_.success, target, source)
-
-  val actions = MoveAction(
-    context2
-  ) :: SwitchAction() :: MoveAction(
-    context5
-  ) :: MoveAction(context1) :: MoveAction(context5b) :: Nil
+      moveType = Electric,
+      category = Physical,
+      pp = pp,
+      accuracy = Of(100.percent),
+      success = _ => EmptyBehavior
+    ).battling
+  
+  private val actions = MoveAction(
+    move2,
+    source,
+    target
+  ) :: SwitchAction(
+    simplePokemon2
+  ) :: MoveAction(
+    move5,
+    source,
+    target
+  ) :: MoveAction(
+    move1,
+    source,
+    target
+  ) :: MoveAction(
+    move5b,
+    source,
+    target
+  ) :: Nil
 
   "Moves" should "be in order" in:
-    import OrderingUtils.given
+    import ClassicOrdering.given
     val flattenList = actions.sorted
-
-    flattenList shouldEqual SwitchAction() :: MoveAction(
-      context5
+    flattenList shouldEqual SwitchAction(
+      simplePokemon2
     ) :: MoveAction(
-      context5b
+      move5,
+      source,
+      target
     ) :: MoveAction(
-      context2
+      move5b,
+      source,
+      target
     ) :: MoveAction(
-      context1
+      move2,
+      source,
+      target
+    ) :: MoveAction(
+      move1,
+      source,
+      target
     ) :: Nil

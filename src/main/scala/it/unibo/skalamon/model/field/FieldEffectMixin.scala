@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.battle.BattleRule
 import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.types.Type
 
@@ -25,6 +26,9 @@ object FieldEffectMixin:
     */
   trait FieldEffect(val creationTurn: Int):
     val description: String
+    
+  trait MutatedBattleRule:
+    val rule: BattleRule 
 
   /** [[FieldEffect]] mixin to add duration.
     */

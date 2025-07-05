@@ -81,7 +81,7 @@ case class ModifyBuilder(filter: FilterEnum, types: List[Type]):
   def apply(modification: BattlePokemon => BattlePokemon): PokemonRule =
     (p: BattlePokemon) =>
       val matches = filter match
-        case FilterEnum.Only   => types.contains(p.base.types)
-        case FilterEnum.Except => !types.contains(p.base.types)
+        case FilterEnum.Only   => p.base.types.exists(types.contains)
+        case FilterEnum.Except => !p.base.types.exists(types.contains)
         case _                 => true
       if matches then modification(p) else p

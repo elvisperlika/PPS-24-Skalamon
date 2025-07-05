@@ -1,12 +1,17 @@
 package it.unibo.skalamon.model.ability
 
-import it.unibo.skalamon.model.battle.{Battle, hookBattleStateUpdate}
+import it.unibo.skalamon.model.battle.{
+  Battle,
+  BattleState,
+  hookBattleStateUpdate
+}
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.behavior.{
   Behavior,
   BehaviorsContext,
   WithBehaviors
 }
+import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** Represents the context of an ability that can be triggered in a battle.
@@ -20,11 +25,14 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
   * @param behaviors
   *   Ordered behaviors that will be applied during the execution of the
   *   ability, associated with their modifiers.
+  * @param turnIndex
+  *   The index of the turn in which the ability is being executed.
   */
 case class AbilityContext(
     override val origin: Ability,
     override val target: BattlePokemon,
     override val source: BattlePokemon,
+    override val turnIndex: Int = 0,
     override val behaviors: List[(Behavior, BehaviorModifiers)] = List.empty
 ) extends BehaviorsContext[Ability]:
 
@@ -43,13 +51,16 @@ extension (ability: Ability)
     *   The target Pokémon of the ability.
     * @param source
     *   The source Pokémon that owns the ability.
+    * @param turnIndex
+    *   The index of the turn in which the ability is being executed.
     * @return
     *   A new [[AbilityContext]] with the phase's behaviors applied.
     */
   def createContext(
       behavior: Ability => Behavior,
       target: BattlePokemon,
-      source: BattlePokemon
+      source: BattlePokemon,
+      turnIndex: Int = 0
   ): AbilityContext =
     behavior(ability)(AbilityContext(ability, target, source))
 
@@ -67,15 +78,20 @@ extension (ability: Ability)
     *   The source Pokémon that owns the ability.
     */
   def hookAll(battle: Battle)(
-      target: => Option[BattlePokemon],
-      source: => Option[BattlePokemon]
+    target: BattleState => Option[BattlePokemon],
+    source: BattleState => Option[BattlePokemon]
   ): Unit =
-    ability.hooks.foreach { case (eventType, behavior) =>
-      battle.hookBattleStateUpdate(eventType): (battleState, _) =>
-        (target, source) match
+    given EventManager = battle.eventManager
+    ability.hooks.foreach: hook =>
+      battle.hookBattleStateUpdate(hook.eventType): (battleState, data) =>
+        (target(battleState), source(battleState)) match
           case (Some(t), Some(s)) =>
-            val context = createContext(_.hooks(eventType), t, s)
+            val context = createContext(
+              _ => hook.behavior(s, t, data),
+              t,
+              s,
+              battle.turnIndex
+            )
             context(battleState)
 
           case _ => battleState
-    }

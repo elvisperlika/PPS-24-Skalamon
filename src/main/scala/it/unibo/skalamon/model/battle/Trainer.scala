@@ -2,6 +2,8 @@ package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
+import java.util.UUID
+
 /** A trainer in a battle.
   *
   * @param name
@@ -15,8 +17,17 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 case class Trainer(
     name: String,
     team: List[BattlePokemon],
-    private val _inField: Option[BattlePokemon] = None
+    private val _inField: Option[BattlePokemon] = None,
+    id: UUID = UUID.randomUUID()
 ):
   /** The Pokémon currently in the field for this trainer, if any. */
   def inField: Option[BattlePokemon] =
-    _inField.flatMap(inField => team.find(_.id == inField.id))
+    _inField.flatMap(inField => team.find(_ is inField))
+
+  /** Returns the team of a trainer without the Pokémon currently in the field.
+    * @return
+    *   A list of BattlePokemon excluding the one currently in the field.
+    */
+  def teamWithoutInField: List[BattlePokemon] = inField match
+    case Some(pokemon) => team.filterNot(_.id == pokemon.id)
+    case None          => team

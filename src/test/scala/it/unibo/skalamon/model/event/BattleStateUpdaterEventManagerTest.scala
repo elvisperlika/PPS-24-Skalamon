@@ -7,9 +7,14 @@ import it.unibo.skalamon.model.battle.{
   hookBattleStateUpdate
 }
 import it.unibo.skalamon.model.behavior.kind.DamageBehavior
-import it.unibo.skalamon.model.move.{BattleMove, Move, createContext}
+import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.dsl.*
+import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
+import it.unibo.skalamon.model.move.MoveModel.Category.Physical
+import it.unibo.skalamon.model.move.{Move, createContext}
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils
 import it.unibo.skalamon.model.pokemon.PokemonTestUtils.*
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -66,7 +71,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
 
     battle.start()
     notified shouldBe true
-
+  
   it should "trigger behavior events" in:
     val behavior = DamageBehavior(10)
     var notified = false
@@ -78,9 +83,13 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
       Move(
         "TestMove",
         priority = 5,
-        success = behavior
+        moveType = Electric,
+        category = Physical,
+        pp = 10,
+        accuracy = Of(100.percent),
+        success = _ => behavior
       )
-    val context = BattleMove(move, pp = 10).createContext(
+    val context = move.battling.createContext(
       _.success,
       PokemonTestUtils.simplePokemon1,
       PokemonTestUtils.simplePokemon2
@@ -90,4 +99,5 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
 
     given EventManager = battle.eventManager
     context(battle.currentTurn.get.state.snapshot)
+    battle.eventManager.notifyQueue()
     notified shouldBe true

@@ -1,72 +1,15 @@
 package it.unibo.skalamon
 
-import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
-import it.unibo.skalamon.model.behavior.kind.*
-import it.unibo.skalamon.model.event.TurnStageEvents
-import it.unibo.skalamon.model.move.*
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Male, Pokemon, Stat}
-import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.types.TypesCollection.{
-  Electric,
-  Fire,
-  Grass,
-  Poison
-}
+import it.unibo.skalamon.model.dsl.*
+import it.unibo.skalamon.model.pokemon.Male
+import it.unibo.skalamon.model.pokemon.Pokemon.*
 
 // TEMPORARY
 
 object PokemonTestUtils:
-  private val moveThunderShock =
-    Move("Thunder Shock", priority = 0, success = DamageBehavior(10))
-  private val moveElectric =
-    Move("Electric", priority = 0, success = DamageBehavior(5))
-
-  private val genericAbility = Ability(
-    "Static",
-    hooks = Map(
-      TurnStageEvents.Started -> DamageBehavior(
-        1
-      ) // 1HP damage at the start of the turn
-    )
-  )
-  private val blazeAbility = Ability("Blaze", Map.empty)
-
-  private val startingHP: Int = 70
-  private val powerPoint: Int = 4
-
-  val simplePokemon1: BattlePokemon = BattlePokemon(
-    Pokemon.pikachu,
-    Male,
-    startingHP,
-    List(BattleMove(moveThunderShock, powerPoint)),
-    None,
-    Set.empty
-  )
-
-  val simplePokemon2: BattlePokemon = BattlePokemon(
-    Pokemon.bulbasaur,
-    Male,
-    startingHP,
-    List(BattleMove(moveElectric, powerPoint)),
-    Option.empty,
-    Set.empty
-  )
-
-  private val simplePokemon3: BattlePokemon = BattlePokemon(
-    Pokemon.charmander,
-    Male,
-    startingHP,
-    List(BattleMove(moveThunderShock, powerPoint)),
-    None,
-    Set.empty
-  )
-
   def trainerAlice: Trainer =
-    Trainer("Alice", List(simplePokemon1))
+    Trainer("Alice", List(pikachu.battling(Male), gyarados.battling(Male)))
 
   def trainerBob: Trainer =
-    Trainer("Bob", List(simplePokemon2))
-
-  def trainerGio: Trainer =
-    Trainer("Gio", List(simplePokemon3))
+    Trainer("Bob", List(bulbasaur.battling(Male)))

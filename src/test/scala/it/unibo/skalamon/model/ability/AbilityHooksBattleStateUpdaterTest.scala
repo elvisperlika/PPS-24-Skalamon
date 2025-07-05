@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.ability
 
 import it.unibo.skalamon.model.battle.Battle
 import it.unibo.skalamon.model.behavior.kind.*
-import it.unibo.skalamon.model.event.{EventType, TurnStageEvents}
+import it.unibo.skalamon.model.event.TurnStageEvents
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
@@ -24,29 +24,72 @@ class AbilityHooksBattleStateUpdaterTest extends AnyFlatSpec
     val behavior = DamageBehavior(damage)
     val ability = Ability(
       "TestAbility",
-      hooks = Map(TurnStageEvents.Started -> behavior)
+      hooks = AbilityHook(TurnStageEvents.Started, (_, _, _) => behavior) :: Nil
     )
 
     ability.hookAll(battle)(
-      Some(target),
-      Some(source),
+      _ => Some(target),
+      _ => Some(source)
     )
 
     battle.start()
-    getTarget(battle.currentTurn.get.state.snapshot).currentHP shouldEqual target.currentHP - damage
+    getTarget(
+      battle.currentTurn.get.state.snapshot
+    ).currentHP shouldEqual target.currentHP - damage
+
+  "Ability with hook" should "use the event data to affect behavior" in:
+    val damage = 10
+    val ability = Ability(
+      "TestAbility",
+      hooks = AbilityHook(
+        TurnStageEvents.Started,
+        (_, _, turn) => DamageBehavior(turn.state.stage.ordinal + damage)
+      ) :: Nil
+    )
+
+    ability.hookAll(battle)(
+      _ => Some(target),
+      _ => Some(source)
+    )
+
+    battle.start()
+    getTarget(
+      battle.currentTurn.get.state.snapshot
+    ).currentHP shouldEqual target.currentHP - damage
+    
+  "Ability with hook" should "use the Pokemon data to affect behavior" in:
+    val ability = Ability(
+      "TestAbility",
+      hooks = AbilityHook(
+        TurnStageEvents.Started,
+        (source, target, _) => DamageBehavior(source.currentHP - target.currentHP)
+      ) :: Nil
+    )
+
+    ability.hookAll(battle)(
+      _ => Some(target),
+      _ => Some(source)
+    )
+
+    battle.start()
+    getTarget(
+      battle.currentTurn.get.state.snapshot
+    ).currentHP shouldEqual target.currentHP - (source.currentHP - target.currentHP)
 
   "Ability" should "not apply if the source is missing" in:
     val damage = 10
     val behavior = DamageBehavior(damage)
     val ability = Ability(
       "TestAbility",
-      hooks = Map(TurnStageEvents.Started -> behavior)
+      hooks = AbilityHook(TurnStageEvents.Started, (_, _, _) => behavior) :: Nil
     )
 
     ability.hookAll(battle)(
-      Some(target),
-      None,
+      _ => Some(target),
+      _ => None
     )
 
     battle.start()
-    getTarget(battle.currentTurn.get.state.snapshot).currentHP shouldEqual target.currentHP
+    getTarget(
+      battle.currentTurn.get.state.snapshot
+    ).currentHP shouldEqual target.currentHP

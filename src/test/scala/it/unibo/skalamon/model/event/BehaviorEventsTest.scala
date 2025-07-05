@@ -23,7 +23,6 @@ class BehaviorEventsTest extends AnyFlatSpec with should.Matchers with BeforeAnd
       notified = true
       behavior.power shouldBe hitBehavior.power
     }
-    println(hitBehavior.event)
     eventManager.notify(hitBehavior.event(BehaviorTestUtils.context))
     notified shouldBe true
 
