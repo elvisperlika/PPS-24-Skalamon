@@ -127,3 +127,12 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
     pokemonToNotThaw.nonVolatileStatus.get.status.executeEffect(
       pokemonToNotThaw
     ).skipsCurrentTurn shouldBe true
+
+  "Poison" should "remove health" in:
+    val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
+      nonVolatileStatus = Option(AssignedStatus(Poison(), initialTurn))
+    )
+
+    assignedBurn.status.executeEffect(
+      pokemon
+    ).currentHP shouldEqual (pokemon.currentHP - pokemon.base.hp / Poison.DamageReduction)
