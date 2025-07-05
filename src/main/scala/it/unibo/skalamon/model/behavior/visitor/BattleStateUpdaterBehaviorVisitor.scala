@@ -42,7 +42,7 @@ class BattleStateUpdaterBehaviorVisitor(
       trainers = current.trainers.map { trainer =>
         trainer.copy(
           team = trainer.team.map { pokemon =>
-            if (pokemon is target && !pokemon.isProtected) then
+            if (pokemon.id == target.id && !pokemon.isProtected) then
               map(pokemon).copy(isProtected = false)
             else pokemon
           }
@@ -86,7 +86,10 @@ class BattleStateUpdaterBehaviorVisitor(
       pokemon.copy(statChanges =
         pokemon.statChanges.updated(
           behavior.change.stat,
-          pokemon.statChanges.getOrElse(behavior.change.stat, 0) + behavior.change.stage
+          pokemon.statChanges.getOrElse(
+            behavior.change.stat,
+            0
+          ) + behavior.change.stage
         )
       )
     }
@@ -115,9 +118,8 @@ class BattleStateUpdaterBehaviorVisitor(
       )
     }
 
-  override def visit(behavior: WeatherBehavior): BattleState = {
+  override def visit(behavior: WeatherBehavior): BattleState =
     current.copy(
       field =
         current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
     )
-  }

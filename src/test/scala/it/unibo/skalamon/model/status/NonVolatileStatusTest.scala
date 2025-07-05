@@ -37,8 +37,8 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
 
     assignedBurn.status.executeEffect(
       pokemon
-    ).base.baseStats.base(Attack) shouldEqual
-      (pokemon.base.baseStats.base(Attack) / Burn.AttackReduction)
+    ).base.stats.base(Attack) shouldEqual
+      (pokemon.base.stats.base(Attack) / Burn.AttackReduction)
 
   "Paralyze" should "halve speed stat" in:
     val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
@@ -47,8 +47,8 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
 
     assignedParalyze.status.executeEffect(
       pokemon
-    ).base.baseStats.base(Speed) shouldEqual
-      (pokemon.base.baseStats.base(
+    ).base.stats.base(Speed) shouldEqual
+      (pokemon.base.stats.base(
         Speed
       ) / Paralyze.AttackReduction)
 

@@ -18,7 +18,7 @@ import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm}
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
-import it.unibo.skalamon.model.status.Paralyze
+import it.unibo.skalamon.model.status.nonVolatileStatus.Paralyze
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -116,7 +116,6 @@ object Ability:
         else
           nothing
 
-
   /** If hit by a physical move, the opponent has a chance to be paralyzed */
   def static: Ability =
     ability("Static"):
@@ -124,7 +123,7 @@ object Ability:
         behavior match
           case (b, context: MoveContext)
               if (context.target is source) && (context.origin.move.category == Physical) =>
-            new StatusBehavior(_ => Paralyze)
+            new StatusBehavior(_ => Paralyze())
               with ProbabilityModifier(30.percent)
           case _ => nothing
 

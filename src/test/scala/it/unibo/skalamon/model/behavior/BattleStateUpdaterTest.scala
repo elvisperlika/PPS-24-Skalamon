@@ -3,10 +3,15 @@ package it.unibo.skalamon.model.behavior
 import it.unibo.skalamon.model.battle.{BattleState, Classic}
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
-import it.unibo.skalamon.model.event.{BattleStateEvents, BehaviorEvent, EventManager}
+import it.unibo.skalamon.model.event.{
+  BattleStateEvents,
+  BehaviorEvent,
+  EventManager
+}
 import it.unibo.skalamon.model.field.field
-import it.unibo.skalamon.model.status.volatileStatus.ProtectEndure
-import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
+import it.unibo.skalamon.model.pokemon.Stat
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.volatileStatus.{ProtectEndure, Yawn}
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -97,7 +102,10 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     given manager: EventManager = EventManager()
 
     val behavior =
-      BehaviorGroup(DamageBehavior(damage), StatusBehavior(_ => ProtectEndure()))
+      BehaviorGroup(
+        DamageBehavior(damage),
+        StatusBehavior(_ => ProtectEndure())
+      )
 
     var currentState = state
     var count = 0

@@ -14,13 +14,13 @@ case class Paralyze(generator: RandomGenerator = RandomGenerator())
   override def executeEffect(
       pokemon: BattlePokemon
   ): BattlePokemon =
-    val updatedStats = pokemon.base.baseStats.base.updatedWith(Stat.Speed) {
+    val updatedStats = pokemon.base.stats.base.updatedWith(Stat.Speed) {
       case Some(value) => Some(value / Paralyze.AttackReduction)
       case other       => other
     }
     pokemon.copy(
-      base = pokemon.base.copy(baseStats =
-        pokemon.base.baseStats.copy(base = updatedStats)
+      base = pokemon.base.copy(stats =
+        pokemon.base.stats.copy(base = updatedStats)
       ),
       skipsCurrentTurn =
         if Paralyze.TriggerChance.randomBoolean(using generator) then true

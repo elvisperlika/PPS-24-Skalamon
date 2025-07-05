@@ -1,20 +1,21 @@
 package it.unibo.skalamon.model.pokemon
 
 import it.unibo.skalamon.model
-import it.unibo.skalamon.model.ability.*
 import it.unibo.skalamon.model.battle.Trainer
-import it.unibo.skalamon.model.behavior.kind.*
+import it.unibo.skalamon.model.behavior.EmptyBehavior
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
 import it.unibo.skalamon.model.move.MoveModel.Category.{Physical, Special}
 import it.unibo.skalamon.model.status.*
-import it.unibo.skalamon.model.types.*
-import it.unibo.skalamon.model.types.TypesCollection.{
-  Electric,
-  Fire,
-  Grass,
-  Poison
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Sleep}
+import it.unibo.skalamon.model.status.volatileStatus.{
+  Flinch,
+  ProtectEndure,
+  Yawn
 }
+import it.unibo.skalamon.model.types.*
+import it.unibo.skalamon.model.types.TypesCollection.Electric
 
 /** Test utilities for testing Pokémon.
   */

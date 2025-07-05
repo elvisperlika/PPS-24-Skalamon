@@ -14,7 +14,7 @@ import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
-import it.unibo.skalamon.model.status.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -90,12 +90,12 @@ object Move:
     move("Thunderbolt", Electric, Special):
       _ pp 15 onSuccess groupOf(
         SingleHitBehavior(90),
-        new StatusBehavior(_ => Paralyze) with ProbabilityModifier(10.percent)
+        new StatusBehavior(_ => Paralyze()) with ProbabilityModifier(10.percent)
       )
 
   def thunderWave: Move =
     move("Thunder Wave", Electric, Status):
-      _ pp 20 onSuccess StatusBehavior(_ => Paralyze)
+      _ pp 20 onSuccess StatusBehavior(_ => Paralyze())
 
   def dragonRage: Move =
     move("Dragon Rage", Dragon, Special):
@@ -114,7 +114,8 @@ object Move:
   def swordDance: Move =
     import it.unibo.skalamon.model.behavior.kind.+
     move("Sword Dance", Normal, Status):
-      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2) with TargetModifier(Self)
+      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2)
+        with TargetModifier(Self)
 
   def growl: Move =
     move("Growl", Normal, Status):
@@ -140,12 +141,12 @@ object Move:
     move("Flamethrower", Fire, Special):
       _ pp 15 onSuccess groupOf(
         SingleHitBehavior(90),
-        new StatusBehavior(_ => Burn) with ProbabilityModifier(10.percent)
+        new StatusBehavior(_ => Burn()) with ProbabilityModifier(10.percent)
       )
 
   def willOWisp: Move =
     move("Will-O-Wisp", Fire, Status):
-      _ pp 15 onSuccess StatusBehavior(_ => Burn)
+      _ pp 15 onSuccess StatusBehavior(_ => Burn())
 
   def earthquake: Move =
     move("Earthquake", Ground, Physical):
@@ -159,7 +160,8 @@ object Move:
     move("Grass Knot", Grass, Special):
       import scala.math.{log10, max, min}
       _ pp 20 onSuccess: context =>
-        val power = 10 * min(120, max(20, 60 * log10(context.target.base.weightKg) - 40))
+        val power =
+          10 * min(120, max(20, 60 * log10(context.target.base.weightKg) - 40))
         SingleHitBehavior(power.toInt)
 
   def superFang: Move =
@@ -170,13 +172,13 @@ object Move:
   def fissure: Move =
     move("Fissure", Ground, Physical):
       _ pp 5 accuracyOf 30.percent onSuccess: context =>
-          DamageBehavior(context.target.currentHP)
+        DamageBehavior(context.target.currentHP)
 
   def bulletSeed: Move =
     move("Bullet Seed", Grass, Physical):
       _ pp 30 onSuccess: context =>
         RandomModifier(2, 5)(_ => SingleHitBehavior(10))
-        
+
   def rainDance: Move =
     move("Rain Dance", Water, Status):
       _ pp 5 onSuccess WeatherBehavior(Rain(_))

@@ -10,15 +10,15 @@ case class Burn() extends NonVolatileStatus:
   override def executeEffect(
       pokemon: BattlePokemon
   ): BattlePokemon =
-    val updatedStats = pokemon.base.baseStats.base.updatedWith(Stat.Attack) {
+    val updatedStats = pokemon.base.stats.base.updatedWith(Stat.Attack) {
       case Some(value) => Some(value / Burn.AttackReduction)
       case other       => other
     }
     pokemon.copy(
       currentHP = pokemon.currentHP - (pokemon.base.hp / Burn.DamageReduction),
       base =
-        pokemon.base.copy(baseStats =
-          pokemon.base.baseStats.copy(base = updatedStats)
+        pokemon.base.copy(stats =
+          pokemon.base.stats.copy(base = updatedStats)
         )
     )
 
