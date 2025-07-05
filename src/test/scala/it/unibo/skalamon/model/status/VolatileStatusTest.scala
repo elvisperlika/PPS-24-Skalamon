@@ -1,7 +1,7 @@
 package it.unibo.skalamon.model.status
 
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, PokemonTestUtils}
-import it.unibo.skalamon.model.status.volatileStatus.Yawn
+import it.unibo.skalamon.model.status.volatileStatus.{ProtectEndure, Yawn}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -12,6 +12,8 @@ class VolatileStatusTest extends AnyFlatSpec with should.Matchers:
 
   private val assignedYawn: AssignedStatus[VolatileStatus] =
     AssignedStatus(Yawn(), initialTurn)
+  private val assignedProtectEndure: AssignedStatus[VolatileStatus] =
+    AssignedStatus(ProtectEndure(), initialTurn)
 
   "Yawn" should "make the pokemon skip the next turn" in:
     val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
@@ -29,3 +31,14 @@ class VolatileStatusTest extends AnyFlatSpec with should.Matchers:
       secondTurn,
       initialTurn
     ).skipsCurrentTurn shouldBe true
+
+  "ProtectEndure" should "make the pokemon protected" in:
+    val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
+      volatileStatus = Set(assignedProtectEndure)
+    )
+  
+    pokemon.volatileStatus.head.status.executeEffect(
+      pokemon,
+      initialTurn,
+      initialTurn
+    ).isProtected shouldBe true
