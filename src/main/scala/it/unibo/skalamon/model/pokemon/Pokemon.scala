@@ -51,7 +51,8 @@ object Pokemon:
       _ typed Rock + Dark hp 100 weighing 202.0.kg ability sandStream stat Attack -> 134 stat Defense -> 110 stat SpecialAttack -> 95 stat SpecialDefense -> 100 stat Speed -> 61 moves (
         bite,
         earthquake,
-        dragonDance
+        dragonDance,
+        fissure
       )
 
   def pikachu: Pokemon =

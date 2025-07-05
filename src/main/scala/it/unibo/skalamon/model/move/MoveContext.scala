@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.move
 
+import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.behavior.{
   Behavior,
@@ -34,6 +35,16 @@ case class MoveContext(
       newBehaviors: List[(Behavior, BehaviorModifiers)]
   ): T =
     this.copy(behaviors = behaviors ++ newBehaviors).asInstanceOf[T]
+
+  /** @return
+    *   A new [[BattleState]] with this context's move PP decremented by 1.
+    */
+  def decrementPP(state: BattleState): BattleState = {
+    if origin.pp > 0 then
+      state.updateMove(source, origin, move => move.copy(pp = move.pp - 1))
+    else
+      state
+  }
 
 extension (move: BattleMove)
   /** Creates a [[MoveContext]] for the given move, target, and source Pokémon.

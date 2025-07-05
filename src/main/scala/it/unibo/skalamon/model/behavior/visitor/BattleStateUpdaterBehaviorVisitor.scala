@@ -32,27 +32,11 @@ class BattleStateUpdaterBehaviorVisitor(
     override val modifiers: BehaviorModifiers
 ) extends ContextualBehaviorVisitor[BattleState]:
 
-  /** Returns a new battle state with [[target]] updated according to [[map]].
-    */
-  private def updatePokemon(
-      target: BattlePokemon,
-      map: BattlePokemon => BattlePokemon
-  ): BattleState =
-    current.copy(
-      trainers = current.trainers.map { trainer =>
-        trainer.copy(
-          team = trainer.team.map { pokemon =>
-            if (pokemon is target) map(pokemon) else pokemon
-          }
-        )
-      }
-    )
-
   /** Returns a new battle state with the target Pokémon updated according to
     * [[map]].
     */
   private def updateTarget(map: BattlePokemon => BattlePokemon): BattleState =
-    updatePokemon(target, map)
+    current.updatePokemon(target, map)
 
   // Behaviors
 
