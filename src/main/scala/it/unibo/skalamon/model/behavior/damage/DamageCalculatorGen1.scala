@@ -12,7 +12,7 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 case object DamageCalculatorGen1 extends DamageCalculator:
 
-  private val DamageDivider: Int = 50
+  private val DamageDivider: Int = 30
   private val DamageBoost: Int = 2
 
   def calculate(

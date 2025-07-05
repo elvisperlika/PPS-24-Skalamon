@@ -14,7 +14,7 @@ import it.unibo.skalamon.model.event.{
   EventType,
   TurnStageEvents
 }
-import it.unibo.skalamon.model.field.weather.Rain
+import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm}
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
@@ -106,6 +106,16 @@ object Ability:
           WeatherBehavior(Rain(_))
         else
           nothing
+
+  /** When the Pokémon switches in, sets the weather to sandstorm. */
+  def sandStream: Ability =
+    ability("Sand Stream"):
+      _.on(ActionEvents.Switch): (source, _, switch) =>
+        if switch.in is source then
+          WeatherBehavior(Sandstorm(_))
+        else
+          nothing
+
 
   /** If hit by a physical move, the opponent has a chance to be paralyzed */
   def static: Ability =

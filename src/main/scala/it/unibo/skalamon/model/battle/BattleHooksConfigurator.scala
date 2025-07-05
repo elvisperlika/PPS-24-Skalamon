@@ -93,13 +93,15 @@ object BattleHooksConfigurator:
         target: Trainer,
         current: BattleState
     ): BattleState =
-      val result: (Move => Behavior, EventType[MoveContext]) =
+      val result: (Move => MoveContext => Behavior, EventType[MoveContext]) =
         move.move.accuracy match
           case MoveModel.Accuracy.Of(percentage)
               if !percentage.randomBoolean => (_ => move.move.fail, Miss)
           case _ => (_ => move.move.success, Hit)
+
       val context =
         move.createContext(result._1, target.inField.get, source.inField.get)
+      
       battle.eventManager.notify(result._2 of context)
       context(current)
 

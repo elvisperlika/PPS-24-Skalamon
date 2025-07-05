@@ -87,7 +87,7 @@ class BattleStateUpdaterEventManagerTest extends AnyFlatSpec
         category = Physical,
         pp = 10,
         accuracy = Of(100.percent),
-        success = behavior
+        success = _ => behavior
       )
     val context = move.battling.createContext(
       _.success,
