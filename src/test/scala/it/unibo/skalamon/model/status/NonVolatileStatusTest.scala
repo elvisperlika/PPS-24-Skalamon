@@ -100,3 +100,30 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
       case _                   => pokemon
 
     pokemon.skipsCurrentTurn shouldBe false
+
+  "Freeze" should "make the pokemon skip its turn" in:
+    val triggerChance = Freeze.ThawChance.asInt
+    val valueToThaw = triggerChance - 1
+    val valueToNotThaw = triggerChance + 1
+
+    val pokemonToThaw: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
+      nonVolatileStatus =
+        Option(AssignedStatus(
+          Freeze(FixedRandomGenerator(valueToThaw)),
+          initialTurn
+        ))
+    )
+    val pokemonToNotThaw: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
+      nonVolatileStatus =
+        Option(AssignedStatus(
+          Freeze(FixedRandomGenerator(valueToNotThaw)),
+          initialTurn
+        ))
+    )
+
+    pokemonToThaw.nonVolatileStatus.get.status.executeEffect(
+      pokemonToThaw
+    ).skipsCurrentTurn shouldBe false
+    pokemonToNotThaw.nonVolatileStatus.get.status.executeEffect(
+      pokemonToNotThaw
+    ).skipsCurrentTurn shouldBe true
