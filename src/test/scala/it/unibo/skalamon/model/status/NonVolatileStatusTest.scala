@@ -9,7 +9,8 @@ import org.scalatest.matchers.should
 
 class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
 
-  private val initialTurn: Int = 0
+  private val initialTurn = 0
+  private val turnsToTest = 5
 
   private val assignedBurn: AssignedStatus[NonVolatileStatus] =
     AssignedStatus(Burn(), initialTurn)
@@ -136,3 +137,15 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
     assignedBurn.status.executeEffect(
       pokemon
     ).currentHP shouldEqual (pokemon.currentHP - pokemon.base.hp / Poison.DamageReduction)
+
+  "BadlyPoison" should "increase damage every turn" in:
+    var pokemon = PokemonTestUtils.simplePokemon4.copy(
+      nonVolatileStatus = Some(AssignedStatus(BadlyPoison(), initialTurn))
+    )
+    var expectedHP = pokemon.currentHP
+
+    (1 to turnsToTest).foreach { turn =>
+      pokemon = BadlyPoison(turn).executeEffect(pokemon)
+      expectedHP -= (pokemon.base.hp / BadlyPoison.DamageReduction) * turn
+      pokemon.currentHP shouldEqual expectedHP
+    }
