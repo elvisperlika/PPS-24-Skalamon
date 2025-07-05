@@ -17,7 +17,7 @@ case class Sleep(turnsLeft: Int = Sleep.DefaultTurns) extends NonVolatileStatus:
           pokemon.nonVolatileStatus.map(_.copy(status = Sleep(turnsLeft - 1)))
       )
     else
-      pokemon.copy(nonVolatileStatus = None, skipsCurrentTurn = false)
+      pokemon.copy(nonVolatileStatus = None)
 
 object Sleep:
   val DefaultTurns: Int = 3

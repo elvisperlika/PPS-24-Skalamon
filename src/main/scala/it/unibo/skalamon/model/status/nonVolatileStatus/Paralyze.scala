@@ -22,7 +22,9 @@ case class Paralyze(generator: RandomGenerator = RandomGenerator())
       base = pokemon.base.copy(baseStats =
         pokemon.base.baseStats.copy(base = updatedStats)
       ),
-      skipsCurrentTurn = Paralyze.TriggerChance.randomBoolean(using generator)
+      skipsCurrentTurn =
+        if Paralyze.TriggerChance.randomBoolean(using generator) then true
+        else pokemon.skipsCurrentTurn
     )
 
 object Paralyze:

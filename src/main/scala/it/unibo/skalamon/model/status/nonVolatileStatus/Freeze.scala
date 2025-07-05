@@ -14,7 +14,7 @@ case class Freeze(generator: RandomGenerator = RandomGenerator())
     if Freeze.ThawChance.randomBoolean(using generator) then
       pokemon.copy(
         nonVolatileStatus = None,
-        skipsCurrentTurn = false
+        skipsCurrentTurn = false  // this is because the Pokémon thaws out
       )
     else
       pokemon.copy(skipsCurrentTurn = true)
