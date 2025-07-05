@@ -1,37 +1,11 @@
 package it.unibo.skalamon.model.move
 
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleState,
-  Trainer,
-  hookBattleStateUpdate
-}
-import it.unibo.skalamon.model.behavior.kind.{
-  RoomBehavior,
-  SideConditionBehavior,
-  SingleHitBehavior,
-  TerrainBehavior,
-  WeatherBehavior
-}
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
-import it.unibo.skalamon.model.field.{FieldEffectMixin, PokemonRule}
-import it.unibo.skalamon.model.behavior.visitor.BehaviorVisitor
 import it.unibo.skalamon.model.behavior.{
   Behavior,
   BehaviorsContext,
   WithBehaviors
 }
-import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.field.FieldEffectMixin
-import it.unibo.skalamon.model.field.FieldEffectMixin.{
-  FieldEffect,
-  PokemonRules,
-  Room,
-  SideCondition,
-  Terrain,
-  Weather
-}
-import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm, Snow, Sunny}
 import it.unibo.skalamon.model.pokemon.*
 
 /** Represents the context of a move that can be executed in a battle.

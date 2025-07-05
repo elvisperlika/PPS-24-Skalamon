@@ -1,7 +1,8 @@
 package it.unibo.skalamon.model.field
 
 import it.unibo.skalamon.model.battle.Trainer
-import it.unibo.skalamon.model.field.fieldside.{FieldSide, SideCondition}
+import it.unibo.skalamon.model.field.FieldEffectMixin.SideCondition
+import it.unibo.skalamon.model.field.fieldside.FieldSide
 import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.terrain.Mud
 import it.unibo.skalamon.model.field.weather.Sunny

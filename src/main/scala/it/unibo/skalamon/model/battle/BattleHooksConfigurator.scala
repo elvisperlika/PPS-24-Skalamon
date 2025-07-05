@@ -9,9 +9,14 @@ import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.battle.turn.BattleEvents.*
 import it.unibo.skalamon.model.behavior.Behavior
-import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
+import it.unibo.skalamon.model.event.TurnStageEvents.{
+  ActionsReceived,
+  Ended,
+  Started
+}
 import it.unibo.skalamon.model.event.{ActionEvents, EventType}
 import it.unibo.skalamon.model.field.Field
+import it.unibo.skalamon.model.field.FieldEffectMixin.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
@@ -34,7 +39,7 @@ object BattleHooksConfigurator:
       executeSwitch(action.in, state)
     }
 
-    battle.hookBattleStateUpdate(Started) { (state, _) =>
+    battle.hookBattleStateUpdate(Ended) { (state, _) =>
       updateBattlefield(state)
     }
 
@@ -54,11 +59,78 @@ object BattleHooksConfigurator:
       }
     }
 
-    def updateBattlefield(battleState: BattleState): BattleState =
+    def hookWeatherEffects[T <: Weather with PokemonRules](o: T): Unit =
+      o.rules.foreach: pokemonRule =>
+        val (event, rule) = pokemonRule
+        battle.hookBattleStateUpdate(event) { (state, _) =>
+          state.field.weather match
+            case Some(`o`) =>
+              val updTrainers = state.trainers.map(t =>
+                val updTeam = t.team.map(p =>
+                  if t.inField.get is p then rule(p) else p
+                )
+                t.copy(team = updTeam)
+              )
+              state.copy(trainers = updTrainers)
+            case _ => state
+        }
+
+    def hookTerrainEffects[T <: Terrain with PokemonRules](o: T): Unit =
+      o.rules.foreach: pokemonRule =>
+        val (event, rule) = pokemonRule
+        battle.hookBattleStateUpdate(event) { (state, _) =>
+          state.field.terrain match
+            case Some(`o`) =>
+              val updTrainers = state.trainers.map(t =>
+                val updTeam = t.team.map(p =>
+                  if t.inField.get is p then rule(p) else p
+                )
+                t.copy(team = updTeam)
+              )
+              state.copy(trainers = updTrainers)
+            case _ => state
+        }
+
+    def hookRoomEffects[T <: Room with PokemonRules](o: T): Unit =
+      o.rules.foreach: pokemonRule =>
+        val (event, rule) = pokemonRule
+        battle.hookBattleStateUpdate(event) { (state, _) =>
+          state.field.room match
+            case Some(`o`) =>
+              val updTrainers = state.trainers.map(t =>
+                val updTeam = t.team.map(p =>
+                  if t.inField.get is p then rule(p) else p
+                )
+                t.copy(team = updTeam)
+              )
+              state.copy(trainers = updTrainers)
+            case _ => state
+        }
+
+    def hookBattleRules[T <: Room with MutatedBattleRule](o: T): Unit =
+      battle.hookBattleStateUpdate(Started) { (state, t) =>
+        state.field.room match
+          case Some(r) if r.getClass == o.getClass =>
+            state.copy(rules = o.rule)
+          case _ => state.copy(rules = battle.rules)
+      }
+
+    def updateBattlefield(state: BattleState): BattleState =
       import it.unibo.skalamon.model.battle.ExpirableSystem.removeExpiredEffects
-      battleState.copy(
-        field = battleState.field.removeExpiredEffects(battle.turnIndex)
+      val updState = state.copy(
+        field = state.field.removeExpiredEffects(battle.turnIndex)
       )
+      state.field.terrain match
+        case Some(t: Terrain with PokemonRules) => hookTerrainEffects(t)
+        case _                                  =>
+      state.field.weather match
+        case Some(t: Weather with PokemonRules) => hookWeatherEffects(t)
+        case _                                  =>
+      state.field.room match
+        case Some(t: Room with PokemonRules)      => hookRoomEffects(t)
+        case Some(t: Room with MutatedBattleRule) => hookBattleRules(t)
+        case _                                    =>
+      updState
 
     def executeActions(turn: Turn): Unit =
       turn.state.stage match
@@ -86,10 +158,8 @@ object BattleHooksConfigurator:
           case MoveModel.Accuracy.Of(percentage)
               if !percentage.randomBoolean => (_ => move.move.fail, Miss)
           case _ => (_ => move.move.success, Hit)
-
       val context =
         move.createContext(result._1, target.inField.get, source.inField.get)
-      
       battle.eventManager.notify(result._2 of context)
       context(current)
 
