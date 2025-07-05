@@ -9,9 +9,8 @@ import it.unibo.skalamon.model.event.{
   EventManager
 }
 import it.unibo.skalamon.model.field.field
-import it.unibo.skalamon.model.status.Confusion
 import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze}
-import it.unibo.skalamon.model.status.volatileStatus.{Yawn}
+import it.unibo.skalamon.model.status.volatileStatus.{Yawn, ProtectEndure}
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -43,13 +42,13 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     getSource(newState).currentHP shouldBe source.currentHP - damage
 
   "StatusBehavior" should "set volatile status" in:
-    val status = Confusion
+    val status = ProtectEndure()
     val behavior = StatusBehavior(status, currentTurnIndex = 1)
     val newState = behavior(context)(state)
     getTarget(newState).volatileStatus.map(_.status) shouldBe Set(status)
 
   it should "stack volatile status" in:
-    val status1 = Confusion
+    val status1 = ProtectEndure()
     val status2 = Yawn()
     val newState1 =
       StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
@@ -92,7 +91,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     given manager: EventManager = EventManager()
 
     val behavior =
-      BehaviorGroup(DamageBehavior(damage), StatusBehavior(Confusion, 1))
+      BehaviorGroup(DamageBehavior(damage), StatusBehavior(ProtectEndure(), 1))
 
     var currentState = state
     var count = 0
