@@ -66,6 +66,7 @@ case class Battle(trainers: List[Trainer], rules: BattleRule = Classic())
       case ExecutingActions              => setStage(Ended)
       case Ended                         =>
         turnHistory = turnHistory push Turn(turn.state.copy(stage = Started))
+        setStage(Started)
 
   /** Sets the stage of the current turn, and notifies the event manager of the
     * change via the appropriate [[TurnStageEvents]].
