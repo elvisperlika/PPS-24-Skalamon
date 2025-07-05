@@ -6,6 +6,7 @@ import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.status.nonVolatileStatus.Burn
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.{
   Electric,
@@ -28,7 +29,7 @@ object PokemonTestUtils:
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn, 1)),
+    Option(AssignedStatus(Burn(), 1)),
     Set(
       AssignedStatus(Substitute, 4),
       AssignedStatus(ProtectEndure, 3),
@@ -43,7 +44,7 @@ object PokemonTestUtils:
     Male,
     currentHP = 0,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn, 1)),
+    Option(AssignedStatus(Burn(), 1)),
     Set(
       AssignedStatus(Substitute, 4),
       AssignedStatus(ProtectEndure, 3),

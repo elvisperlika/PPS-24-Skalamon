@@ -33,28 +33,6 @@ trait NonVolatileStatus extends Status:
       pokemon: BattlePokemon
   ): BattlePokemon
 
-/** Inflicts damage equal to 1/16 of the maximum HP and halves the physical
-  * Attack stat.
-  */
-case object Burn extends NonVolatileStatus:
-  val BurnAttackReduction = 2
-  val BurnDamageReduction = 16
-
-  override def executeEffect(
-      pokemon: BattlePokemon
-  ): BattlePokemon =
-    val updatedStats = pokemon.base.baseStats.base.updatedWith(Stat.Attack) {
-      case Some(value) => Some(value / BurnAttackReduction)
-      case other       => other
-    }
-    pokemon.copy(
-      currentHP = pokemon.currentHP - (pokemon.base.hp / BurnDamageReduction),
-      base =
-        pokemon.base.copy(baseStats =
-          pokemon.base.baseStats.copy(base = updatedStats)
-        )
-    )
-
 /** Reduces Speed to 50% and has a 25% chance to skip the current turn. */
 case object Paralyze extends NonVolatileStatus:
   val ParalyzeAttackReduction = 2
