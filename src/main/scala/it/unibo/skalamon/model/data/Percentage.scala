@@ -19,6 +19,12 @@ case class Percentage(private val value: Int):
   def of(base: Int): Int =
     (value * base) / MaxBound
 
+  /** Converts the percentage to an integer value.
+    * @return
+    *   The integer representation of the percentage.
+    */
+  def asInt: Int = value
+
   /** Generates a random boolean based on the percentage. If the percentage is
     * 0, it always returns false. If the percentage is 100, it always returns
     * true.
