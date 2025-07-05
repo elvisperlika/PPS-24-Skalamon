@@ -1,10 +1,16 @@
 package it.unibo.skalamon.model.status.nonVolatileStatus
 
+import it.unibo.skalamon.model.data.{Percentage, RandomGenerator, percent}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
 import it.unibo.skalamon.model.status.NonVolatileStatus
 
-/** Reduces Speed to 50% and has a 25% chance to skip the current turn. */
-case class Paralyze() extends NonVolatileStatus:
+/** Reduces Speed to 50% and has a 25% chance to skip the current turn.
+  * @param generator
+  *   The random number generator to use for determining the chance of skipping
+  *   the turn.
+  */
+case class Paralyze(generator: RandomGenerator = RandomGenerator())
+    extends NonVolatileStatus:
   override def executeEffect(
       pokemon: BattlePokemon
   ): BattlePokemon =
@@ -12,13 +18,13 @@ case class Paralyze() extends NonVolatileStatus:
       case Some(value) => Some(value / Paralyze.AttackReduction)
       case other       => other
     }
-    val updatedPokemon = pokemon.copy(
-      base = pokemon.base.copy(
-        baseStats = pokemon.base.baseStats.copy(base = updatedStats)
-      )
+    pokemon.copy(
+      base = pokemon.base.copy(baseStats =
+        pokemon.base.baseStats.copy(base = updatedStats)
+      ),
+      skipsCurrentTurn = Paralyze.TriggerChance.randomBoolean(using generator)
     )
-    skipTurn(updatedPokemon, Paralyze.TriggerChance)
 
 object Paralyze:
   val AttackReduction: Int = 2
-  val TriggerChance: Int = 25
+  val TriggerChance: Percentage = 25.percent
