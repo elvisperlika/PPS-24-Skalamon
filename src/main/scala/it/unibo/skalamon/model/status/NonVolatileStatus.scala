@@ -33,25 +33,12 @@ trait NonVolatileStatus extends Status:
       pokemon: BattlePokemon
   ): BattlePokemon
 
-/** Reduces Speed to 50% and has a 25% chance to skip the current turn. */
-case object Paralyze extends NonVolatileStatus:
-  val ParalyzeAttackReduction = 2
-  val ParalyzeTriggerChance = 25
 
 case object Freeze extends NonVolatileStatus
   override def executeEffect(
       pokemon: BattlePokemon
   ): BattlePokemon =
-    val updatedStats = pokemon.base.baseStats.base.updatedWith(Stat.Speed) {
-      case Some(value) => Some(value / ParalyzeAttackReduction)
-      case other       => other
-    }
-    val updatedPokemon = pokemon.copy(
-      base = pokemon.base.copy(
-        baseStats = pokemon.base.baseStats.copy(base = updatedStats)
-      )
     )
-    skipTurn(updatedPokemon, ParalyzeTriggerChance)
 
 case object Poison extends NonVolatileStatus
 

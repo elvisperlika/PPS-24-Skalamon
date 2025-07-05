@@ -13,7 +13,7 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
   private val assignedBurn: AssignedStatus[NonVolatileStatus] =
     AssignedStatus(Burn(), initialTurn)
   private val assignedParalyze: AssignedStatus[NonVolatileStatus] =
-    AssignedStatus(Paralyze, initialTurn)
+    AssignedStatus(Paralyze(), initialTurn)
 
   "NonVolatileStatus" should "make the pokemon skip its turn" in:
     val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
@@ -48,12 +48,15 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
       pokemon
     ).base.baseStats.base(Attack) shouldEqual
       (pokemon.base.baseStats.base(Attack) / Burn.AttackReduction)
+
   "Paralyze" should "halve speed stat" in:
     val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
       nonVolatileStatus = Option(assignedParalyze)
     )
 
-    Paralyze.executeEffect(pokemon).base.baseStats.base(Speed) shouldEqual
+    assignedParalyze.status.executeEffect(
+      pokemon
+    ).base.baseStats.base(Speed) shouldEqual
       (pokemon.base.baseStats.base(
         Speed
-      ) / Paralyze.ParalyzeAttackReduction)
+      ) / Paralyze.AttackReduction)

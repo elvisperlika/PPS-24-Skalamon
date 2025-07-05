@@ -3,10 +3,14 @@ package it.unibo.skalamon.model.behavior
 import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{BehaviorGroup, TargetModifier}
-import it.unibo.skalamon.model.event.{BattleStateEvents, BehaviorEvent, EventManager}
+import it.unibo.skalamon.model.event.{
+  BattleStateEvents,
+  BehaviorEvent,
+  EventManager
+}
 import it.unibo.skalamon.model.field.field
-import it.unibo.skalamon.model.status.nonVolatileStatus.Burn
-import it.unibo.skalamon.model.status.{Confusion, NonVolatileStatus, Paralyze, Yawn}
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.{Confusion, NonVolatileStatus, Yawn}
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -62,7 +66,7 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
 
   it should "not overwrite existing non-volatile status" in:
     val status1 = Burn()
-    val status2 = Paralyze
+    val status2 = Paralyze()
     val newState1 =
       StatusBehavior(status1, currentTurnIndex = 1)(context)(state)
     val newState2 =
