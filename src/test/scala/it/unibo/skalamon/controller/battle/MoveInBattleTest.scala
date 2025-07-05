@@ -103,3 +103,10 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     val heavyweightDeltaHp = gyarados.hp - battle.state.inField._2.currentHP
 
     lightweightDeltaHp shouldBe <(heavyweightDeltaHp)
+    
+  "Super Fang" should "halve the target's HP" in:
+    val (battle, controller, _, _) = newBattle(rattata)(rattata)
+    controller.update()
+    registerMoves(superFang, tackle)(controller)
+
+    battle.state.inField._2.currentHP shouldBe rattata.hp / 2

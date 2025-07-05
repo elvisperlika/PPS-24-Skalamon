@@ -192,5 +192,6 @@ object Pokemon:
       _ typed Normal hp 30 weighing 3.5.kg ability none stat Attack -> 56 stat Defense -> 35 stat SpecialAttack -> 25 stat SpecialDefense -> 35 stat Speed -> 72 moves (
         tackle,
         quickAttack,
-        bite
+        bite,
+        superFang
       )

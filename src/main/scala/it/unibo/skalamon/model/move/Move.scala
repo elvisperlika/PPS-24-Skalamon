@@ -146,3 +146,8 @@ object Move:
       _ pp 20 onSuccess: context =>
         val power = 10 * min(120, max(20, 60 * log10(context.target.base.weightKg) - 40))
         SingleHitBehavior(power.toInt)
+
+  def superFang: Move =
+    move("Super Fang", Normal, Physical):
+      _ pp 10 onSuccess: context =>
+        DamageBehavior(context.target.currentHP / 2)
