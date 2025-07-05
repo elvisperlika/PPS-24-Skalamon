@@ -15,6 +15,8 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
     AssignedStatus(Burn(), initialTurn)
   private val assignedParalyze: AssignedStatus[NonVolatileStatus] =
     AssignedStatus(Paralyze(), initialTurn)
+  private val assignedSleep: AssignedStatus[NonVolatileStatus] =
+    AssignedStatus(Sleep(), initialTurn)
 
   "Burn" should "remove health" in:
     val pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
@@ -73,3 +75,28 @@ class NonVolatileStatusTest extends AnyFlatSpec with should.Matchers:
     pokemonTrue.nonVolatileStatus.get.status.executeEffect(
       pokemonTrue
     ).skipsCurrentTurn shouldBe true
+
+  "Sleep" should "make the pokemon skip its turn for x turns" in:
+    val turnsToSleep = Sleep.DefaultTurns
+
+    var pokemon: BattlePokemon = PokemonTestUtils.simplePokemon4.copy(
+      nonVolatileStatus = Some(assignedSleep)
+    )
+
+    (1 until turnsToSleep).foreach { _ =>
+      val sleepStatus = pokemon.nonVolatileStatus.map(_.status).collect {
+        case s: Sleep => s
+      }
+
+      pokemon = sleepStatus match
+        case Some(status) => status.executeEffect(pokemon)
+        case None         => pokemon
+
+      pokemon.skipsCurrentTurn shouldBe true
+    }
+
+    pokemon = pokemon.nonVolatileStatus.map(_.status) match
+      case Some(status: Sleep) => status.executeEffect(pokemon)
+      case _                   => pokemon
+
+    pokemon.skipsCurrentTurn shouldBe false
