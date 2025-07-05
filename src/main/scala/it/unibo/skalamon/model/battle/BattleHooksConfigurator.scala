@@ -15,7 +15,7 @@ import it.unibo.skalamon.model.event.TurnStageEvents.{
   Started
 }
 import it.unibo.skalamon.model.event.{ActionEvents, EventType}
-import it.unibo.skalamon.model.field.Field
+import it.unibo.skalamon.model.field.{Field, PokemonRule}
 import it.unibo.skalamon.model.field.FieldEffectMixin.*
 import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
@@ -59,19 +59,21 @@ object BattleHooksConfigurator:
       }
     }
 
+    def updateTeam(trainers: List[Trainer], rule: PokemonRule): List[Trainer] =
+      trainers.map(t =>
+        val updTeam = t.team.map(p =>
+          if t.inField.get is p then rule(p) else p
+        )
+        t.copy(team = updTeam)
+      )
+
     def hookWeatherEffects[T <: Weather with PokemonRules](o: T): Unit =
       o.rules.foreach: pokemonRule =>
         val (event, rule) = pokemonRule
         battle.hookBattleStateUpdate(event) { (state, _) =>
           state.field.weather match
             case Some(`o`) =>
-              val updTrainers = state.trainers.map(t =>
-                val updTeam = t.team.map(p =>
-                  if t.inField.get is p then rule(p) else p
-                )
-                t.copy(team = updTeam)
-              )
-              state.copy(trainers = updTrainers)
+              state.copy(trainers = updateTeam(state.trainers, rule))
             case _ => state
         }
 
@@ -81,13 +83,7 @@ object BattleHooksConfigurator:
         battle.hookBattleStateUpdate(event) { (state, _) =>
           state.field.terrain match
             case Some(`o`) =>
-              val updTrainers = state.trainers.map(t =>
-                val updTeam = t.team.map(p =>
-                  if t.inField.get is p then rule(p) else p
-                )
-                t.copy(team = updTeam)
-              )
-              state.copy(trainers = updTrainers)
+              state.copy(trainers = updateTeam(state.trainers, rule))
             case _ => state
         }
 
@@ -97,22 +93,15 @@ object BattleHooksConfigurator:
         battle.hookBattleStateUpdate(event) { (state, _) =>
           state.field.room match
             case Some(`o`) =>
-              val updTrainers = state.trainers.map(t =>
-                val updTeam = t.team.map(p =>
-                  if t.inField.get is p then rule(p) else p
-                )
-                t.copy(team = updTeam)
-              )
-              state.copy(trainers = updTrainers)
+              state.copy(trainers = updateTeam(state.trainers, rule))
             case _ => state
         }
 
     def hookBattleRules[T <: Room with MutatedBattleRule](o: T): Unit =
       battle.hookBattleStateUpdate(Started) { (state, t) =>
         state.field.room match
-          case Some(r) if r.getClass == o.getClass =>
-            state.copy(rules = o.rule)
-          case _ => state.copy(rules = battle.rules)
+          case Some(`o`) => state.copy(rules = o.rule)
+          case _         => state.copy(rules = battle.rules)
       }
 
     def updateBattlefield(state: BattleState): BattleState =
