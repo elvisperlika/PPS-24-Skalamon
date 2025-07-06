@@ -4,7 +4,6 @@ import it.unibo.skalamon.controller.battle.GameState
 import it.unibo.skalamon.controller.battle.GameState.InProgress
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.*
-import it.unibo.skalamon.model.event.config.BattleConfiguration
 
 /** A battle between trainers.
   * @param trainers
@@ -34,8 +33,7 @@ case class Battle(trainers: List[Trainer], rules: BattleRule = Classic())
 
   /** The event manager for handling battle/turn events.
     */
-  override val eventManager: EventManager =
-    new EventManager with BattleConfiguration(this)
+  override val eventManager: EventManager = new EventManager
 
   /** Starts the battle by initializing the first turn.
     */
