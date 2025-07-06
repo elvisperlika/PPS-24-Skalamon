@@ -1,19 +1,19 @@
 package it.unibo.skalamon.view
 
-import javax.swing.{JFrame, WindowConstants}
 import asciiPanel.AsciiPanel
 import it.unibo.skalamon.view.battle.{
   BattleInput,
-  BattleScreen,
-  BattleKeyBindings
+  BattleKeyBindings,
+  BattleScreen
 }
 
 import java.awt.event.{KeyAdapter, KeyEvent}
+import javax.swing.{JFrame, WindowConstants}
 
 /** Represents the main view of the game, which contains the battle screen. It
   * sets up the terminal and handles key events for player inputs.
   */
-class MainView() extends JFrame:
+class MainView extends JFrame:
   private val terminalWidth: Int = 88
   private val terminalHeight: Int = 50//39
 

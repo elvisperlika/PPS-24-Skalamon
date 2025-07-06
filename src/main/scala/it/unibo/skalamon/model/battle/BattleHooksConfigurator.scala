@@ -1,5 +1,6 @@
 package it.unibo.skalamon.model.battle
 
+import it.unibo.skalamon.controller.battle.GameState
 import it.unibo.skalamon.controller.battle.action.{
   Action,
   MoveAction,
@@ -10,7 +11,11 @@ import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.battle.turn.BattleEvents.*
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
-import it.unibo.skalamon.model.event.{ActionEvents, EventType}
+import it.unibo.skalamon.model.event.{
+  ActionEvents,
+  BattleStateEvents,
+  EventType
+}
 import it.unibo.skalamon.model.field.FieldEffectMixin
 import it.unibo.skalamon.model.field.FieldEffectMixin.MutatedBattleRule
 import it.unibo.skalamon.model.move.*
@@ -48,6 +53,26 @@ object BattleHooksConfigurator:
 
     battle.hookBattleStateUpdate(Started) { (state, _) =>
       updateBattleField(state)
+    }
+
+    battle.hookBattleStateUpdateOption(BattleStateEvents.Changed) { (state, _) =>
+      val koTrainers = state.trainers.filter(t => !t.inField.exists(_.isAlive))
+      if battle.gameState == GameState.InProgress && koTrainers.nonEmpty then
+        val updatedTrainers = state.trainers.map { trainer =>
+          if koTrainers.contains(trainer) then
+            trainer.team.find(_.isAlive) match
+              case pokemon @ Some(_) => trainer.copy(_inField = pokemon)
+              case _                 =>
+                val winner = state.trainers.find(_ != trainer)
+                battle.gameState = GameState.GameOver(winner)
+                battle.eventManager.notify(BattleStateEvents.Finished of winner)
+                trainer
+          else
+            trainer
+        }
+        Some(state.copy(trainers = updatedTrainers))
+      else
+        None
     }
 
     battle.trainers.zipWithIndex.foreach { (trainer, trainerIndex) =>
@@ -95,15 +120,17 @@ object BattleHooksConfigurator:
     ): BattleState =
       val result: (Move => MoveContext => Behavior, EventType[MoveContext]) =
         move.move.accuracy match
+          case _ if move.pp <= 0 => (_ => move.move.fail, Miss)
           case MoveModel.Accuracy.Of(percentage)
               if !percentage.randomBoolean => (_ => move.move.fail, Miss)
           case _ => (_ => move.move.success, Hit)
 
       val context =
         move.createContext(result._1, target.inField.get, source.inField.get)
-      
+
       battle.eventManager.notify(result._2 of context)
-      context(current)
+      val newState = context(current)
+      context.decrementPP(newState)
 
     def executeSwitch(
         pIn: BattlePokemon,

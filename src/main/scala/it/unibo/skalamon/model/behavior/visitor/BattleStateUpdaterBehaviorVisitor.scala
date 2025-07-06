@@ -54,7 +54,7 @@ class BattleStateUpdaterBehaviorVisitor(
     * [[map]].
     */
   private def updateTarget(map: BattlePokemon => BattlePokemon): BattleState =
-    updatePokemon(target, map)
+    current.updatePokemon(target, map)
 
   // Behaviors
 
@@ -123,3 +123,4 @@ class BattleStateUpdaterBehaviorVisitor(
       field =
         current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
     )
+  }
