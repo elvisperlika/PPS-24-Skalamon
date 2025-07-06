@@ -61,12 +61,23 @@ extension (container: BattleStateContainer with EventManagerProvider)
     *   The function to execute with the current battle state and the data
     *   associated with the event.
     */
-  def hookBattleStateUpdate[T](eventType: EventType[T])(
-      callback: (BattleState, T) => BattleState
+  def hookBattleStateUpdateOption[T](eventType: EventType[T])(
+      callback: (BattleState, T) => Option[BattleState]
   ): Unit =
     given EventManager = container.eventManager
     container.eventManager.watch(eventType) { data =>
       val currentState = extractBattleState(container)
-      val updatedState = callback(currentState, data)
-      setBattleState(container, updatedState)
+      callback(currentState, data) match
+        case Some(updatedState) => setBattleState(container, updatedState)
+        case _                  =>
+    }
+
+  /**
+   * @see [[hookBattleStateUpdateOption]]
+   */
+  def hookBattleStateUpdate[T](eventType: EventType[T])(
+      callback: (BattleState, T) => BattleState
+  ): Unit =
+    hookBattleStateUpdateOption(eventType) { (state, data) =>
+      Some(callback(state, data))
     }

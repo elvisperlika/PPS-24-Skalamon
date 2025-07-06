@@ -163,3 +163,31 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
       registerMoves(rainDance, rainDance)(controller)
       advanceToNextRegistration(controller)
     }
+
+  "KO-ing" should "make the trainer switch" in:
+    val (battle, controller, a, b) = newBattle(rattata)(rattata, gyarados)
+    controller.update()
+
+    while (battle.state.inField._2.base.name == rattata.name) {
+      registerMoves(tackle, growl)(controller)
+      advanceToNextRegistration(controller)
+    }
+
+    battle.state.inField._2.base.name shouldBe gyarados.name
+
+  "Game over" should "trigger when there is only on trainer with at least a Pokémon alive" in:
+    val (battle, controller, a, b) = newBattle(rattata)(rattata)
+    controller.update()
+
+    var notified = false
+    battle.eventManager.watch(BattleStateEvents.Finished) { winner =>
+      winner.map(_.id) shouldBe Some(a.id)
+      notified = true
+    }
+
+    while (battle.gameState == GameState.InProgress) {
+      registerMoves(tackle, growl)(controller)
+      advanceToNextRegistration(controller)
+    }
+
+    notified shouldBe true

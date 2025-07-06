@@ -4,6 +4,12 @@ import it.unibo.skalamon.controller.battle.GameState.GameOver
 import it.unibo.skalamon.controller.battle.action.Action
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.controller.battle.action.SwitchAction
+import it.unibo.skalamon.controller.battle.GameState
+import it.unibo.skalamon.controller.battle.action.{
+  Action,
+  MoveAction,
+  SwitchAction
+}
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
 import it.unibo.skalamon.model.battle.turn.BattleEvents._
@@ -18,6 +24,15 @@ import it.unibo.skalamon.model.field.Field
 import it.unibo.skalamon.model.field.FieldEffectMixin._
 import it.unibo.skalamon.model.field.PokemonRule
 import it.unibo.skalamon.model.move._
+import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
+import it.unibo.skalamon.model.event.{
+  ActionEvents,
+  BattleStateEvents,
+  EventType
+}
+import it.unibo.skalamon.model.field.FieldEffectMixin
+import it.unibo.skalamon.model.field.FieldEffectMixin.MutatedBattleRule
+import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
@@ -70,6 +85,26 @@ object BattleHooksConfigurator:
 
     battle.hookBattleStateUpdate(Ended) { (state, _) =>
       updateBattlefield(state)
+    }
+
+    battle.hookBattleStateUpdateOption(BattleStateEvents.Changed) { (state, _) =>
+      val koTrainers = state.trainers.filter(t => !t.inField.exists(_.isAlive))
+      if battle.gameState == GameState.InProgress && koTrainers.nonEmpty then
+        val updatedTrainers = state.trainers.map { trainer =>
+          if koTrainers.contains(trainer) then
+            trainer.team.find(_.isAlive) match
+              case pokemon @ Some(_) => trainer.copy(_inField = pokemon)
+              case _                 =>
+                val winner = state.trainers.find(_ != trainer)
+                battle.gameState = GameState.GameOver(winner)
+                battle.eventManager.notify(BattleStateEvents.Finished of winner)
+                trainer
+          else
+            trainer
+        }
+        Some(state.copy(trainers = updatedTrainers))
+      else
+        None
     }
 
     battle.trainers.zipWithIndex.foreach { (trainer, trainerIndex) =>
