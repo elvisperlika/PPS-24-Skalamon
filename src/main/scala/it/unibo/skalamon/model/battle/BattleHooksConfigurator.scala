@@ -25,11 +25,9 @@ object BattleHooksConfigurator:
   def configure(battle: Battle): Unit =
 
     battle.eventManager.watch(Started) { t =>
-      println("notifica di start")
     }
 
     battle.eventManager.watch(Ended) { t =>
-      println("Check game over")
       checkGameOver(t)
     }
 
@@ -52,8 +50,8 @@ object BattleHooksConfigurator:
     }
 
     battle.eventManager.watch(CreateRoom) {
-      case t: Room with PokemonRules      => hookRoomEffects(t)
-      case t: Room with MutatedBattleRule => hookBattleRules(t)
+      case r: Room with PokemonRules      => hookRoomEffects(r)
+      case r: Room with MutatedBattleRule => hookBattleRules(r)
       case _                              =>
     }
 
@@ -103,14 +101,9 @@ object BattleHooksConfigurator:
     def hookWeatherEffects[T <: Weather with PokemonRules](o: T): Unit =
       o.rules.foreach: pokemonRule =>
         val (event, rule) = pokemonRule
-        println("event -> " + event)
-        println("rule -> " + rule)
         battle.hookBattleStateUpdate(event) { (state, _) =>
-          println("w -> " + state.field.weather)
-          println("o -> " + o)
           state.field.weather match
             case Some(`o`) =>
-              println("same o")
               state.copy(trainers = updateTeam(state.trainers, rule))
             case _ => state
         }
