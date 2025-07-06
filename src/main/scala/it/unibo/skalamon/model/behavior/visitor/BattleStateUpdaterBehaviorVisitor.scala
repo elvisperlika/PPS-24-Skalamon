@@ -123,4 +123,3 @@ class BattleStateUpdaterBehaviorVisitor(
       field =
         current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
     )
-  }
