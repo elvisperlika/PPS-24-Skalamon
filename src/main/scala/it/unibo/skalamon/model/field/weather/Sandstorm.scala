@@ -1,13 +1,8 @@
 package it.unibo.skalamon.model.field.weather
 
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.event.TurnStageEvents.WaitingForActions
-import it.unibo.skalamon.model.field.FieldEffectMixin.{
-  Expirable,
-  FieldEffect,
-  PokemonRules,
-  Weather
-}
+import it.unibo.skalamon.model.event.TurnStageEvents.{Started, WaitingForActions}
+import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, PokemonRules, Weather}
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
 import it.unibo.skalamon.model.types.TypesCollection.{Ground, Rock, Steel}
 
@@ -19,7 +14,7 @@ case class Sandstorm(t: Int)
   override val description: String = Sandstorm.Description
   override val rules: List[(EventType[_], PokemonRule)] =
     (
-      WaitingForActions,
+      Started,
       Modify.except(Rock, Steel, Ground) { p =>
         p.copy(currentHP = p.currentHP - Sandstorm.Damange)
       }

@@ -34,8 +34,7 @@ case class Battle(trainers: List[Trainer], rules: BattleRule = Classic())
 
   /** The event manager for handling battle/turn events.
     */
-  override val eventManager: EventManager =
-    new EventManager with BattleConfiguration(this)
+  override val eventManager: EventManager = new EventManager
 
   /** Starts the battle by initializing the first turn.
     */
@@ -66,6 +65,7 @@ case class Battle(trainers: List[Trainer], rules: BattleRule = Classic())
       case ExecutingActions              => setStage(Ended)
       case Ended                         =>
         turnHistory = turnHistory push Turn(turn.state.copy(stage = Started))
+        setStage(Started)
 
   /** Sets the stage of the current turn, and notifies the event manager of the
     * change via the appropriate [[TurnStageEvents]].
