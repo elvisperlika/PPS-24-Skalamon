@@ -29,6 +29,7 @@ object BattleHooksConfigurator:
     }
 
     battle.eventManager.watch(Ended) { t =>
+      println("Check game over")
       checkGameOver(t)
     }
 
