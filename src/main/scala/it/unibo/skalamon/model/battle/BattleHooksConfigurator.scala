@@ -164,6 +164,7 @@ object BattleHooksConfigurator:
     ): BattleState =
       val result: (Move => MoveContext => Behavior, EventType[MoveContext]) =
         move.move.accuracy match
+          case _ if move.pp <= 0 => (_ => move.move.fail, Miss)
           case MoveModel.Accuracy.Of(percentage)
               if !percentage.randomBoolean => (_ => move.move.fail, Miss)
           case _ => (_ => move.move.success, Hit)
@@ -172,7 +173,8 @@ object BattleHooksConfigurator:
         move.createContext(behavior, target.inField.get, source.inField.get)
       behavior(move.move)(context).notifyFieldEffects(battle)
       battle.eventManager.notify(successEvent of context)
-      context(current)
+      val newState = context(current)
+      context.decrementPP(newState)
 
     def executeSwitch(
         pIn: BattlePokemon,
