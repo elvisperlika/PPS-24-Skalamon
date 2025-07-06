@@ -24,8 +24,12 @@ def main(): Unit =
   val battleView = BattleView(mainView.getPlayScreen)
 
   battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
-    mainView.repaint()
-    battleView.update(state, controller.battle.turnIndex)
+    if battle.gameState == GameState.InProgress then
+      mainView.repaint()
+      battleView.update(state, controller.battle.turnIndex)
+
+  battle.eventManager.watch(BattleStateEvents.Finished): winner =>
+    println("Battle finished: " + winner)
 
   controller.start()
   mainView.setKeyPressedHandler { input =>
