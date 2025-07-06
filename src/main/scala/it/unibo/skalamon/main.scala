@@ -3,7 +3,7 @@ package it.unibo.skalamon
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
-import it.unibo.skalamon.model.event.BattleStateEvents
+import it.unibo.skalamon.model.event.{BattleStateEvents, TurnStageEvents}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.MainView
 import it.unibo.skalamon.view.battle.{BattleInput, BattleView, PlayerSide}
@@ -22,6 +22,10 @@ def main(): Unit =
   mainView.setupView()
 
   val battleView = BattleView(mainView.getPlayScreen)
+
+  battle.eventManager.watch(TurnStageEvents.Started): turn =>
+    mainView.repaint()
+    battleView.update(turn.state.snapshot, controller.battle.turnIndex)
 
   battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
     if battle.gameState == GameState.InProgress then

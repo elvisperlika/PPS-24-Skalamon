@@ -24,6 +24,8 @@ class BattleScreen(
   private val defaultPokemonName = "No Pokemon"
   private val defaultAbilityName = "No Move"
 
+  private val NoStatusText = "No Status"
+
   private val statChangeMaxLength = 3
 
   def setTurn(turn: Int): Unit =
@@ -160,14 +162,19 @@ class BattleScreen(
     *   A sequence of strings representing the formatted Battle Pokémon text.
     */
   private def formatBattlePokemon(bpOpt: Option[BattlePokemon]): Seq[String] =
-    bpOpt
-      .map(bp =>
-        Seq(
-          s"${bp.base.name} ${bp.currentHP}HP Ability: ${bp.base.ability.name}",
-          formatStatChanges(bp)
-        )
-      )
-      .getOrElse(Seq(defaultPokemonName))
+    bpOpt match
+      case Some(bp) =>
+        val name = bp.base.name
+        val hp = s"${bp.currentHP}HP"
+        val ability = s"Ability: ${bp.base.ability.name}"
+        val status =
+          bp.nonVolatileStatus.map(_.status.toString).getOrElse(NoStatusText)
+        val statLine = formatStatChanges(bp)
+
+        Seq(s"$name $hp $ability", s"Status: $status", statLine)
+
+      case None =>
+        Seq(defaultPokemonName)
 
   /** Formats the stat changes of a Battle Pokémon.
     * @param bp
@@ -242,7 +249,7 @@ object BattleScreen:
 
   // Battle Pokémon
   private val battlePokemonWidth = 46
-  private val battlePokemonHeight = 4
+  private val battlePokemonHeight = 5
 
   // Layout positions (computed)
   private val p1PokemonY = playerNameY + playerTeamGap
