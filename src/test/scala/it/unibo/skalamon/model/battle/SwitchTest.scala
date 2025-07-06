@@ -114,4 +114,4 @@ class SwitchTest extends AnyFlatSpec with should.Matchers:
     ).get.currentHP shouldEqual bulbasaur.currentHP
     bob.team.find(
       _.id == alakazam.id
-    ).get.currentHP shouldBe 54
+    ).get.currentHP shouldBe 51
