@@ -22,13 +22,21 @@ object FieldEffectMixin:
       */
     val typesModifier: Map[Type, Double]
 
-  /** [[FieldEffect]] represent a dynamic state of the battlefield.
+  /** Represent a dynamic state of the battlefield.
     */
   trait FieldEffect(val creationTurn: Int):
+    /** Field effect description.
+      */
     val description: String
-    
+
+  /**
+   * Represent a battle rule that affect the game.
+   */
   trait MutatedBattleRule:
-    val rule: BattleRule 
+    /**
+     * Rule to be setted.
+     */
+    val rule: BattleRule
 
   /** [[FieldEffect]] mixin to add duration.
     */

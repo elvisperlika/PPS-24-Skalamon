@@ -2,13 +2,9 @@ package it.unibo.skalamon.model.field.fieldside.kind
 
 import it.unibo.skalamon.model.battle.turn.BattleEvents.PokemonSwitchIn
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.field.FieldEffectMixin.{
-  Expirable,
-  FieldEffect,
-  PokemonRules
-}
+import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, PokemonRules, SideCondition}
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
-import it.unibo.skalamon.model.field.fieldside.{SideCondition, Unique}
+import it.unibo.skalamon.model.field.fieldside.Unique
 import it.unibo.skalamon.model.types.TypeUtility
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.field.fieldside.kind.StealthRock.DamagePercentage

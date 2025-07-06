@@ -34,7 +34,6 @@ case class Classic() extends BattleRule:
     ClassicOrdering.given_Ordering_Action
 
 case class Tricky() extends BattleRule:
-  import it.unibo.skalamon.model.event.config.InvertedSpeedOrdering.given
 
   /** Sorts battle actions using the tricky rules:
     *   - Higher priority acts first

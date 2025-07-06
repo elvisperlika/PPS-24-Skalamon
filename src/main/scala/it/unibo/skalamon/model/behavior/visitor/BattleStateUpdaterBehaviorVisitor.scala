@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.behavior.visitor
 
-import it.unibo.skalamon.model.battle.BattleState
+import it.unibo.skalamon.model.battle.{BattleRule, BattleState, Trainer}
 import it.unibo.skalamon.model.behavior.BehaviorsContext
 import it.unibo.skalamon.model.behavior.damage.{
   DamageCalculator,
@@ -8,6 +8,13 @@ import it.unibo.skalamon.model.behavior.damage.{
 }
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
+import it.unibo.skalamon.model.field.FieldEffectMixin.{
+  MutatedBattleRule,
+  PokemonRules,
+  Room,
+  SideCondition
+}
+import it.unibo.skalamon.model.field.fieldside.FieldSide
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
 import it.unibo.skalamon.model.status.{
@@ -97,9 +104,29 @@ class BattleStateUpdaterBehaviorVisitor(
       )
     }
 
-  override def visit(behavior: WeatherBehavior): BattleState = {
+  override def visit(behavior: WeatherBehavior): BattleState =
+    val weather = behavior.weather(context.turnIndex)
     current.copy(
       field =
-        current.field.copy(weather = Some(behavior.weather(context.turnIndex)))
+        current.field.copy(weather = Some(weather))
     )
-  }
+
+  override def visit(behavior: TerrainBehavior): BattleState =
+    val terrain = behavior.terrain(context.turnIndex)
+    current.copy(field =
+      current.field.copy(terrain = Some(terrain))
+    )
+
+  override def visit(behavior: RoomBehavior): BattleState =
+    val room = behavior.room(context.turnIndex)
+    val updField = current.field.copy(room = Some(room))
+    current.copy(field = updField)
+
+  override def visit(behavior: SideConditionBehavior): BattleState =
+    import it.unibo.skalamon.model.field.fieldside.add
+    val (trainer, condition) = behavior.sideCondition(context.turnIndex)
+    val updatedSides = current.field.sides.map {
+      case (`trainer`, side) => trainer -> side.add(condition)
+      case other             => other
+    }
+    current.copy(field = current.field.copy(sides = updatedSides))

@@ -4,14 +4,18 @@ import it.unibo.skalamon.PokemonTestUtils
 import it.unibo.skalamon.controller.battle.BattleController
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.model.battle.turn.BattleEvents.{CreateRoom, Hit}
-import it.unibo.skalamon.model.battle.{Battle, Trainer}
+import it.unibo.skalamon.model.battle.{
+  Battle,
+  BattleHooksConfigurator,
+  Trainer,
+  hookBattleStateUpdate
+}
 import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.move.Move
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 class TrickyRoomTest extends AnyFlatSpec with should.Matchers:
-  // bob Pokémon has 1 hp
   val trainerBob: Trainer = PokemonTestUtils.trainerBob.copy(_inField =
     Some(PokemonTestUtils.trainerBob.team.head)
   )
@@ -23,12 +27,16 @@ class TrickyRoomTest extends AnyFlatSpec with should.Matchers:
     * priority -> Alice attack before Bob
     */
   "Tricky room" should "change moves order execution" in:
-
     val battle: Battle = Battle(trainerBob :: trainerAlice :: Nil)
     val controller: BattleController = BattleController(battle)
     var moves: List[Move] = Nil
     battle.eventManager.watch(Hit) { c =>
       moves = c.origin.move :: moves
+    }
+    /* Artificially set up of the room */
+    battle.hookBattleStateUpdate(CreateRoom) { (state, r) =>
+      val updField = state.field.copy(room = Some(r))
+      state.copy(field = updField)
     }
 
     def getTrainerFromState(name: String): Trainer =
@@ -52,17 +60,18 @@ class TrickyRoomTest extends AnyFlatSpec with should.Matchers:
 
     controller.registerAction(trainerBob, bobAction)
     controller.registerAction(trainerAlice, aliceAction)
-    controller.update()
+    controller.update() // exe move
     val predictedMoves =
       bob.inField.get.moves.head.move :: alice.inField.get.moves.head.move :: Nil
     moves shouldBe predictedMoves
-    controller.update()
-    controller.update()
-    controller.update()
+
+    battle.eventManager.notify(CreateRoom of TrickRoom(1))
+    controller.update() // ended
+    controller.update() // stated
+    controller.update() // waiting moves
     // reset moves
     moves = Nil
-    battle.eventManager.notify(CreateRoom of TrickRoom(1))
     controller.registerAction(trainerBob, bobAction)
     controller.registerAction(trainerAlice, aliceAction)
-    controller.update()
+    controller.update() // exe moves
     moves shouldBe predictedMoves.reverse

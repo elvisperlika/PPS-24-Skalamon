@@ -1,16 +1,12 @@
 package it.unibo.skalamon.model.ability
-
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleState,
-  hookBattleStateUpdate
-}
+import it.unibo.skalamon.model.battle.Battle
+import it.unibo.skalamon.model.battle.BattleState
+import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+import it.unibo.skalamon.model.behavior.Behavior
+import it.unibo.skalamon.model.behavior.BehaviorsContext
+import it.unibo.skalamon.model.behavior.WithBehaviors
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
-import it.unibo.skalamon.model.behavior.{
-  Behavior,
-  BehaviorsContext,
-  WithBehaviors
-}
+import it.unibo.skalamon.model.behavior.notifyFieldEffects
 import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
@@ -78,20 +74,17 @@ extension (ability: Ability)
     *   The source Pokémon that owns the ability.
     */
   def hookAll(battle: Battle)(
-    target: BattleState => Option[BattlePokemon],
-    source: BattleState => Option[BattlePokemon]
+      target: BattleState => Option[BattlePokemon],
+      source: BattleState => Option[BattlePokemon]
   ): Unit =
     given EventManager = battle.eventManager
     ability.hooks.foreach: hook =>
       battle.hookBattleStateUpdate(hook.eventType): (battleState, data) =>
         (target(battleState), source(battleState)) match
           case (Some(t), Some(s)) =>
-            val context = createContext(
-              _ => hook.behavior(s, t, data),
-              t,
-              s,
-              battle.turnIndex
-            )
+            val behavior = hook.behavior(s, t, data)
+            val context =
+              createContext(_ => behavior, t, s, battle.turnIndex)
+            behavior.notifyFieldEffects(battle)
             context(battleState)
-
           case _ => battleState

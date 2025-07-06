@@ -1,7 +1,8 @@
 package it.unibo.skalamon.model.field
 
+import it.unibo.skalamon.model.field.FieldEffectMixin.SideCondition
 import it.unibo.skalamon.model.field.fieldside.kind.{Spikes, StealthRock}
-import it.unibo.skalamon.model.field.fieldside.{FieldSide, SideCondition, add}
+import it.unibo.skalamon.model.field.fieldside.{FieldSide, add}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
