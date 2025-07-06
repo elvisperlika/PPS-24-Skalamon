@@ -69,7 +69,6 @@ object BattleHooksConfigurator:
     }
 
     battle.eventManager.watch(ActionsReceived) { turn =>
-      println("EXECUTING ACTIONS\nx\nx")
       executeActions(turn)
     }
 
