@@ -4,7 +4,6 @@ import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.damage.DamageCalculatorUtility.{
   calculateCategoryScalar,
   calculateFieldFactor,
-  calculateRandomFactor,
   calculateStabFactor,
   calculateTypeEfficacy
 }

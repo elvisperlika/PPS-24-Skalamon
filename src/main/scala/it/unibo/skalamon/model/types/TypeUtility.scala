@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.types
 
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
 
 object TypeUtility:
 

@@ -1,7 +1,7 @@
 package it.unibo.skalamon.model.field.weather
 
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.event.TurnStageEvents.{Started, WaitingForActions}
+import it.unibo.skalamon.model.event.TurnStageEvents.Started
 import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, PokemonRules, Weather}
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
 import it.unibo.skalamon.model.types.TypesCollection.{Ground, Rock, Steel}

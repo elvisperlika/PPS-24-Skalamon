@@ -2,7 +2,6 @@ package it.unibo.skalamon.model.behavior.damage
 
 import it.unibo.skalamon.model.battle.{BattleState, Trainer}
 import it.unibo.skalamon.model.behavior.kind.Stats
-import it.unibo.skalamon.model.data.RandomGenerator
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Room,
   SideCondition,
@@ -15,7 +14,6 @@ import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.move.MoveModel.Category
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.pokemon.Stat.*
-import it.unibo.skalamon.model.types.TypesCollection.Electric
 import it.unibo.skalamon.model.types.{Type, TypeUtility}
 
 import scala.util.Random

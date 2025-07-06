@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.field.weather
 
-import it.unibo.skalamon.model.event.EventManager
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Expirable,
   FieldEffect,

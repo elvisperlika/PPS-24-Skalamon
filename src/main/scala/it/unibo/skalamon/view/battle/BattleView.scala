@@ -4,7 +4,6 @@ import it.unibo.skalamon.model.battle.{
   BattleState,
   Trainer
 }
-import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 trait BattleView:
 
