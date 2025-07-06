@@ -58,17 +58,6 @@ object BattleHooksConfigurator:
       executeActions(turn)
     }
 
-    battle.hookBattleStateUpdate(ExpiredRoom) { (state, room) =>
-      state.copy(rules = battle.rules)
-    }
-
-    battle.hookBattleStateUpdate(CreateRoom) { (state, room) =>
-      room match
-        case r: FieldEffectMixin.Room with MutatedBattleRule =>
-          state.copy(rules = r.rule)
-        case _ => state
-    }
-
     battle.hookBattleStateUpdate(ActionEvents.Move) { (state, action) =>
       val updSource: Trainer = state.trainers.find(_.id == action.source.id).get
       val updTarget: Trainer = state.trainers.find(_.id == action.target.id).get
@@ -173,6 +162,7 @@ object BattleHooksConfigurator:
     ): BattleState =
       val result: (Move => MoveContext => Behavior, EventType[MoveContext]) =
         move.move.accuracy match
+          case _ if move.pp <= 0 => (_ => move.move.fail, Miss)
           case MoveModel.Accuracy.Of(percentage)
               if !percentage.randomBoolean => (_ => move.move.fail, Miss)
           case _ => (_ => move.move.success, Hit)
@@ -181,7 +171,8 @@ object BattleHooksConfigurator:
         move.createContext(behavior, target.inField.get, source.inField.get)
       behavior(move.move)(context).notifyFieldEffects(battle)
       battle.eventManager.notify(successEvent of context)
-      context(current)
+      val newState = context(current)
+      context.decrementPP(newState)
 
     def executeSwitch(
         pIn: BattlePokemon,
