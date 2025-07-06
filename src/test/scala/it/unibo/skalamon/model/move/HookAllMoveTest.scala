@@ -3,7 +3,6 @@ package it.unibo.skalamon.model.move
 import it.unibo.skalamon.PokemonTestUtils
 import it.unibo.skalamon.controller.battle.BattleController
 import it.unibo.skalamon.controller.battle.action.SwitchAction
-import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateWeather
 import it.unibo.skalamon.model.battle.{Battle, BattleState, Trainer}
 import it.unibo.skalamon.model.field.fieldside.FieldSide
 import it.unibo.skalamon.model.field.weather.Snow

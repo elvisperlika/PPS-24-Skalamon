@@ -4,7 +4,6 @@ import it.unibo.skalamon.controller.battle.GameState
 import it.unibo.skalamon.controller.battle.GameState.InProgress
 import it.unibo.skalamon.model.data.Stacks.Stack
 import it.unibo.skalamon.model.event.*
-import it.unibo.skalamon.model.event.config.BattleConfiguration
 
 /** A battle between trainers.
   * @param trainers
