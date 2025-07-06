@@ -154,3 +154,12 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     val deltaHpAfterRain = pelipper.hp - deltaHpBeforeRain - battle.state.inField._1.currentHP
 
     deltaHpAfterRain should be > deltaHpBeforeRain
+    
+  "PP" should "decrement after move execution" in:
+    val (battle, controller, _, _) = newBattle(pelipper)(pelipper)
+    controller.update()
+    
+    while (battle.state.inField._1.move(rainDance).pp > 0) {
+      registerMoves(rainDance, rainDance)(controller)
+      advanceToNextRegistration(controller)
+    }

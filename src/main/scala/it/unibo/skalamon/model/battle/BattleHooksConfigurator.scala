@@ -24,8 +24,6 @@ object BattleHooksConfigurator:
 
   def configure(battle: Battle): Unit =
 
-    battle.eventManager.watch(Started) { t =>
-    }
 
     battle.eventManager.watch(Ended) { t =>
       checkGameOver(t)
@@ -58,6 +56,17 @@ object BattleHooksConfigurator:
     battle.eventManager.watch(ActionsReceived) { turn =>
       println("EXECUTING ACTIONS\nx\nx")
       executeActions(turn)
+    }
+
+    battle.hookBattleStateUpdate(ExpiredRoom) { (state, room) =>
+      state.copy(rules = battle.rules)
+    }
+
+    battle.hookBattleStateUpdate(CreateRoom) { (state, room) =>
+      room match
+        case r: FieldEffectMixin.Room with MutatedBattleRule =>
+          state.copy(rules = r.rule)
+        case _ => state
     }
 
     battle.hookBattleStateUpdate(ActionEvents.Move) { (state, action) =>
