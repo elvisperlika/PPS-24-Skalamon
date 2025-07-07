@@ -127,6 +127,50 @@ def sandStream: Ability =
           nothing
 ```
 
-### Field effects DSL
+### Field effects Mixin
 
-TODO
+You can freely create custom field effects using a mixin-based system, allowing you to compose only 
+the features you need:
+
+1. **Name and description** – Define the field effect’s name and provide a short explanation of what it does.
+2. **Type modifiers** – Modify move damage based on move types, influencing battle dynamics.
+3. **Hooks** – React to in-battle events applying changes on Skalámon in field.
+4. **Expirable** – Make the effect temporary for a fixed duration.
+5. **BattleRule** – Customize battle rules while the effect is active (e.g. moves order).
+
+```scala
+case class TrickRoom(t: Int) extends Room with FieldEffect(t)
+    with Expirable(t, TrickRoom.Duration) with MutatedBattleRule:
+  override val name: String = TrickRoom.Name
+  override val description: String = TrickRoom.Description
+  override val rule: BattleRule = Tricky()
+```
+
+```scala
+case class Sunny(t: Int)
+    extends Weather
+    with FieldEffect(t)
+    with TypesModifier
+    with Expirable(t, Sunny.Duration):
+  override val name: String = Sunny.Name
+  override val typesModifier: Map[Type, Double] =
+    Map(Fire -> Sunny.FireModifier, Water -> Sunny.WaterModifier)
+  override val description: String = Sunny.Description
+```
+
+```scala
+case class Sandstorm(t: Int)
+    extends Weather
+    with FieldEffect(t)
+    with Hooks
+    with Expirable(t, Sandstorm.Duration):
+  override val name: String = Sandstorm.Name
+  override val description: String = Sandstorm.Description
+  override val hooks: List[(EventType[_], PokemonRule)] =
+    (
+      Started,
+      Modify.except(Rock, Steel, Ground) { p =>
+        p.copy(currentHP = p.currentHP - Sandstorm.Damange)
+      }
+    ) :: Nil
+```
