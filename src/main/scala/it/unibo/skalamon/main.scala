@@ -7,6 +7,7 @@ import it.unibo.skalamon.model.event.{BattleStateEvents, TurnStageEvents}
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.MainView
 import it.unibo.skalamon.view.battle.{BattleInput, BattleView, PlayerSide}
+import it.unibo.skalamon.view.gameOver.GameOverView
 
 @main
 def main(): Unit =
@@ -22,6 +23,7 @@ def main(): Unit =
   mainView.setupView()
 
   val battleView = BattleView(mainView.getPlayScreen)
+  val gameOverView = GameOverView(mainView.getGameOverScreen)
 
   battle.eventManager.watch(TurnStageEvents.Started): turn =>
     mainView.repaint()
@@ -33,7 +35,8 @@ def main(): Unit =
       battleView.update(state, controller.battle.turnIndex)
 
   battle.eventManager.watch(BattleStateEvents.Finished): winner =>
-    println("Battle finished: " + winner)
+    mainView.repaint()
+    gameOverView.update(winner)
 
   controller.start()
   mainView.setKeyPressedHandler { input =>
