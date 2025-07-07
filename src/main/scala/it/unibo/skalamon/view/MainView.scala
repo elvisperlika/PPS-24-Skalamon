@@ -6,6 +6,7 @@ import it.unibo.skalamon.view.battle.{
   BattleKeyBindings,
   BattleScreen
 }
+import it.unibo.skalamon.view.gameOver.GameOverScreen
 
 import java.awt.event.{KeyAdapter, KeyEvent}
 import javax.swing.{JFrame, WindowConstants}
@@ -45,6 +46,9 @@ class MainView extends JFrame:
     */
   def getPlayScreen: BattleScreen =
     BattleScreen(terminal)
+
+  def getGameOverScreen: GameOverScreen =
+    GameOverScreen(terminal)
 
   override def repaint(): Unit =
     terminal.clear()
