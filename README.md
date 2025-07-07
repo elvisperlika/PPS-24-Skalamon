@@ -1,9 +1,7 @@
 # PPS-24-Skalámon
 
-**Skalámon** is a faithful clone of the classic 
-Pokémon First Generation battle system.
-It features a turn-based strategic combat mechanic
-between two teams of Pokémon (or rather _Skalámon_), each controlled by a trainer.
+**Skalámon** is a faithful clone of the classic Pokémon battle system.
+It features a turn-based strategic combat mechanic between two teams of Pokémon (or rather _Skalámon_), each controlled by a trainer.
 
 ## Features
 
