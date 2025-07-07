@@ -8,7 +8,7 @@ import java.awt.Color
 
 class GameOverScreen(
     private val terminal: AsciiPanel
-) extends Screen:
+) extends Screen(terminal):
   import GameOverScreen.*
 
   def setWinner(winner: Option[Trainer]): Unit =
@@ -21,7 +21,6 @@ class GameOverScreen(
       (terminal.getWidthInCharacters - gameOverText.length) / 2,
       nameColor
     )
-    terminal.repaint()
 
 object GameOverScreen:
   private val nameColor = Color.WHITE

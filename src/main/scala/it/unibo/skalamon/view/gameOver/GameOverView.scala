@@ -26,3 +26,4 @@ object GameOverView:
 
     override def update(winner: Option[Trainer]): Unit =
       screen.setWinner(winner)
+      screen.repaint()

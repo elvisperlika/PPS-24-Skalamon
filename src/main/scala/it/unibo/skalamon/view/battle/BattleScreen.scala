@@ -18,7 +18,7 @@ import java.util.Locale
   */
 class BattleScreen(
     private val terminal: AsciiPanel
-) extends Screen:
+) extends Screen(terminal):
   import BattleScreen.*
 
   private val defaultPokemonName = "No Pokemon"

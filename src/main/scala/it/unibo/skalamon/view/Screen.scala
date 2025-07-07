@@ -1,3 +1,7 @@
 package it.unibo.skalamon.view
 
-trait Screen
+import asciiPanel.AsciiPanel
+
+trait Screen(private val terminal: AsciiPanel):
+  def repaint(): Unit =
+    terminal.repaint()

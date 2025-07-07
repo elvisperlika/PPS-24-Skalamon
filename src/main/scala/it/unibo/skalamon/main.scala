@@ -29,11 +29,6 @@ def main(): Unit =
     mainView.repaint()
     battleView.update(turn.state.snapshot, controller.battle.turnIndex)
 
-  battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
-    if battle.gameState == GameState.InProgress then
-      mainView.repaint()
-      battleView.update(state, controller.battle.turnIndex)
-
   battle.eventManager.watch(BattleStateEvents.Finished): winner =>
     mainView.repaint()
     gameOverView.update(winner)

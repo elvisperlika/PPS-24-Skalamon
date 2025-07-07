@@ -48,6 +48,7 @@ object BattleView:
         movesWithKeys(player, PlayerSide.Player),
         movesWithKeys(opponent, PlayerSide.Opponent)
       )
+      screen.repaint()
 
     /** Returns the team of a trainer with each Pokémon paired with a key
       * binding.
