@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.move.Move.*
 import it.unibo.skalamon.model.pokemon.Pokemon
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
-import it.unibo.skalamon.model.status.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.{Burn, Paralyze, Sleep}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -136,7 +136,15 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     val deltaHpAfterRain = pelipper.hp - deltaHpBeforeRain - battle.state.inField._1.currentHP
 
     deltaHpAfterRain should be > deltaHpBeforeRain
-    
+
+  "Rest" should "put the user to sleep and heal it" in:
+    val (battle, controller, _, _) = newBattle(snorlax)(rattata)
+    controller.update()
+    registerMoves(rest, quickAttack)(controller)
+
+    battle.state.inField._1.currentHP shouldBe snorlax.hp
+    battle.state.inField._1.nonVolatileStatus.map(_.status) shouldBe Some(Sleep)
+
   "Trick Room" should "apply that room" in:
     val (battle, controller, _, _) = newBattle(malamar)(rattata)
     controller.update()

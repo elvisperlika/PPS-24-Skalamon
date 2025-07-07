@@ -121,27 +121,12 @@ object Pokemon:
       )
 
   def snorlax: Pokemon =
-    Pokemon(
-      name = "Snorlax",
-      types = Normal :: Nil,
-      hp = 160,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 110,
-          Stat.Defense -> 65,
-          Stat.SpecialAttack -> 65,
-          Stat.SpecialDefense -> 110,
-          Stat.Speed -> 30
-        )
-      ),
-      ability = Ability("Immunity", List.empty),
-      weightKg = 460.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Snorlax"):
+      _ typed Normal hp 160 weighing 460.0.kg ability none stat Attack -> 110 stat Defense -> 65 stat SpecialAttack -> 65 stat SpecialDefense -> 110 stat Speed -> 30 moves (
+        tackle,
+        rest,
+        earthquake,
+      )
 
   def bulbasaur: Pokemon =
     pokemon("Bulbasaur"):

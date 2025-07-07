@@ -235,6 +235,14 @@ object Move:
     move("Hypnosis", Psychic, Status):
       _ pp 20 onSuccess StatusBehavior(_ => Sleep)
 
+  def rest: Move =
+    move("Rest", Psychic, Status):
+      _ pp 10 onSuccess: context =>
+        new BehaviorGroup(
+          HealthBehavior(context.source.base.hp),
+          StatusBehavior(_ => Sleep)
+        ) with TargetModifier(Self)
+
   def trickRoom: Move =
     move("Trick Room", Psychic, Status):
       _ pp 5 onSuccess RoomBehavior(TrickRoom(_))
