@@ -68,6 +68,8 @@ object PokemonTestUtils:
     )
   )
 
+  /** This Pokémon has no NonVolatileStatus and no VolatileStatus.
+    */
   val simplePokemon2: BattlePokemon = BattlePokemon(
     Pokemon.bulbasaur,
     Male,
@@ -90,6 +92,9 @@ object PokemonTestUtils:
     )
   )
 
+  /** This Pokémon has only VolatileStatus (Flinch, ProtectEndure, Yawn) and no
+    * NonVolatileStatus.
+    */
   val simplePokemon4: BattlePokemon = BattlePokemon(
     Pokemon.gyarados,
     Male,
@@ -97,10 +102,21 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option.empty,
     Set(
-      AssignedStatus(Flinch(), 4),
-      AssignedStatus(ProtectEndure(), 3),
-      AssignedStatus(Yawn(), 8)
+      AssignedStatus(Flinch(1), 1),
+      AssignedStatus(ProtectEndure(1), 1),
+      AssignedStatus(Yawn(1), 1)
     )
+  )
+
+  /** This Pokémon has only a NonVolatileStatus (Burn) and no VolatileStatus.
+    */
+  val simplePokemon5: BattlePokemon = BattlePokemon(
+    Pokemon.gyarados,
+    Male,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option(AssignedStatus(Burn(), 4)),
+    Set.empty
   )
 
   def trainerAlice: Trainer =
@@ -111,3 +127,9 @@ object PokemonTestUtils:
 
   def trainerGio: Trainer =
     Trainer("Gio", List(simplePokemon3), _inField = Some(simplePokemon3))
+
+  def trainerKirk: Trainer =
+    Trainer("Kirk", List(simplePokemon4), _inField = Some(simplePokemon4))
+
+  def trainerLuca: Trainer =
+    Trainer("Luca", List(simplePokemon5), _inField = Some(simplePokemon5))

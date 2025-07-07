@@ -5,8 +5,8 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.VolatileStatus
 
 /** After 1 turn, the target Pokémon will fall asleep, unless switched out. */
-case class Yawn() extends VolatileStatus,
-      Expirable(creationTurn = 0, duration = 1):
+case class Yawn(private val creationTurn: Int = 0) extends VolatileStatus,
+      Expirable(creationTurn = creationTurn, duration = 1):
   override def executeEffect(
       pokemon: BattlePokemon,
       currentTurn: Int,

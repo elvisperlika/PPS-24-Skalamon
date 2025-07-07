@@ -270,6 +270,7 @@ object BattleHooksConfigurator:
                     assignedStatus.turnAssigned
                   )
               }
+
             val cleaned = removeExpiredStatuses(afterVolatile)
 
             val updatedTeam = trainer.team.map {

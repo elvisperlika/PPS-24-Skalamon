@@ -5,8 +5,8 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.status.VolatileStatus
 
 /** Blocks moves that target this Pokémon. */
-case class ProtectEndure() extends VolatileStatus,
-      Expirable(creationTurn = 0, duration = 1):
+case class ProtectEndure(private val creationTurn: Int = 0) extends VolatileStatus,
+      Expirable(creationTurn = creationTurn, duration = 1):
   override def executeEffect(
       pokemon: BattlePokemon,
       assignedTurn: Int,
