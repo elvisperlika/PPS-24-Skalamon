@@ -10,7 +10,7 @@ import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   MutatedBattleRule,
-  PokemonRules,
+  Hooks,
   Room,
   SideCondition
 }
