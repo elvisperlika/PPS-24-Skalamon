@@ -3,7 +3,7 @@ package it.unibo.skalamon.controller.battle
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.field.room.TrickRoom
-import it.unibo.skalamon.model.field.weather.Rain
+import it.unibo.skalamon.model.field.weather.{Rain, Sunny}
 import it.unibo.skalamon.model.move.Move
 import it.unibo.skalamon.model.move.Move.*
 import it.unibo.skalamon.model.pokemon.Pokemon
@@ -120,6 +120,13 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     registerMoves(rainDance, aquaJet)(controller)
 
     battle.state.field.weather shouldBe Some(Rain(0))
+    
+  "Sunny Day" should "cause sun" in:
+    val (battle, controller, _, _) = newBattle(charmander)(charmander)
+    controller.update()
+    registerMoves(sunnyDay, sunnyDay)(controller)
+
+    battle.state.field.weather shouldBe Some(Sunny(0))
 
   "Rain" should "boost Water moves" in:
     val (battle, controller, _, _) = newBattle(pelipper)(pelipper)

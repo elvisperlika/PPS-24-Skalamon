@@ -144,10 +144,10 @@ object Pokemon:
   def charmander: Pokemon =
     pokemon("Charmander"):
       _ typed Fire hp 39 weighing 8.5.kg ability none stat Attack -> 52 stat Defense -> 43 stat SpecialAttack -> 60 stat SpecialDefense -> 50 stat Speed -> 65 moves (
-        tackle,
         slash,
         flamethrower,
-        willOWisp
+        willOWisp,
+        sunnyDay
       )
 
   def squirtle: Pokemon =

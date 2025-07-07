@@ -11,7 +11,7 @@ import it.unibo.skalamon.model.behavior.modifier.{
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.field.room.TrickRoom
-import it.unibo.skalamon.model.field.weather.Rain
+import it.unibo.skalamon.model.field.weather.{Rain, Sunny}
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.pokemon.Stat.{
@@ -180,6 +180,10 @@ object Move:
   def willOWisp: Move =
     move("Will-O-Wisp", Fire, Status):
       _ pp 15 onSuccess StatusBehavior(_ => Burn)
+      
+  def sunnyDay: Move =
+    move("Sunny Day", Fire, Status):
+      _ pp 5 onSuccess WeatherBehavior(Sunny(_))
 
   // Ground
 
