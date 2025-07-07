@@ -42,15 +42,19 @@ object PokemonTestUtils:
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
 
+  private val firstTurn: Int = 1
+  private val midTurn: Int = 4
+  private val lateTurn: Int = 8
+
   val simplePokemon1: BattlePokemon = BattlePokemon(
     Pokemon.pikachu,
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn(), 1)),
+    Option(AssignedStatus(Burn(), firstTurn)),
     Set(
-      AssignedStatus(Flinch(), 4),
-      AssignedStatus(ProtectEndure(), 3)
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn)
     )
   )
 
@@ -61,10 +65,10 @@ object PokemonTestUtils:
     Male,
     currentHP = 0,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn(), 1)),
+    Option(AssignedStatus(Burn(), firstTurn)),
     Set(
-      AssignedStatus(Flinch(), 4),
-      AssignedStatus(ProtectEndure(), 3)
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn)
     )
   )
 
@@ -84,11 +88,11 @@ object PokemonTestUtils:
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Sleep(), 4)),
+    Option(AssignedStatus(Sleep(), midTurn)),
     Set(
-      AssignedStatus(Flinch(), 4),
-      AssignedStatus(ProtectEndure(), 3),
-      AssignedStatus(Yawn(), 8)
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn),
+      AssignedStatus(Yawn(), lateTurn)
     )
   )
 
@@ -102,9 +106,9 @@ object PokemonTestUtils:
     List(BattleMove(moveThunderShock, powerPoint)),
     Option.empty,
     Set(
-      AssignedStatus(Flinch(1), 1),
-      AssignedStatus(ProtectEndure(1), 1),
-      AssignedStatus(Yawn(1), 1)
+      AssignedStatus(Flinch(firstTurn), firstTurn),
+      AssignedStatus(ProtectEndure(firstTurn), firstTurn),
+      AssignedStatus(Yawn(firstTurn), firstTurn)
     )
   )
 
@@ -115,7 +119,7 @@ object PokemonTestUtils:
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn(), 4)),
+    Option(AssignedStatus(Burn(), midTurn)),
     Set.empty
   )
 
