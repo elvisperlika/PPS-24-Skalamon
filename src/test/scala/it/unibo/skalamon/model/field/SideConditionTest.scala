@@ -41,7 +41,7 @@ class SideConditionTest extends AnyFlatSpec with should.Matchers:
     val fieldEvents: EventManager = EventManager()
     var pokemonInBattle = icePokemon :: Nil
     val sideCondition: StealthRock = StealthRock(1)
-    sideCondition.rules.foreach((e, r) =>
+    sideCondition.hooks.foreach((e, r) =>
       fieldEvents.watch(e)(_ => pokemonInBattle = pokemonInBattle.map(r(_)))
     )
     fieldEvents.notify(PokemonSwitchIn of icePokemon)

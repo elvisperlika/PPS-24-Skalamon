@@ -9,10 +9,10 @@ object FieldEffectMixin:
   /** [[FieldEffect]] mixin to add [[PokemonRule]]s to execute when an event is
     * triggered.
     */
-  trait PokemonRules:
+  trait Hooks:
     /** List of [[Event]]s that trigger [[PokemonRule]]s.
       */
-    val rules: List[(EventType[_], PokemonRule)]
+    val hooks: List[(EventType[_], PokemonRule)]
 
   /** [[FieldEffect]] mixin to add [[Type]] modifiers that have to be applied to
     * Pokémon moves with defined types.
@@ -23,19 +23,23 @@ object FieldEffectMixin:
     val typesModifier: Map[Type, Double]
 
   /** Represent a dynamic state of the battlefield.
+    * @param creationTurn
+    *   Creation turn of the field effect
     */
   trait FieldEffect(val creationTurn: Int):
+    /** Name of the field effect.
+      */
+    val name: String
+
     /** Field effect description.
       */
     val description: String
 
-  /**
-   * Represent a battle rule that affect the game.
-   */
+  /** Represent a battle rule that affect the game.
+    */
   trait MutatedBattleRule:
-    /**
-     * Rule to be setted.
-     */
+    /** Rule to be setted.
+      */
     val rule: BattleRule
 
   /** [[FieldEffect]] mixin to add duration.
@@ -51,6 +55,15 @@ object FieldEffectMixin:
       */
     def isExpired(currentTurn: Int): Boolean =
       currentTurn >= creationTurn + duration
+
+    /** Get number of turns left before the field effect expires.
+      *
+      * @param currentTurn
+      *   The current turn in the battle
+      * @return
+      *   The number of turns remaining
+      */
+    def turnsLeft(currentTurn: Int): Int = creationTurn + duration - currentTurn
 
   /** Represents a weather condition affecting the battlefield. Influences rules
     * and type effectiveness.

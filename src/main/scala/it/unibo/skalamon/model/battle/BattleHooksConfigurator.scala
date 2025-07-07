@@ -53,17 +53,17 @@ object BattleHooksConfigurator:
         case _            =>
 
     battle.eventManager.watch(CreateWeather) {
-      case t: Weather with PokemonRules => hookWeatherEffects(t)
+      case t: Weather with Hooks => hookWeatherEffects(t)
       case _                            =>
     }
 
     battle.eventManager.watch(CreateTerrain) {
-      case t: Terrain with PokemonRules => hookTerrainEffects(t)
+      case t: Terrain with Hooks => hookTerrainEffects(t)
       case _                            =>
     }
 
     battle.eventManager.watch(CreateRoom) {
-      case r: Room with PokemonRules      => hookRoomEffects(r)
+      case r: Room with Hooks      => hookRoomEffects(r)
       case r: Room with MutatedBattleRule => hookBattleRules(r)
       case _                              =>
     }
@@ -131,8 +131,8 @@ object BattleHooksConfigurator:
         t.copy(team = updTeam)
       )
 
-    def hookWeatherEffects[T <: Weather with PokemonRules](o: T): Unit =
-      o.rules.foreach: pokemonRule =>
+    def hookWeatherEffects[T <: Weather with Hooks](o: T): Unit =
+      o.hooks.foreach: pokemonRule =>
         val (event, rule) = pokemonRule
         battle.hookBattleStateUpdate(event) { (state, _) =>
           state.field.weather match
@@ -141,8 +141,8 @@ object BattleHooksConfigurator:
             case _ => state
         }
 
-    def hookTerrainEffects[T <: Terrain with PokemonRules](o: T): Unit =
-      o.rules.foreach: pokemonRule =>
+    def hookTerrainEffects[T <: Terrain with Hooks](o: T): Unit =
+      o.hooks.foreach: pokemonRule =>
         val (event, rule) = pokemonRule
         battle.hookBattleStateUpdate(event) { (state, _) =>
           state.field.terrain match
@@ -151,8 +151,8 @@ object BattleHooksConfigurator:
             case _ => state
         }
 
-    def hookRoomEffects[T <: Room with PokemonRules](o: T): Unit =
-      o.rules.foreach: pokemonRule =>
+    def hookRoomEffects[T <: Room with Hooks](o: T): Unit =
+      o.hooks.foreach: pokemonRule =>
         val (event, rule) = pokemonRule
         battle.hookBattleStateUpdate(event) { (state, _) =>
           state.field.room match

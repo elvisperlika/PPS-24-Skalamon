@@ -14,8 +14,10 @@ case class Electrified(t: Int) extends Terrain with FieldEffect(t)
   override val description: String = Electrified.Description
   override val typesModifier: Map[Type, Double] =
     Map(Electric -> Electrified.ElectricModifier)
+  override val name: String = Electrified.Name
 
 object Electrified:
+  val Name = "Electrified"
   val ElectricModifier: Double = 1.5
   val Description: String = "Electric boosts Electric Pokémon."
   val Duration: Int = 5

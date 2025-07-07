@@ -14,8 +14,10 @@ case class Rain(t: Int) extends Weather with FieldEffect(t)
   override val description: String = Sandstorm.Description
   override val typesModifier: Map[Type, Double] =
     Map(Water -> Rain.WaterModifier, Fire -> Rain.FireModifier)
+  override val name: String = Rain.Name
 
 object Rain:
+  val Name = "Rain"
   val WaterModifier: Double = 1.5
   val FireModifier: Double = 0.5
   val Description: String = "Rain boosts Water and weakens Fire Pokémon."
