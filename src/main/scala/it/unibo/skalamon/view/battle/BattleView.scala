@@ -34,14 +34,14 @@ object BattleView:
     override def update(battleState: BattleState, turn: Int): Unit =
       val trainers = battleState.trainers
       require(
-        trainers.size == BattleScreen.playerNumber,
-        s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
+        trainers.size == BattleScreen.PlayerCount,
+        s"Expected ${BattleScreen.PlayerCount} trainers, but got ${trainers.size}."
       )
 
       val Seq(player, opponent) = trainers
 
       screen.setTurn(turn)
-      screen.setField(battleState.field)
+      screen.setField(battleState.field, turn)
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
       screen.setPokemonTeam(

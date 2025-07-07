@@ -2,7 +2,7 @@ package it.unibo.skalamon.view.battle
 
 import asciiPanel.AsciiPanel
 import it.unibo.skalamon.model.behavior.kind.StatStage
-import it.unibo.skalamon.model.field.Field
+import it.unibo.skalamon.model.field.{Field, FieldEffectMixin}
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.Screen
@@ -39,28 +39,30 @@ class BattleScreen(
     * components.
     */
   def setTurn(turn: Int): Unit =
-    terminal.writeCenter(s"Turn: $turn", turnY, turnColor)
+    terminal.writeCenter(s"Turn: $turn", turnLineY, turnColor)
 
   /** Sets the field for the battle screen.
     * @param field
     *   The field to be displayed on the battle screen.
     */
-  def setField(field: Field): Unit =
-    terminal.write(
-      s"Terrain: ${field.terrain.getOrElse(defaultTerrainName)}",
-      leftScreenBorder,
-      terrainY
-    )
-    terminal.write(
-      s"Room: ${field.room.getOrElse(defaultRoomName)}",
-      leftScreenBorder,
-      roomY
-    )
-    terminal.write(
-      s"Weather: ${field.weather.getOrElse(defaultWeatherName)}",
-      leftScreenBorder,
-      weatherY
-    )
+  def setField(field: Field, currentTurn: Int): Unit =
+    val terrainText = field.terrain match
+      case Some(exp: FieldEffectMixin.Expirable) =>
+        s"${field.terrain.getOrElse(defaultTerrainName)} - Turns left: ${exp.turnsLeft(currentTurn)}"
+      case _ => defaultTerrainName
+    terminal.write(s"Terrain: $terrainText", leftScreenBorder, terrainY)
+
+    val roomText = field.room match
+      case Some(exp: FieldEffectMixin.Expirable) =>
+        s"${field.room.getOrElse(defaultRoomName)} - Turns left: ${exp.turnsLeft(currentTurn)}"
+      case _ => defaultRoomName
+    terminal.write(s"Room: $roomText", leftScreenBorder, roomY)
+
+    val weatherText = field.weather match
+      case Some(exp: FieldEffectMixin.Expirable) =>
+        s"${field.weather.getOrElse(defaultWeatherName)} - Turns left: ${exp.turnsLeft(currentTurn)}"
+      case _ => defaultWeatherName
+    terminal.write(s"Weather: $weatherText", leftScreenBorder, weatherY)
 
   /** Shows the player's and opponent's names on the screen.
     * @param player
@@ -87,11 +89,11 @@ class BattleScreen(
   ): Unit =
     drawBattlePokemonSlot(
       BoxContainerData(formatBattlePokemon(playerBP), playerBPColor),
-      BattleScreen.p1AbilitiesY + BattleScreen.abilitySlotHeight
+      p1AbilitiesY + abilitySlotHeight
     )
     drawBattlePokemonSlot(
       BoxContainerData(formatBattlePokemon(opponentBP), opponentBPColor),
-      BattleScreen.p1BattlePokemonY + BattleScreen.battlePokemonHeight + BattleScreen.playerSidePadding
+      p1BattlePokemonY + battlePokemonHeight + playerSidePadding
     )
 
   /** Sets the Pokémon pool for both players on the screen.
@@ -133,10 +135,10 @@ class BattleScreen(
     BoxContainer(
       terminal,
       battlePokemonData,
-      centerX(BattleScreen.battlePokemonWidth),
+      centerX(battlePokemonWidth),
       y,
-      BattleScreen.battlePokemonWidth,
-      BattleScreen.battlePokemonHeight
+      battlePokemonWidth,
+      battlePokemonHeight
     )
 
   /** Sets the Pokémon slots for a team on the screen.
@@ -153,7 +155,7 @@ class BattleScreen(
         else
           BoxContainerData(formatTeam(p, key), teamColor)
       } ++
-        Seq.fill(BattleScreen.pokemonSlotNum - team.length)(
+        Seq.fill(pokemonSlotCount - team.length)(
           BoxContainerData(Seq(defaultPokemonName), teamEmptyColor)
         )
 
@@ -161,8 +163,8 @@ class BattleScreen(
       terminal,
       filledTeam,
       y,
-      BattleScreen.pokemonSlotWidth,
-      BattleScreen.pokemonSlotHeight
+      pokemonSlotWidth,
+      pokemonSlotHeight
     )
 
   /** Sets the moves slots for a team on the screen.
@@ -176,7 +178,7 @@ class BattleScreen(
       moves.map { case BattleMoveWithKey(m, key) =>
         BoxContainerData(formatMove(m, key), teamColor)
       } ++
-        Seq.fill(BattleScreen.abilitySlotNum - moves.length)(
+        Seq.fill(abilitySlotCount - moves.length)(
           BoxContainerData(Seq(defaultAbilityName), teamEmptyColor)
         )
 
@@ -184,8 +186,8 @@ class BattleScreen(
       terminal,
       filledMoves,
       y,
-      BattleScreen.abilitySlotWidth,
-      BattleScreen.abilitySlotHeight
+      abilitySlotWidth,
+      abilitySlotHeight
     )
 
   /** Creates the text for the Battle Pokémon slot.
@@ -263,46 +265,52 @@ class BattleScreen(
     (terminal.getWidthInCharacters - containerWidth) / 2
 
 object BattleScreen:
-  /** The number of players in the battle. */
-  val playerNumber: Int = 2
+  /** Number of players in the battle */
+  val PlayerCount: Int = 2
 
-  private val leftScreenBorder = 0
+  // === Layout constants ===
+  private val leftScreenBorder: Int = 0
+  private val turnLineY: Int = 1
 
-  private val turnY = 0
+  private val terrainOffset: Int = 2
+  private val roomOffset: Int = 1
+  private val weatherOffset: Int = 1
 
-  private val terrainY = 2
-  private val roomY = 3
-  private val weatherY = 4
+  private val playerNameOffset: Int = 2
+  private val playerTeamGap: Int = 2
+  private val playerSidePadding: Int = 3
 
-  private val playerNameY = 6
-  private val playerTeamGap = 2
-  private val playerSidePadding = 3
+  // === Pokémon team layout ===
+  private val pokemonSlotCount: Int = 5
+  private val pokemonSlotWidth: Int = 15
+  private val pokemonSlotHeight: Int = 4
 
-  // Pokemon slots
-  private val pokemonSlotNum = 5
-  private val pokemonSlotWidth = 15
-  private val pokemonSlotHeight = 4
+  // === Ability layout ===
+  private val abilitySlotCount: Int = 4
+  private val abilitySlotWidth: Int = 20
+  private val abilitySlotHeight: Int = 8
 
-  // Abilities
-  private val abilitySlotNum = 4
-  private val abilitySlotWidth = 20
-  private val abilitySlotHeight = 8
+  // === Battle Pokémon layout ===
+  private val battlePokemonWidth: Int = 46
+  private val battlePokemonHeight: Int = 5
 
-  // Battle Pokémon
-  private val battlePokemonWidth = 46
-  private val battlePokemonHeight = 5
+  // === Computed Y positions ===
+  private val terrainY: Int = turnLineY + terrainOffset
+  private val roomY: Int = terrainY + roomOffset
+  private val weatherY: Int = roomY + weatherOffset
+  private val playerNameY: Int = weatherY + playerNameOffset
 
-  // Layout positions (computed)
-  private val p1PokemonY = playerNameY + playerTeamGap
-  private val p1AbilitiesY = p1PokemonY + pokemonSlotHeight
-  private val p1BattlePokemonY = p1AbilitiesY + abilitySlotHeight
+  private val p1PokemonY: Int = playerNameY + playerTeamGap
+  private val p1AbilitiesY: Int = p1PokemonY + pokemonSlotHeight
+  private val p1BattlePokemonY: Int = p1AbilitiesY + abilitySlotHeight
 
-  private val p2BattlePokemonY =
+  private val p2BattlePokemonY: Int =
     p1BattlePokemonY + battlePokemonHeight + playerSidePadding
-  private val p2AbilitiesY = p2BattlePokemonY + battlePokemonHeight
-  private val p2PokemonY = p2AbilitiesY + abilitySlotHeight
+  private val p2AbilitiesY: Int = p2BattlePokemonY + battlePokemonHeight
+  private val p2PokemonY: Int = p2AbilitiesY + abilitySlotHeight
 
-  private val opponentNameY = p2PokemonY + pokemonSlotHeight + playerTeamGap
+  private val opponentNameY: Int =
+    p2PokemonY + pokemonSlotHeight + playerTeamGap
 
   // Colors
   private val turnColor: Color = Color.WHITE
