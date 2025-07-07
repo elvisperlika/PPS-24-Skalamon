@@ -2,7 +2,6 @@ package it.unibo.skalamon.model.event
 
 import it.unibo.skalamon.model.battle.{
   Battle,
-  BattleState,
   TurnStage,
   hookBattleStateUpdate
 }

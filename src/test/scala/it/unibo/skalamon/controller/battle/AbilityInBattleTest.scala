@@ -40,14 +40,14 @@ class AbilityInBattleTest extends AnyFlatSpec with should.Matchers with BattleSi
 
     battle.state.field.weather shouldBe Some(Sandstorm(0))
 
+    controller.update() // exe action
+    controller.update() // ended
     controller.update()
-    controller.update()
-    controller.update()
-    controller.update()
+    controller.update() // started
 
-    val (hurt, notHurt) = battle.state.inField
+    val (notHurt, hurt) = battle.state.inField
     notHurt.currentHP shouldBe notHurt.base.hp
-    // hurt.currentHP shouldBe <(hurt.base.hp) TODO does not pass
+    hurt.currentHP shouldBe <(hurt.base.hp)
 
   "Swift Swim" should "increase source's attack in rain" in:
     val (battle, controller, a, b) = newBattle(neutral, pelipper)(squirtle)

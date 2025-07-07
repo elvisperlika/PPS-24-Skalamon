@@ -1,13 +1,22 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.model.field.FieldEffectMixin.Expirable
-import it.unibo.skalamon.model.field.fieldside.{FieldSide, SideCondition}
+import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, SideCondition}
+import it.unibo.skalamon.model.field.fieldside.FieldSide
 import it.unibo.skalamon.model.field.{Field, FieldEffectMixin}
 
 object ExpirableSystem:
 
   extension (field: Field)
-    
+    /** Remove all expirable effects from the battlefield, like:
+      *   - Terrain
+      *   - Room
+      *   - Weather
+      *   - SideCondition
+      * @param t
+      *   Current turn
+      * @return
+      *   Field with no expired effects
+      */
     def removeExpiredEffects(t: Int): Field =
       /** Return the same Option of the [[Expirable]] status if it's not
         * expired, otherwise None.

@@ -13,3 +13,6 @@ trait BehaviorVisitor[T]:
   def visit(behavior: StatusBehavior): T
   def visit(behavior: ClearAllStatusBehavior): T
   def visit(behavior: WeatherBehavior): T
+  def visit(behavior: TerrainBehavior): T
+  def visit(behavior: RoomBehavior): T
+  def visit(behavior: SideConditionBehavior): T

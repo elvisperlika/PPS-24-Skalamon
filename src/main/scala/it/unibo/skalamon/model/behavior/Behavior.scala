@@ -1,5 +1,12 @@
 package it.unibo.skalamon.model.behavior
 
+import it.unibo.skalamon.model.battle.Battle
+import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateRoom
+import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateTerrain
+import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateWeather
+import it.unibo.skalamon.model.behavior.kind.RoomBehavior
+import it.unibo.skalamon.model.behavior.kind.TerrainBehavior
+import it.unibo.skalamon.model.behavior.kind.WeatherBehavior
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.behavior.visitor.BehaviorVisitor
 
@@ -55,3 +62,22 @@ object EmptyBehavior extends Behavior:
   override def apply[T <: WithBehaviors](container: T)(using
       modifiers: BehaviorModifiers
   ): T = container
+
+extension (behavior: Behavior)
+  /** If the Behavior create a field effects this function send an event to the
+    * battle event manager.
+    * @param battle
+    *   Battle
+    */
+  def notifyFieldEffects(battle: Battle): Unit = behavior match
+    case wb: WeatherBehavior =>
+      battle.eventManager.notify(
+        CreateWeather of wb.weather(battle.turnIndex - 1)
+      )
+    case rb: RoomBehavior =>
+      battle.eventManager.notify(CreateRoom of rb.room(battle.turnIndex - 1))
+    case tb: TerrainBehavior =>
+      battle.eventManager.notify(
+        CreateTerrain of tb.terrain(battle.turnIndex - 1)
+      )
+    case _ =>

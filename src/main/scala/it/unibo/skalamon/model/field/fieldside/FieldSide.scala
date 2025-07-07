@@ -1,11 +1,13 @@
 package it.unibo.skalamon.model.field.fieldside
 
+import it.unibo.skalamon.model.field.FieldEffectMixin.SideCondition
+
 import scala.reflect.ClassTag
 
 /** Represents the side of the battlefield assigned to a single Pokémon.
   *
   * @param conditions
-  *   [[FieldSide]] may be affected by overlapping [[SideCondition2]]s or none
+  *   [[FieldSide]] may be affected by overlapping [[SideCondition]]s or none
   */
 case class FieldSide(
     conditions: List[SideCondition] = Nil
@@ -27,18 +29,13 @@ extension (field: FieldSide)
         else field
       case _ => field.copy(conditions = condition :: field.conditions)
 
-/** Represent a state that affect Pokémon in a [[FieldSide]], typically
-  * expirable.
-  */
-trait SideCondition
-
 /** Mixin to create [[SideCondition]] with constraint.
   */
 trait AddConstraint:
   def canAdd(existing: List[SideCondition]): Boolean
 
-/** Mixin constraint to create [[SideCondition]] that can be added on
-  * [[FieldSide]] only one for time.
+/** Mixin constraint to create [[SideCondition]] that can't have 
+  * same kind of [[SideCondition]] in the same [[FieldSide]].
   * @tparam E
   *   Kind of the [[SideCondition]] created with this mixin
   */

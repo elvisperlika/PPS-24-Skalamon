@@ -2,9 +2,9 @@ package it.unibo.skalamon.model.field.fieldside.kind
 
 import it.unibo.skalamon.model.battle.turn.BattleEvents.PokemonSwitchIn
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, PokemonRules}
+import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, PokemonRules, SideCondition}
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
-import it.unibo.skalamon.model.field.fieldside.{Multi, SideCondition}
+import it.unibo.skalamon.model.field.fieldside.Multi
 import it.unibo.skalamon.model.pokemon.Pokemon
 import it.unibo.skalamon.model.types.TypesCollection.{Dragon, Flying}
 import it.unibo.skalamon.model.data.percent
