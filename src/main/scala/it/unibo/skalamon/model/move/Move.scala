@@ -66,6 +66,8 @@ case class BattleMove(move: Move, pp: Int)
 object Move:
   import it.unibo.skalamon.model.dsl.*
 
+  // Normal
+
   def tackle: Move =
     move("Tackle", Normal, Physical):
       _ pp 35 onSuccess SingleHitBehavior(40)
@@ -82,9 +84,27 @@ object Move:
     move("Swift", Normal, Special):
       _.neverFailing pp 20 onSuccess SingleHitBehavior(60)
 
+  def swordDance: Move =
+    import it.unibo.skalamon.model.behavior.kind.+
+    move("Sword Dance", Normal, Status):
+      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2) with TargetModifier(Self)
+
+  def growl: Move =
+    move("Growl", Normal, Status):
+      _ pp 40 onSuccess StatChangeBehavior(Attack - 1)
+
+  def superFang: Move =
+    move("Super Fang", Normal, Physical):
+      _ pp 10 onSuccess : context =>
+        DamageBehavior(context.target.currentHP / 2)
+
+  // Dark
+
   def bite: Move =
     move("Bite", Dark, Physical):
       _ pp 25 onSuccess SingleHitBehavior(60)
+
+  // Electric
 
   def thunderbolt: Move =
     move("Thunderbolt", Electric, Special):
@@ -97,6 +117,8 @@ object Move:
     move("Thunder Wave", Electric, Status):
       _ pp 20 onSuccess StatusBehavior(_ => Paralyze)
 
+  // Dragon
+
   def dragonRage: Move =
     move("Dragon Rage", Dragon, Special):
       _ pp 10 onSuccess DamageBehavior(40)
@@ -104,21 +126,6 @@ object Move:
   def dragonClaw: Move =
     move("Dragon Claw", Dragon, Physical):
       _ pp 15 onSuccess SingleHitBehavior(80)
-
-  def roost: Move =
-    move("Roost", Flying, Status):
-      _ pp 10 onSuccess: context =>
-        new HealBehavior(context.source.base.hp - context.source.currentHP)
-          with TargetModifier(Self)
-
-  def swordDance: Move =
-    import it.unibo.skalamon.model.behavior.kind.+
-    move("Sword Dance", Normal, Status):
-      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2) with TargetModifier(Self)
-
-  def growl: Move =
-    move("Growl", Normal, Status):
-      _ pp 40 onSuccess StatChangeBehavior(Attack - 1)
 
   def dragonDance: Move =
     import it.unibo.skalamon.model.behavior.kind.+
@@ -128,6 +135,16 @@ object Move:
         StatChangeBehavior(Speed + 1)
       ) with TargetModifier(Self)
 
+  // Flying
+
+  def roost: Move =
+    move("Roost", Flying, Status):
+      _ pp 10 onSuccess: context =>
+        new HealBehavior(context.source.base.hp - context.source.currentHP)
+          with TargetModifier(Self)
+
+  // Water
+
   def surf: Move =
     move("Surf", Water, Special):
       _ pp 15 onSuccess SingleHitBehavior(90)
@@ -135,6 +152,12 @@ object Move:
   def aquaJet: Move =
     move("Aqua Jet", Water, Physical):
       _ pp 20 priority 1 onSuccess SingleHitBehavior(40)
+
+  def rainDance: Move =
+    move("Rain Dance", Water, Status):
+      _ pp 5 onSuccess WeatherBehavior(Rain(_))
+
+  // Fire
 
   def flamethrower: Move =
     move("Flamethrower", Fire, Special):
@@ -147,13 +170,18 @@ object Move:
     move("Will-O-Wisp", Fire, Status):
       _ pp 15 onSuccess StatusBehavior(_ => Burn)
 
+  // Ground
+
   def earthquake: Move =
     move("Earthquake", Ground, Physical):
       _ pp 10 onSuccess SingleHitBehavior(100)
 
-  def razorLeaf: Move =
-    move("Razor Leaf", Grass, Physical):
-      _ pp 25 onSuccess SingleHitBehavior(55)
+  def fissure: Move =
+    move("Fissure", Ground, Physical):
+      _ pp 5 accuracyOf 30.percent onSuccess : context =>
+        DamageBehavior(context.target.currentHP)
+
+  // Grass
 
   def grassKnot: Move =
     move("Grass Knot", Grass, Special):
@@ -162,21 +190,13 @@ object Move:
         val power = 10 * min(120, max(20, 60 * log10(context.target.base.weightKg) - 40))
         SingleHitBehavior(power.toInt)
 
-  def superFang: Move =
-    move("Super Fang", Normal, Physical):
-      _ pp 10 onSuccess: context =>
-        DamageBehavior(context.target.currentHP / 2)
 
-  def fissure: Move =
-    move("Fissure", Ground, Physical):
-      _ pp 5 accuracyOf 30.percent onSuccess: context =>
-          DamageBehavior(context.target.currentHP)
+  def razorLeaf: Move =
+    move("Razor Leaf", Grass, Physical):
+      _ pp 25 onSuccess SingleHitBehavior(55)
+
 
   def bulletSeed: Move =
     move("Bullet Seed", Grass, Physical):
       _ pp 30 onSuccess: context =>
         RandomModifier(2, 5)(_ => SingleHitBehavior(10))
-        
-  def rainDance: Move =
-    move("Rain Dance", Water, Status):
-      _ pp 5 onSuccess WeatherBehavior(Rain(_))
