@@ -76,7 +76,7 @@ class WeatherTest extends AnyFlatSpec with should.Matchers:
     var pokemonInBattle = pikachu :: snowsaur :: Nil
     val snow: Snow = Snow(5)
 
-    snow.rules.foreach((e, r) =>
+    snow.hooks.foreach((e, r) =>
       fieldEvents.watch(e)(_ =>
         pokemonInBattle = pokemonInBattle.map(r(_))
       )

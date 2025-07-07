@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.field.fieldside.kind
 
 import it.unibo.skalamon.model.battle.turn.BattleEvents.PokemonSwitchIn
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, PokemonRules, SideCondition}
+import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, Hooks, SideCondition}
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
 import it.unibo.skalamon.model.field.fieldside.Multi
 import it.unibo.skalamon.model.pokemon.Pokemon
@@ -13,10 +13,10 @@ import it.unibo.skalamon.model.field.fieldside.kind.Spikes.DamagePercentage
 import scala.reflect.ClassTag
 
 case class Spikes(t: Int)(implicit val classTag: ClassTag[Spikes])
-    extends SideCondition with Multi[Spikes](Spikes.Limit) with PokemonRules
+    extends SideCondition with Multi[Spikes](Spikes.Limit) with Hooks
     with FieldEffect(t)
     with Expirable(t, Spikes.Duration):
-  override val rules: List[(EventType[_], PokemonRule)] =
+  override val hooks: List[(EventType[_], PokemonRule)] =
     (
       PokemonSwitchIn,
       Modify.except(Flying, Dragon)(p =>

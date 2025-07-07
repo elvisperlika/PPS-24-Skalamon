@@ -9,10 +9,10 @@ object FieldEffectMixin:
   /** [[FieldEffect]] mixin to add [[PokemonRule]]s to execute when an event is
     * triggered.
     */
-  trait PokemonRules:
+  trait Hooks:
     /** List of [[Event]]s that trigger [[PokemonRule]]s.
       */
-    val rules: List[(EventType[_], PokemonRule)]
+    val hooks: List[(EventType[_], PokemonRule)]
 
   /** [[FieldEffect]] mixin to add [[Type]] modifiers that have to be applied to
     * Pokémon moves with defined types.

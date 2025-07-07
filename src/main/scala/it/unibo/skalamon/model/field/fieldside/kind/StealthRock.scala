@@ -2,7 +2,7 @@ package it.unibo.skalamon.model.field.fieldside.kind
 
 import it.unibo.skalamon.model.battle.turn.BattleEvents.PokemonSwitchIn
 import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, PokemonRules, SideCondition}
+import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, FieldEffect, Hooks, SideCondition}
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
 import it.unibo.skalamon.model.field.fieldside.Unique
 import it.unibo.skalamon.model.types.TypeUtility
@@ -14,9 +14,9 @@ import scala.reflect.ClassTag
 
 case class StealthRock(t: Int)(implicit val classTag: ClassTag[StealthRock])
     extends SideCondition with Unique[StealthRock]
-    with PokemonRules with FieldEffect(t)
+    with Hooks with FieldEffect(t)
     with Expirable(t, StealthRock.Duration):
-  override val rules: List[(EventType[_], PokemonRule)] =
+  override val hooks: List[(EventType[_], PokemonRule)] =
     (
       PokemonSwitchIn,
       Modify.all {

@@ -9,10 +9,10 @@ import it.unibo.skalamon.model.types.TypesCollection.Ice
 case class Snow(t: Int)
     extends Weather
     with FieldEffect(t)
-    with PokemonRules
+    with Hooks
     with Expirable(t, Snow.Duration):
   override val description: String = Snow.Description
-  override val rules: List[(EventType[_], PokemonRule)] =
+  override val hooks: List[(EventType[_], PokemonRule)] =
     (
       CreateWeather,
       Modify.except(Ice) { p => p.copy(currentHP = p.currentHP - Snow.Damage) }
