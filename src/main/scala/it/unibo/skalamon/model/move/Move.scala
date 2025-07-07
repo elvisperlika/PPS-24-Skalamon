@@ -20,7 +20,7 @@ import it.unibo.skalamon.model.pokemon.Stat.{
   SpecialDefense,
   Speed
 }
-import it.unibo.skalamon.model.status.{BadlyPoison, Burn, Paralyze, Sleep}
+import it.unibo.skalamon.model.status.{Poison, Status, *}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -104,6 +104,11 @@ object Move:
     move("Super Fang", Normal, Physical):
       _ pp 10 onSuccess: context =>
         DamageBehavior(context.target.currentHP / 2)
+
+  def protect: Move =
+    move("Protect", Normal, Status):
+      _ pp 10 onSuccess new StatusBehavior(_ => ProtectEndure)
+        with TargetModifier(Self)
 
   // Dark
 
@@ -273,5 +278,16 @@ object Move:
     move("Poison Jab", Poison, Physical):
       _ pp 20 onSuccess groupOf(
         SingleHitBehavior(80),
-        new StatusBehavior(_ => it.unibo.skalamon.model.status.Poison) with ProbabilityModifier(30.percent)
+        new StatusBehavior(_ => it.unibo.skalamon.model.status.Poison)
+          with ProbabilityModifier(30.percent)
+      )
+
+  // Bug
+
+  def bugBuzz: Move =
+    move("Bug Buzz", Bug, Special):
+      _ pp 10 onSuccess groupOf(
+        SingleHitBehavior(90),
+        new StatChangeBehavior(SpecialDefense - 1)
+          with ProbabilityModifier(10.percent)
       )

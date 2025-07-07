@@ -117,7 +117,9 @@ object Pokemon:
     pokemon("Lucario"):
       _ typed Fighting + Steel hp 70 weighing 54.0.kg ability intimidate stat Attack -> 110 stat Defense -> 70 stat SpecialAttack -> 115 stat SpecialDefense -> 70 stat Speed -> 90 moves (
         quickAttack,
-        swordDance
+        swordDance,
+        protect,
+        superpower,
       )
 
   def snorlax: Pokemon =
@@ -126,6 +128,7 @@ object Pokemon:
         tackle,
         rest,
         earthquake,
+        protect,
       )
 
   def bulbasaur: Pokemon =
@@ -137,9 +140,13 @@ object Pokemon:
         bulletSeed
       )
 
-  val yanmega: Pokemon =
+  def yanmega: Pokemon =
     pokemon("Yanmega"):
-      _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95
+      _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95 moves (
+        bugBuzz,
+        protect,
+        sunnyDay
+      )
 
   def charmander: Pokemon =
     pokemon("Charmander"):
