@@ -103,7 +103,7 @@ def main(): Unit =
         controller.registerAction(source, action)
 
   def handlePokemonSwitch(trainer: Trainer, pokemonIndex: Int): Unit =
-    if (controller.isWaitingForActions) then
+    if controller.isWaitingForActions then
       val availablePokemon = trainer.teamWithoutInField
       availablePokemon.lift(pokemonIndex) match
         case Some(pokemon) if pokemon.currentHP > 0 =>

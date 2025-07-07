@@ -41,6 +41,7 @@ object BattleView:
       val Seq(player, opponent) = trainers
 
       screen.setTurn(turn)
+      screen.setField(battleState.field)
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
       screen.setPokemonTeam(

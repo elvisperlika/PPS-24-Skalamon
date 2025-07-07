@@ -2,6 +2,7 @@ package it.unibo.skalamon.view.battle
 
 import asciiPanel.AsciiPanel
 import it.unibo.skalamon.model.behavior.kind.StatStage
+import it.unibo.skalamon.model.field.Field
 import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.Screen
@@ -21,6 +22,10 @@ class BattleScreen(
 ) extends Screen(terminal):
   import BattleScreen.*
 
+  private val defaultTerrainName = "No Terrain"
+  private val defaultRoomName = "No Room"
+  private val defaultWeatherName = "No Weather"
+
   private val defaultPokemonName = "No Pokemon"
   private val defaultAbilityName = "No Move"
 
@@ -35,6 +40,27 @@ class BattleScreen(
     */
   def setTurn(turn: Int): Unit =
     terminal.writeCenter(s"Turn: $turn", turnY, turnColor)
+
+  /** Sets the field for the battle screen.
+    * @param field
+    *   The field to be displayed on the battle screen.
+    */
+  def setField(field: Field): Unit =
+    terminal.write(
+      s"Terrain: ${field.terrain.getOrElse(defaultTerrainName)}",
+      leftScreenBorder,
+      terrainY
+    )
+    terminal.write(
+      s"Room: ${field.room.getOrElse(defaultRoomName)}",
+      leftScreenBorder,
+      roomY
+    )
+    terminal.write(
+      s"Weather: ${field.weather.getOrElse(defaultWeatherName)}",
+      leftScreenBorder,
+      weatherY
+    )
 
   /** Shows the player's and opponent's names on the screen.
     * @param player
@@ -240,8 +266,15 @@ object BattleScreen:
   /** The number of players in the battle. */
   val playerNumber: Int = 2
 
+  private val leftScreenBorder = 0
+
   private val turnY = 0
-  private val playerNameY = 3
+
+  private val terrainY = 2
+  private val roomY = 3
+  private val weatherY = 4
+
+  private val playerNameY = 6
   private val playerTeamGap = 2
   private val playerSidePadding = 3
 
