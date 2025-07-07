@@ -2,6 +2,7 @@ package it.unibo.skalamon.controller.battle
 
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.BattleStateEvents
+import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.Move
 import it.unibo.skalamon.model.move.Move.*
@@ -135,6 +136,13 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     val deltaHpAfterRain = pelipper.hp - deltaHpBeforeRain - battle.state.inField._1.currentHP
 
     deltaHpAfterRain should be > deltaHpBeforeRain
+    
+  "Trick Room" should "apply that room" in:
+    val (battle, controller, _, _) = newBattle(malamar)(rattata)
+    controller.update()
+    registerMoves(trickRoom, growl)(controller)
+
+    battle.state.field.room shouldBe Some(TrickRoom(0))
     
   "PP" should "decrement after move execution" in:
     val (battle, controller, _, _) = newBattle(pelipper)(pelipper)

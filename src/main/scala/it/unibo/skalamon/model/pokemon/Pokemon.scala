@@ -92,6 +92,7 @@ object Pokemon:
         hypnosis,
         psychic,
         nightSlash,
+        trickRoom,
       )
 
   def gyarados: Pokemon =

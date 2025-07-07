@@ -10,10 +10,16 @@ import it.unibo.skalamon.model.behavior.modifier.{
 }
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
-import it.unibo.skalamon.model.pokemon.Stat.{Attack, SpecialDefense, Speed}
+import it.unibo.skalamon.model.pokemon.Stat.{
+  Attack,
+  Defense,
+  SpecialDefense,
+  Speed
+}
 import it.unibo.skalamon.model.status.{Burn, Paralyze, Sleep}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
@@ -229,14 +235,18 @@ object Move:
     move("Hypnosis", Psychic, Status):
       _ pp 20 onSuccess StatusBehavior(_ => Sleep)
 
+  def trickRoom: Move =
+    move("Trick Room", Psychic, Status):
+      _ pp 5 onSuccess RoomBehavior(TrickRoom(_))
+
   // Fighting
 
   def superpower: Move =
     move("Superpower", Fighting, Physical):
-      _ pp 5 onSuccess new StatChangeBehavior(Attack - 1) with TargetModifier(Self) /*groupOf(
+      _ pp 5 onSuccess groupOf(
         SingleHitBehavior(120),
         new BehaviorGroup(
           StatChangeBehavior(Attack - 1),
           StatChangeBehavior(Defense - 1)
         ) with TargetModifier(Self)
-      )*/
+      )
