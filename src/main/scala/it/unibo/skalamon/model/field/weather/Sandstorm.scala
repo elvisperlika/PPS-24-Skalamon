@@ -19,8 +19,10 @@ case class Sandstorm(t: Int)
         p.copy(currentHP = p.currentHP - Sandstorm.Damange)
       }
     ) :: Nil
+  override val name: String = Sandstorm.Name
 
 object Sandstorm:
+  val Name: String = "Sandstorm"
   val Damange: Int = 10
   val Description: String = "Sandstorm damages non-Rock, Ground, Steel types."
   val Duration: Int = 5

@@ -30,8 +30,10 @@ case class StealthRock(t: Int)(implicit val classTag: ClassTag[StealthRock])
       }
     ) :: Nil
   override val description: String = StealthRock.Description
+  override val name: String = StealthRock.Name
 
 object StealthRock:
+  val Name: String = "Stealth Rock"
   val DamagePercentage: Int = 13
   val Description: String =
     "Deals damage to the target’s Pokémon when they switch in. The damage depends to the target’s weakness to rock type."

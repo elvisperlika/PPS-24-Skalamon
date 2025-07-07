@@ -17,8 +17,10 @@ case class Misty(t: Int)
   override val description: String = Misty.Description
   override val typesModifier: Map[Type, Double] =
     Map(Dragon -> Misty.DragonModifier)
+  override val name: String = Misty.Name
 
 object Misty:
+  val Name = "Misty"
   val DragonModifier: Double = 0.5
   val Description: String = "Misty weakens Dragon Pokémon."
   val Duration: Int = 5

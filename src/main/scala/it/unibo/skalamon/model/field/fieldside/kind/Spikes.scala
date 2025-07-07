@@ -24,8 +24,10 @@ case class Spikes(t: Int)(implicit val classTag: ClassTag[Spikes])
       )
     ) :: Nil
   override val description: String = Spikes.Description
+  override val name: String = Spikes.Name
 
 object Spikes:
+  val Name: String = "Spikes"
   val DamagePercentage: Int = 13
   val Description: String =
     "Inflicts cumulative damage equal to 13% of the grounded Pokémon's HP when they switch in."

@@ -17,8 +17,10 @@ case class Snow(t: Int)
       CreateWeather,
       Modify.except(Ice) { p => p.copy(currentHP = p.currentHP - Snow.Damage) }
     ) :: Nil
+  override val name: String = Snow.Name
 
 object Snow:
+  val Name = "Snow"
   val Damage: Int = 10
   val Description: String = "Snow boosts Ice-type defense."
   val Duration: Int = 5

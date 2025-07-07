@@ -10,9 +10,10 @@ class SidesTest extends AnyFlatSpec with should.Matchers:
 
   "Side field" should "add condition" in:
     var side: FieldSide = FieldSide()
-    object SimpleSideCondition extends SideCondition
-    side = side.add(SimpleSideCondition)
-    side shouldEqual FieldSide(SimpleSideCondition :: Nil)
+    case class SimpleSideCondition() extends SideCondition
+    val ssc: SideCondition = SimpleSideCondition()
+    side = side.add(ssc)
+    side shouldEqual FieldSide(ssc :: Nil)
 
   it should "not add unique condition if one exist in field" in:
     val stealthRock: SideCondition = StealthRock(1)
