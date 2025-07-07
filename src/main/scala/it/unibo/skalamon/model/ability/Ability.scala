@@ -7,7 +7,7 @@ import it.unibo.skalamon.model.behavior.modifier.{
   ProbabilityModifier,
   TargetModifier
 }
-import it.unibo.skalamon.model.data.percent
+import it.unibo.skalamon.model.data.{Percentage, percent}
 import it.unibo.skalamon.model.event.{
   ActionEvents,
   BehaviorEvent,
@@ -18,7 +18,7 @@ import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm}
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
-import it.unibo.skalamon.model.status.Paralyze
+import it.unibo.skalamon.model.status.{Paralyze, Poison, Status}
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -103,7 +103,8 @@ object Ability:
     ability("Clear Body"):
       _.on(BehaviorEvent[StatChangeBehavior]()): (source, _, behavior) =>
         behavior match
-          case (b, context) if b.change.stage < 0 && (context.target is source) =>
+          case (b, context)
+              if b.change.stage < 0 && (context.target is source) =>
             new StatChangeBehavior(b.change.copy(stage = -b.change.stage))
               with TargetModifier(TargetModifier.Type.Self)
           case _ => nothing
@@ -136,17 +137,27 @@ object Ability:
         else
           nothing
 
-
-  /** If hit by a physical move, the opponent has a chance to be paralyzed */
-  def static: Ability =
-    ability("Static"):
+  private def statusOnContactAbility(
+      name: String,
+      status: Status,
+      probability: Percentage
+  ): Ability =
+    ability(name):
       _.on(BehaviorEvent[SingleHitBehavior]()): (source, target, behavior) =>
         behavior match
           case (b, context: MoveContext)
               if (context.target is source) && (context.origin.move.category == Physical) =>
-            new StatusBehavior(_ => Paralyze)
-              with ProbabilityModifier(30.percent)
+            new StatusBehavior(_ => status)
+              with ProbabilityModifier(probability)
           case _ => nothing
+
+  /** If hit by a physical move, the opponent has a chance to be paralyzed */
+  def static: Ability =
+    statusOnContactAbility("Static", Paralyze, 30.percent)
+
+  /** If hit by a physical move, the opponent has a chance to be poisoned */
+  def poisonTouch: Ability =
+    statusOnContactAbility("Poison Touch", Poison, 30.percent)
 
   /** When the Pokémon switches out, clears all its statuses */
   def naturalCure: Ability =

@@ -20,7 +20,7 @@ import it.unibo.skalamon.model.pokemon.Stat.{
   SpecialDefense,
   Speed
 }
-import it.unibo.skalamon.model.status.{Burn, Paralyze, Sleep}
+import it.unibo.skalamon.model.status.{BadlyPoison, Burn, Paralyze, Sleep}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -180,7 +180,7 @@ object Move:
   def willOWisp: Move =
     move("Will-O-Wisp", Fire, Status):
       _ pp 15 onSuccess StatusBehavior(_ => Burn)
-      
+
   def sunnyDay: Move =
     move("Sunny Day", Fire, Status):
       _ pp 5 onSuccess WeatherBehavior(Sunny(_))
@@ -261,4 +261,17 @@ object Move:
           StatChangeBehavior(Attack - 1),
           StatChangeBehavior(Defense - 1)
         ) with TargetModifier(Self)
+      )
+
+  // Poison
+
+  def toxic: Move =
+    move("Toxic", Poison, Status):
+      _ pp 10 onSuccess StatusBehavior(_ => BadlyPoison)
+
+  def poisonJab: Move =
+    move("Poison Jab", Poison, Physical):
+      _ pp 20 onSuccess groupOf(
+        SingleHitBehavior(80),
+        new StatusBehavior(_ => it.unibo.skalamon.model.status.Poison) with ProbabilityModifier(30.percent)
       )
