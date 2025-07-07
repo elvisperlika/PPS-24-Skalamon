@@ -1,14 +1,13 @@
 package it.unibo.skalamon.controller.battle
 
-import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.field.weather.Rain
+import it.unibo.skalamon.model.move.Move
 import it.unibo.skalamon.model.move.Move.*
-import it.unibo.skalamon.model.move.{BattleMove, Move}
+import it.unibo.skalamon.model.pokemon.Pokemon
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
 import it.unibo.skalamon.model.status.{Burn, Paralyze}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -17,24 +16,6 @@ import org.scalatest.matchers.should
   */
 class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     with BattleSimulationTest:
-
-  private def registerMoves(
-      a: Move,
-      b: Move
-  )(controller: BattleController): Unit =
-    val (trainerA, trainerB) = controller.battle.trainersTuple
-    controller.registerAction(
-      trainerA,
-      MoveAction(trainerA.inField.get.move(a), trainerA, trainerB)
-    )
-    controller.registerAction(
-      trainerB,
-      MoveAction(trainerB.inField.get.move(b), trainerB, trainerA)
-    )
-
-  extension (pokemon: BattlePokemon)
-    def move(move: Move): BattleMove =
-      pokemon.moves.find(_.move.name == move.name).get
 
   "Tackle" should "just cause damage" in:
     val (battle, controller, _, _) = newBattle(pikachu)(rattata)

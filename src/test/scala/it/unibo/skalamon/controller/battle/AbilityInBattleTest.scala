@@ -83,3 +83,14 @@ class AbilityInBattleTest extends AnyFlatSpec with should.Matchers with BattleSi
     controller.update()
 
     battle.state.inField._2.statChanges(Attack) shouldBe 0
+
+  "Contrary" should "reverse stat changes" in:
+    val (battle, controller, a, b) = newBattle(gyarados)(malamar)
+    controller.update()
+    battle.state.inField._2.statChanges.getOrElse(Attack, 0) shouldBe 0
+
+    controller.registerAction(a, SwitchAction(a.team.last))
+    controller.registerAction(b, SwitchAction(b.team.last))
+    controller.update()
+
+    battle.state.inField._2.statChanges(Attack) shouldBe 1

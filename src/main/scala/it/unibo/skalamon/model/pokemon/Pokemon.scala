@@ -54,7 +54,7 @@ object Pokemon:
         psychic,
         earthquake
       )
-  
+
   def tyranitar: Pokemon =
     pokemon("Tyranitar"):
       _ typed Rock + Dark hp 100 weighing 202.0.kg ability sandStream stat Attack -> 134 stat Defense -> 110 stat SpecialAttack -> 95 stat SpecialDefense -> 100 stat Speed -> 61 moves (
@@ -85,6 +85,14 @@ object Pokemon:
   def gardevoir: Pokemon =
     pokemon("Gardevoir"):
       _ typed Psychic + Fairy hp 68 weighing 48.4.kg ability synchronize stat Attack -> 65 stat Defense -> 65 stat SpecialAttack -> 125 stat SpecialDefense -> 115 stat Speed -> 80
+
+  def malamar: Pokemon =
+    pokemon("Malamar"):
+      _ typed Dark + Psychic hp 86 weighing 47.0.kg ability contrary stat Attack -> 92 stat Defense -> 88 stat SpecialAttack -> 68 stat SpecialDefense -> 75 stat Speed -> 73 moves (
+        hypnosis,
+        psychic,
+        nightSlash,
+      )
 
   def gyarados: Pokemon =
     pokemon("Gyarados"):

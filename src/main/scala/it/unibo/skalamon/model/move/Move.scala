@@ -14,7 +14,7 @@ import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, SpecialDefense, Speed}
-import it.unibo.skalamon.model.status.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.{Burn, Paralyze, Sleep}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -87,7 +87,8 @@ object Move:
   def swordDance: Move =
     import it.unibo.skalamon.model.behavior.kind.+
     move("Sword Dance", Normal, Status):
-      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2) with TargetModifier(Self)
+      _ pp 20 onSuccess new StatChangeBehavior(Attack + 2)
+        with TargetModifier(Self)
 
   def growl: Move =
     move("Growl", Normal, Status):
@@ -95,7 +96,7 @@ object Move:
 
   def superFang: Move =
     move("Super Fang", Normal, Physical):
-      _ pp 10 onSuccess : context =>
+      _ pp 10 onSuccess: context =>
         DamageBehavior(context.target.currentHP / 2)
 
   // Dark
@@ -103,6 +104,10 @@ object Move:
   def bite: Move =
     move("Bite", Dark, Physical):
       _ pp 25 onSuccess SingleHitBehavior(60)
+
+  def nightSlash: Move =
+    move("Night Slash", Dark, Physical):
+      _ pp 15 onSuccess SingleHitBehavior(70)
 
   // Electric
 
@@ -178,7 +183,7 @@ object Move:
 
   def fissure: Move =
     move("Fissure", Ground, Physical):
-      _ pp 5 accuracyOf 30.percent onSuccess : context =>
+      _ pp 5 accuracyOf 30.percent onSuccess: context =>
         DamageBehavior(context.target.currentHP)
 
   // Grass
@@ -187,14 +192,13 @@ object Move:
     move("Grass Knot", Grass, Special):
       import scala.math.{log10, max, min}
       _ pp 20 onSuccess: context =>
-        val power = 10 * min(120, max(20, 60 * log10(context.target.base.weightKg) - 40))
+        val power =
+          10 * min(120, max(20, 60 * log10(context.target.base.weightKg) - 40))
         SingleHitBehavior(power.toInt)
-
 
   def razorLeaf: Move =
     move("Razor Leaf", Grass, Physical):
       _ pp 25 onSuccess SingleHitBehavior(55)
-
 
   def bulletSeed: Move =
     move("Bullet Seed", Grass, Physical):
@@ -210,12 +214,29 @@ object Move:
   // Psychic
 
   def psychic: Move =
-      move("Psychic", Psychic, Special):
-        _ pp 10 onSuccess groupOf(
-            SingleHitBehavior(90),
-            new StatChangeBehavior(SpecialDefense - 1) with ProbabilityModifier(30.percent)
-        )
+    move("Psychic", Psychic, Special):
+      _ pp 10 onSuccess groupOf(
+        SingleHitBehavior(90),
+        new StatChangeBehavior(SpecialDefense - 1)
+          with ProbabilityModifier(30.percent)
+      )
 
   def zenHeadbutt: Move =
     move("Zen Headbutt", Psychic, Physical):
       _ pp 15 onSuccess SingleHitBehavior(80)
+
+  def hypnosis: Move =
+    move("Hypnosis", Psychic, Status):
+      _ pp 20 onSuccess StatusBehavior(_ => Sleep)
+
+  // Fighting
+
+  def superpower: Move =
+    move("Superpower", Fighting, Physical):
+      _ pp 5 onSuccess new StatChangeBehavior(Attack - 1) with TargetModifier(Self) /*groupOf(
+        SingleHitBehavior(120),
+        new BehaviorGroup(
+          StatChangeBehavior(Attack - 1),
+          StatChangeBehavior(Defense - 1)
+        ) with TargetModifier(Self)
+      )*/

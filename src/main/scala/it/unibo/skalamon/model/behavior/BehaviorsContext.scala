@@ -54,6 +54,7 @@ trait BehaviorsContext[O] extends WithBehaviors:
       val newState = behavior.accept(visitor)
 
       eventManager.queue += behavior.event(this)
+      println(behavior.getClass)
       eventManager.queue += BattleStateEvents.Changed of(
         currentState,
         newState

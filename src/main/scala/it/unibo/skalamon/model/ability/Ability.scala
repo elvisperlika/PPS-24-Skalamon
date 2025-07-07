@@ -108,6 +108,16 @@ object Ability:
               with TargetModifier(TargetModifier.Type.Self)
           case _ => nothing
 
+  /** Reverses any stat change. */
+  def contrary: Ability =
+    ability("Contrary"):
+      _.on(BehaviorEvent[StatChangeBehavior]()): (source, _, behavior) =>
+        behavior match
+          case (b, context) if context.target is source =>
+            new StatChangeBehavior(b.change.copy(stage = -b.change.stage * 2))
+              with TargetModifier(TargetModifier.Type.Self)
+          case _ => nothing
+
   /** When the Pokémon switches in, sets the weather to rain. */
   def drizzle: Ability =
     ability("Drizzle"):
