@@ -26,6 +26,8 @@ class BattleScreen(
 
   private val NoStatusText = "No Status"
 
+  private val emptyKey = "-"
+
   private val statChangeMaxLength = 3
 
   def setTurn(turn: Int): Unit =
@@ -117,7 +119,10 @@ class BattleScreen(
   private def drawTeamSlots(team: List[BattlePokemonWithKey], y: Int): Unit =
     val filledTeam: Seq[BoxContainerData] =
       team.map { case BattlePokemonWithKey(p, key) =>
-        BoxContainerData(formatTeam(p, key), teamColor)
+        if p.currentHP <= 0 then
+          BoxContainerData(formatTeam(p, emptyKey), teamEmptyColor)
+        else
+          BoxContainerData(formatTeam(p, key), teamColor)
       } ++
         Seq.fill(BattleScreen.pokemonSlotNum - team.length)(
           BoxContainerData(Seq(defaultPokemonName), teamEmptyColor)
