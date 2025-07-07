@@ -100,23 +100,12 @@ def main(): Unit =
         println(s"${source.name} selected move '${move.move.name}'")
         controller.registerAction(source, action)
 
-  def handlePokemonSwitch(
-      trainer: Trainer,
-      pokemonIndex: Int
-  ): Unit =
-    if controller.isWaitingForActions then
-      println("team: " + trainer.teamWithoutInField.map(p =>
-        p.base.name
-      ).mkString(
-        ", "
-      ) + s" - inField: ${trainer.inField.map(_.base.name).getOrElse(None)}")
-      trainer.teamWithoutInField.lift(pokemonIndex) match
   def handlePokemonSwitch(trainer: Trainer, pokemonIndex: Int): Unit =
     if (controller.isWaitingForActions) then
-      val availablePokemons = trainer.teamWithoutInField
-      availablePokemons.lift(pokemonIndex) match
+      val availablePokemon = trainer.teamWithoutInField
+      availablePokemon.lift(pokemonIndex) match
         case Some(pokemon) if pokemon.currentHP > 0 =>
-          val teamNames = availablePokemons.map(_.base.name).mkString(", ")
+          val teamNames = availablePokemon.map(_.base.name).mkString(", ")
           val currentInField =
             trainer.inField.map(_.base.name).getOrElse("None")
           println(s"team: $teamNames - inField: $currentInField")
