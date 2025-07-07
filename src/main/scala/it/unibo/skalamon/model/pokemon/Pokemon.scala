@@ -44,7 +44,11 @@ object Pokemon:
 
   def alakazam: Pokemon =
     pokemon("Alakazam"):
-      _ typed Psychic hp 55 weighing 48.0.kg ability synchronize stat Attack -> 50 stat Defense -> 45 stat SpecialAttack -> 135 stat SpecialDefense -> 95 stat Speed -> 120
+      _ typed Psychic hp 55 weighing 48.0.kg ability psychicSurge stat Attack -> 50 stat Defense -> 45 stat SpecialAttack -> 135 stat SpecialDefense -> 95 stat Speed -> 120 moves (
+        psychic,
+        calmMind,
+        protect,
+      )
 
   def metagross: Pokemon =
     pokemon("Metagross"):
@@ -84,7 +88,12 @@ object Pokemon:
 
   def gardevoir: Pokemon =
     pokemon("Gardevoir"):
-      _ typed Psychic + Fairy hp 68 weighing 48.4.kg ability synchronize stat Attack -> 65 stat Defense -> 65 stat SpecialAttack -> 125 stat SpecialDefense -> 115 stat Speed -> 80
+      _ typed Psychic + Fairy hp 68 weighing 48.4.kg ability psychicSurge stat Attack -> 65 stat Defense -> 65 stat SpecialAttack -> 125 stat SpecialDefense -> 115 stat Speed -> 80 moves (
+        psychic,
+        zenHeadbutt,
+        protect,
+        calmMind,
+      )
 
   def malamar: Pokemon =
     pokemon("Malamar"):
@@ -133,7 +142,7 @@ object Pokemon:
 
   def bulbasaur: Pokemon =
     pokemon("Bulbasaur"):
-      _ typed Grass + Poison hp 45 weighing 6.9.kg ability naturalCure stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45 moves(
+      _ typed Grass + Poison hp 45 weighing 6.9.kg ability grassySurge stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45 moves(
         tackle,
         grassKnot,
         razorLeaf,

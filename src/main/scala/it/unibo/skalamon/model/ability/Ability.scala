@@ -1,6 +1,5 @@
 package it.unibo.skalamon.model.ability
 
-import it.unibo.skalamon.model.battle.turn.BattleEvents
 import it.unibo.skalamon.model.behavior.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.{
@@ -14,6 +13,7 @@ import it.unibo.skalamon.model.event.{
   EventType,
   TurnStageEvents
 }
+import it.unibo.skalamon.model.field.terrain.{Grassy, Misty}
 import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm}
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
@@ -93,7 +93,7 @@ object Ability:
     */
   def synchronize: Ability =
     ability("Synchronize"):
-      _.on(BehaviorEvent[StatusBehavior]()): (source, target, behavior) =>
+      _.on(BehaviorEvent[StatChangeBehavior]()): (source, target, behavior) =>
         behavior match
           case (b, context) if context.target is source => b
           case _                                        => nothing
@@ -128,6 +128,24 @@ object Ability:
         else
           nothing
 
+  /** When the Pokémon switches in, sets the terrain to grassy. */
+  def grassySurge: Ability =
+    ability("Grassy Surge"):
+      _.on(ActionEvents.Switch): (source, _, switch) =>
+        if switch.in is source then
+          TerrainBehavior(Grassy(_))
+        else
+          nothing
+
+  /** When the Pokémon switches in, sets the terrain to misty (psychic). */
+  def psychicSurge: Ability =
+    ability("Psychic Surge"):
+      _.on(ActionEvents.Switch): (source, _, switch) =>
+        if switch.in is source then
+          TerrainBehavior(Misty(_))
+        else
+          nothing
+
   /** When the Pokémon switches in, sets the weather to sandstorm. */
   def sandStream: Ability =
     ability("Sand Stream"):
@@ -158,14 +176,3 @@ object Ability:
   /** If hit by a physical move, the opponent has a chance to be poisoned */
   def poisonTouch: Ability =
     statusOnContactAbility("Poison Touch", Poison, 30.percent)
-
-  /** When the Pokémon switches out, clears all its statuses */
-  def naturalCure: Ability =
-    ability("Natural Cure"):
-      // TODO add `out` to ActionEvents.Switch
-      _.on(BattleEvents.PokemonSwitchOut): (source, _, switched) =>
-        if switched is source then
-          new ClearAllStatusBehavior
-            with TargetModifier(TargetModifier.Type.Self)
-        else
-          nothing

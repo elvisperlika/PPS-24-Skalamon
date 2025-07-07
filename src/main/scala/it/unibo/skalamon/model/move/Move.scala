@@ -14,13 +14,8 @@ import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.field.weather.{Rain, Sunny}
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
-import it.unibo.skalamon.model.pokemon.Stat.{
-  Attack,
-  Defense,
-  SpecialDefense,
-  Speed
-}
-import it.unibo.skalamon.model.status.{Poison, Status, *}
+import it.unibo.skalamon.model.pokemon.Stat.*
+import it.unibo.skalamon.model.status.{Status, Poison as PoisonStatus, *}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -244,6 +239,14 @@ object Move:
     move("Hypnosis", Psychic, Status):
       _ pp 20 onSuccess StatusBehavior(_ => Sleep)
 
+  def calmMind: Move =
+    import it.unibo.skalamon.model.behavior.kind.+
+    move("Calm Mind", Psychic, Status):
+      _ pp 20 onSuccess new BehaviorGroup(
+        StatChangeBehavior(SpecialAttack + 1),
+        StatChangeBehavior(SpecialDefense + 1)
+      ) with TargetModifier(Self)
+
   def rest: Move =
     move("Rest", Psychic, Status):
       _ pp 10 onSuccess: context =>
@@ -278,7 +281,7 @@ object Move:
     move("Poison Jab", Poison, Physical):
       _ pp 20 onSuccess groupOf(
         SingleHitBehavior(80),
-        new StatusBehavior(_ => it.unibo.skalamon.model.status.Poison)
+        new StatusBehavior(_ => PoisonStatus)
           with ProbabilityModifier(30.percent)
       )
 
