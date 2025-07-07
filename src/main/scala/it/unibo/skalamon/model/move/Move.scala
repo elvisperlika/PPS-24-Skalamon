@@ -271,6 +271,14 @@ object Move:
         ) with TargetModifier(Self)
       )
 
+  def highJumpKick: Move =
+    move("High Jump Kick", Fighting, Physical):
+      _ pp 10 accuracyOf 90.percent onSuccess (context =>
+        SingleHitBehavior(130)
+      ) onFail (context =>
+        DamageBehavior(context.source.base.hp / 2)
+      )
+
   // Poison
 
   def toxic: Move =
