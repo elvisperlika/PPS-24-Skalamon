@@ -3,7 +3,7 @@ package it.unibo.skalamon
 import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
-import it.unibo.skalamon.model.event.{BattleStateEvents, TurnStageEvents}
+import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.view.MainView
 import it.unibo.skalamon.view.battle.{BattleInput, BattleView, PlayerSide}
@@ -25,15 +25,19 @@ def main(): Unit =
   val battleView = BattleView(mainView.getPlayScreen)
   val gameOverView = GameOverView(mainView.getGameOverScreen)
 
-  battle.eventManager.watch(TurnStageEvents.Started): turn =>
-    mainView.repaint()
-    battleView.update(turn.state.snapshot, controller.battle.turnIndex)
+  battle.eventManager.watch(BattleStateEvents.Changed): (_, state) =>
+    if battle.gameState == GameState.InProgress then
+      mainView.repaint()
+      battleView.update(state, controller.battle.turnIndex)
 
   battle.eventManager.watch(BattleStateEvents.Finished): winner =>
     mainView.repaint()
     gameOverView.update(winner)
 
   controller.start()
+  controller.battle.currentTurn.foreach(turn =>
+    battleView.update(turn.state.snapshot, controller.battle.turnIndex)
+  )
   mainView.setKeyPressedHandler { input =>
     val trainers = battle.currentTurn.get.state.snapshot.trainers
     val player = trainers.head
