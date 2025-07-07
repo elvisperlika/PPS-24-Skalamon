@@ -111,8 +111,21 @@ def main(): Unit =
         ", "
       ) + s" - inField: ${trainer.inField.map(_.base.name).getOrElse(None)}")
       trainer.teamWithoutInField.lift(pokemonIndex) match
-        case Some(p) if p != trainer.inField =>
-          println(s"${trainer.name} switched to ${p.base.name}")
-          controller.registerAction(trainer, SwitchAction(p))
+  def handlePokemonSwitch(trainer: Trainer, pokemonIndex: Int): Unit =
+    if (controller.isWaitingForActions) then
+      val availablePokemons = trainer.teamWithoutInField
+      availablePokemons.lift(pokemonIndex) match
+        case Some(pokemon) if pokemon.currentHP > 0 =>
+          val teamNames = availablePokemons.map(_.base.name).mkString(", ")
+          val currentInField =
+            trainer.inField.map(_.base.name).getOrElse("None")
+          println(s"team: $teamNames - inField: $currentInField")
+
+          if (!trainer.inField.contains(pokemon)) {
+            println(s"${trainer.name} switched to ${pokemon.base.name}")
+            controller.registerAction(trainer, SwitchAction(pokemon))
+          } else
+            println(s"${trainer.name} cannot switch to that Pokémon")
+
         case _ =>
-          println(s"${trainer.name} cannot switch to that Pokémon")
+          println("Cannot switch to that Pokémon, it is not available")
