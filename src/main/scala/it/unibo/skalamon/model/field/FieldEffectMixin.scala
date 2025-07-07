@@ -30,6 +30,7 @@ object FieldEffectMixin:
     /** Name of the field effect.
       */
     val name: String
+
     /** Field effect description.
       */
     val description: String
@@ -54,6 +55,15 @@ object FieldEffectMixin:
       */
     def isExpired(currentTurn: Int): Boolean =
       currentTurn >= creationTurn + duration
+
+    /** Get number of turns left before the field effect expires.
+      *
+      * @param currentTurn
+      *   The current turn in the battle
+      * @return
+      *   The number of turns remaining
+      */
+    def turnsLeft(currentTurn: Int): Int = creationTurn + duration - currentTurn
 
   /** Represents a weather condition affecting the battlefield. Influences rules
     * and type effectiveness.
