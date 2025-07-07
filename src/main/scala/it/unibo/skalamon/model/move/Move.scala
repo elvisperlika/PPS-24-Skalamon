@@ -13,7 +13,7 @@ import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.field.weather.Rain
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
-import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
+import it.unibo.skalamon.model.pokemon.Stat.{Attack, SpecialDefense, Speed}
 import it.unibo.skalamon.model.status.{Burn, Paralyze}
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
@@ -200,3 +200,22 @@ object Move:
     move("Bullet Seed", Grass, Physical):
       _ pp 30 onSuccess: context =>
         RandomModifier(2, 5)(_ => SingleHitBehavior(10))
+
+  // Steel
+
+  def bulletPunch: Move =
+    move("Bullet Punch", Steel, Physical):
+      _ pp 30 priority 1 onSuccess SingleHitBehavior(40)
+
+  // Psychic
+
+  def psychic: Move =
+      move("Psychic", Psychic, Special):
+        _ pp 10 onSuccess groupOf(
+            SingleHitBehavior(90),
+            new StatChangeBehavior(SpecialDefense - 1) with ProbabilityModifier(30.percent)
+        )
+
+  def zenHeadbutt: Move =
+    move("Zen Headbutt", Psychic, Physical):
+      _ pp 15 onSuccess SingleHitBehavior(80)

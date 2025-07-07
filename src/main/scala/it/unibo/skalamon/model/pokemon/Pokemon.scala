@@ -46,6 +46,15 @@ object Pokemon:
     pokemon("Alakazam"):
       _ typed Psychic hp 55 weighing 48.0.kg ability synchronize stat Attack -> 50 stat Defense -> 45 stat SpecialAttack -> 135 stat SpecialDefense -> 95 stat Speed -> 120
 
+  def metagross: Pokemon =
+    pokemon("Metagross"):
+      _ typed Steel + Psychic hp 80 weighing 550.0.kg ability clearBody stat Attack -> 135 stat Defense -> 130 stat SpecialAttack -> 95 stat SpecialDefense -> 90 stat Speed -> 70 moves (
+        bulletPunch,
+        zenHeadbutt,
+        psychic,
+        earthquake
+      )
+  
   def tyranitar: Pokemon =
     pokemon("Tyranitar"):
       _ typed Rock + Dark hp 100 weighing 202.0.kg ability sandStream stat Attack -> 134 stat Defense -> 110 stat SpecialAttack -> 95 stat SpecialDefense -> 100 stat Speed -> 61 moves (
@@ -73,28 +82,6 @@ object Pokemon:
         dragonDance
       )
 
-  def scizor: Pokemon =
-    Pokemon(
-      name = "Scizor",
-      types = Bug :: Steel :: Nil,
-      hp = 70,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 130,
-          Stat.Defense -> 100,
-          Stat.SpecialAttack -> 55,
-          Stat.SpecialDefense -> 80,
-          Stat.Speed -> 65
-        )
-      ),
-      ability = Ability("Swarm", List.empty),
-      weightKg = 118.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
   def gardevoir: Pokemon =
     pokemon("Gardevoir"):
       _ typed Psychic + Fairy hp 68 weighing 48.4.kg ability synchronize stat Attack -> 65 stat Defense -> 65 stat SpecialAttack -> 125 stat SpecialDefense -> 115 stat Speed -> 80

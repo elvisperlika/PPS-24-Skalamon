@@ -98,6 +98,16 @@ object Ability:
           case (b, context) if context.target is source => b
           case _                                        => nothing
 
+  /** Prevents any stat drop. */
+  def clearBody: Ability =
+    ability("Clear Body"):
+      _.on(BehaviorEvent[StatChangeBehavior]()): (source, _, behavior) =>
+        behavior match
+          case (b, context) if b.change.stage < 0 && (context.target is source) =>
+            new StatChangeBehavior(b.change.copy(stage = -b.change.stage))
+              with TargetModifier(TargetModifier.Type.Self)
+          case _ => nothing
+
   /** When the Pokémon switches in, sets the weather to rain. */
   def drizzle: Ability =
     ability("Drizzle"):

@@ -62,3 +62,24 @@ class AbilityInBattleTest extends AnyFlatSpec with should.Matchers with BattleSi
     battle.state.field.weather shouldBe Some(Rain(0))
 
     battle.state.inField._2.statChanges(Attack) shouldBe 1
+
+  "Intimidate" should "reduce target's attack on switch" in:
+    val (battle, controller, a, b) = newBattle(gyarados)(neutral)
+    controller.update()
+    battle.state.inField._2.statChanges.getOrElse(Attack, 0) shouldBe 0
+
+    controller.registerAction(a, SwitchAction(a.team.last))
+    controller.registerAction(b, SwitchAction(b.team.last))
+
+    battle.state.inField._2.statChanges(Attack) shouldBe -1
+
+  "Clear Body" should "prevent stat drops" in:
+    val (battle, controller, a, b) = newBattle(gyarados)(metagross)
+    controller.update()
+    battle.state.inField._2.statChanges.getOrElse(Attack, 0) shouldBe 0
+
+    controller.registerAction(a, SwitchAction(a.team.last))
+    controller.registerAction(b, SwitchAction(b.team.last))
+    controller.update()
+
+    battle.state.inField._2.statChanges(Attack) shouldBe 0
