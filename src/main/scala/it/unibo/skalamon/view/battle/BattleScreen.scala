@@ -30,6 +30,9 @@ class BattleScreen(
 
   private val statChangeMaxLength = 3
 
+  /** Repaints the battle screen, clearing the terminal and redrawing all
+    * components.
+    */
   def setTurn(turn: Int): Unit =
     terminal.writeCenter(s"Turn: $turn", turnY, turnColor)
 

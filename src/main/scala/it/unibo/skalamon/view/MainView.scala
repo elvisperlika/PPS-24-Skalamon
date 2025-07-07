@@ -47,6 +47,10 @@ class MainView extends JFrame:
   def getPlayScreen: BattleScreen =
     BattleScreen(terminal)
 
+  /** Returns the game-over screen for the game.
+    * @return
+    *   The GameOverScreen instance that represents the game-over screen.
+    */
   def getGameOverScreen: GameOverScreen =
     GameOverScreen(terminal)
 

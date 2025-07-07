@@ -2,6 +2,11 @@ package it.unibo.skalamon.view.gameOver
 
 import it.unibo.skalamon.model.battle.Trainer
 
+/** Represents a view for the game-over screen in the ScalaMon game.
+  *
+  * This trait defines the interface for updating the game-over view with the
+  * winner's name after a battle concludes.
+  */
 trait GameOverView:
 
   /** Update the game-over view with the winner's name.
