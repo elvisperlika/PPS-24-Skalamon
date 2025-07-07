@@ -7,8 +7,6 @@ between two teams of Pokémon (or rather _Skalámon_), each controlled by a trai
 
 ## Features
 
----
-
 - Enjoy intense offline battles between Skalámon creatures with your friends
 - Battle logic faithfully inspired by the original game mechanics
 - Create your own Skalámon generation using a fluent and expressive DSL
@@ -18,13 +16,10 @@ between two teams of Pokémon (or rather _Skalámon_), each controlled by a trai
 
 ## Requirements
 
----
-
 // TODO
 
 ## How to play
 
----
 
 **Download the latest JAR file from the GitHub releases page.**
 
@@ -47,8 +42,6 @@ The turn automatically progresses once both players have made their choices.
 // TODO: add game screenshot
 
 ## Create your Skalámon generation
-
----
 
 ### Skalámon creatures DSL
 
