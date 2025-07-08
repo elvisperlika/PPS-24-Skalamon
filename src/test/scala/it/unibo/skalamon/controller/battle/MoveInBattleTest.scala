@@ -9,7 +9,7 @@ import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
-import it.unibo.skalamon.model.status.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -87,14 +87,16 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     controller.update()
     registerMoves(thunderWave, tackle)(controller)
 
-    battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Paralyze)
+    battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(
+      Paralyze()
+    )
 
   "Will-O-Wisp" should "burn the target" in:
     val (battle, controller, _, _) = newBattle(charmander)(rattata)
     controller.update()
     registerMoves(willOWisp, tackle)(controller)
 
-    battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Burn)
+    battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Burn())
 
   "Earthquake" should "not affect flying Pokémon" in:
     val (battle, controller, _, _) = newBattle(gyarados)(dragonite)
@@ -105,7 +107,8 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     battle.state.inField._2.currentHP shouldBe dragonite.hp
 
   "Grass Knot" should "deal damage based on the target's weight" in:
-    val (battle, controller, _, _) = newBattle(bulbasaur)(bulbasaur.copy(weightKg = bulbasaur.weightKg * 2))
+    val (battle, controller, _, _) =
+      newBattle(bulbasaur)(bulbasaur.copy(weightKg = bulbasaur.weightKg * 2))
     controller.update()
     registerMoves(grassKnot, grassKnot)(controller)
 
@@ -151,14 +154,15 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     advanceToNextRegistration(controller)
 
     registerMoves(aquaJet, aquaJet)(controller)
-    val deltaHpAfterRain = pelipper.hp - deltaHpBeforeRain - battle.state.inField._1.currentHP
+    val deltaHpAfterRain =
+      pelipper.hp - deltaHpBeforeRain - battle.state.inField._1.currentHP
 
     deltaHpAfterRain should be > deltaHpBeforeRain
-    
+
   "PP" should "decrement after move execution" in:
     val (battle, controller, _, _) = newBattle(pelipper)(pelipper)
     controller.update()
-    
+
     while (battle.state.inField._1.move(rainDance).pp > 0) {
       registerMoves(rainDance, rainDance)(controller)
       advanceToNextRegistration(controller)
