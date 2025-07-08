@@ -1,7 +1,7 @@
 package it.unibo.skalamon.model.field.weather
 
 import it.unibo.skalamon.model.battle.turn.BattleEvents.CreateWeather
-import it.unibo.skalamon.model.event.{EventManager, EventType}
+import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.field.FieldEffectMixin.*
 import it.unibo.skalamon.model.field.{Modify, PokemonRule}
 import it.unibo.skalamon.model.types.TypesCollection.Ice

@@ -12,22 +12,21 @@ import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 case object DamageCalculatorGen1 extends DamageCalculator:
 
-  private val DamageDivider: Int = 30
-  private val DamageBoost: Int = 2
+  private val DamageDivider: Int = 25
+  private val DamageBoost: Int = 3
 
   def calculate(
       origin: BattleMove,
       source: BattlePokemon,
       target: BattlePokemon,
-      power: Int,
+      movePower: Int,
       battleState: BattleState
   ): Int =
 
     val baseDamage: Double =
       val categoryScalar: Double =
         calculateCategoryScalar(origin, source.actualStats, target.actualStats)
-      power * categoryScalar / DamageDivider + DamageBoost
-
+      movePower * categoryScalar / DamageDivider + DamageBoost
     val multiplier: Double =
       val stab: Double =
         calculateStabFactor(source.base.types, origin.move.moveType)

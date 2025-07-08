@@ -70,11 +70,11 @@ class BattleStateUpdaterBehaviorVisitor(
       case MoveContext(origin, target, source, behaviors, _) =>
         val damageCalculator: DamageCalculator = DamageCalculatorGen1
         damageCalculator.calculate(
-          origin,
-          target,
-          source,
-          behavior.power,
-          current
+          origin = origin,
+          source = source,
+          target = target,
+          power = behavior.power,
+          battleState = current
         )
       case _ => 0
     updateTarget { pokemon =>

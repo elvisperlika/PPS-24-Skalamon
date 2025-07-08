@@ -1,13 +1,30 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.GameState.GameOver
-import it.unibo.skalamon.controller.battle.action.Action
-import it.unibo.skalamon.controller.battle.action.MoveAction
-import it.unibo.skalamon.controller.battle.action.SwitchAction
 import it.unibo.skalamon.controller.battle.GameState
+import it.unibo.skalamon.controller.battle.GameState.GameOver
+import it.unibo.skalamon.controller.battle.action.{
+  Action,
+  MoveAction,
+  SwitchAction
+}
 import it.unibo.skalamon.model.status.AssignedStatus
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+import it.unibo.skalamon.model.battle.turn.BattleEvents.*
+import it.unibo.skalamon.model.behavior.{Behavior, notifyFieldEffects}
+import it.unibo.skalamon.model.event.{
+  ActionEvents,
+  BattleStateEvents,
+  EventType
+}
+import it.unibo.skalamon.model.event.TurnStageEvents.{
+  ActionsReceived,
+  Ended,
+  Started
+}
+import it.unibo.skalamon.model.field.FieldEffectMixin.*
+import it.unibo.skalamon.model.field.{Field, FieldEffectMixin, PokemonRule}
+import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.battle.turn.BattleEvents._
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.behavior.notifyFieldEffects
@@ -57,7 +74,6 @@ object BattleHooksConfigurator:
     }
 
     battle.eventManager.watch(ActionsReceived) { turn =>
-      println("EXECUTING ACTIONS\nx\nx")
       executeActions(turn)
     }
 
