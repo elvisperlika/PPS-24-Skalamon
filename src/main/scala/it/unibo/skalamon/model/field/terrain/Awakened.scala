@@ -17,8 +17,10 @@ case class Awakened(t: Int) extends Terrain with FieldEffect(t)
     with TypesModifier with Expirable(t, Awakened.Duration):
   override val description: String = Awakened.Description
   override val typesModifier: Map[Type, Double] = Map(Psychic -> Awakened.PsychicModifier)
+  override val name: String = Awakened.Name
 
 object Awakened:
+  val Name = "Awakened"
   val PsychicModifier: Double = 1.5
   val Description: String = "Psychic boosts Psychic Pokémon."
   val Duration: Int = 5

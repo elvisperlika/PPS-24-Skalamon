@@ -6,6 +6,7 @@ import it.unibo.skalamon.view.battle.{
   BattleKeyBindings,
   BattleScreen
 }
+import it.unibo.skalamon.view.gameOver.GameOverScreen
 
 import java.awt.event.{KeyAdapter, KeyEvent}
 import javax.swing.{JFrame, WindowConstants}
@@ -14,8 +15,10 @@ import javax.swing.{JFrame, WindowConstants}
   * sets up the terminal and handles key events for player inputs.
   */
 class MainView extends JFrame:
-  private val terminalWidth: Int = 88
-  private val terminalHeight: Int = 50//39
+  private val terminalWidth: Int = 100
+  private val terminalHeight: Int = 50
+
+  private val screenTitle: String = "ScalaMon Showdown"
 
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)
@@ -36,6 +39,9 @@ class MainView extends JFrame:
     add(terminal)
     pack()
 
+    this.setTitle(screenTitle)
+    this.setFocusable(true)
+
     this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     this.setVisible(true)
 
@@ -45,6 +51,13 @@ class MainView extends JFrame:
     */
   def getPlayScreen: BattleScreen =
     BattleScreen(terminal)
+
+  /** Returns the game-over screen for the game.
+    * @return
+    *   The GameOverScreen instance that represents the game-over screen.
+    */
+  def getGameOverScreen: GameOverScreen =
+    GameOverScreen(terminal)
 
   override def repaint(): Unit =
     terminal.clear()

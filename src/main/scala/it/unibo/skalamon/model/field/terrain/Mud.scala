@@ -17,8 +17,10 @@ case class Mud(t: Int)
   override val typesModifier: Map[Type, Double] =
     Map(Fire -> Mud.FireModifier, Water -> Mud.WaterModifier)
   override val description: String = Mud.Description
+  override val name: String = Mud.Name
 
 object Mud:
+  val Name = "Mud"
   val WaterModifier: Double = 1.5
   val FireModifier: Double = 1.5
   val Description: String = "Mud boosts Fire and Water Pokémon."
