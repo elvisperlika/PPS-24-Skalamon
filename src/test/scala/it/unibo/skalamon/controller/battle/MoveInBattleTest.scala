@@ -1,15 +1,16 @@
 package it.unibo.skalamon.controller.battle
 
-import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.event.BattleStateEvents
-import it.unibo.skalamon.model.field.weather.Rain
+import it.unibo.skalamon.model.field.room.TrickRoom
+import it.unibo.skalamon.model.field.weather.{Rain, Sunny}
+import it.unibo.skalamon.model.move.Move
 import it.unibo.skalamon.model.move.Move.*
-import it.unibo.skalamon.model.move.{BattleMove, Move}
+import it.unibo.skalamon.model.pokemon.Pokemon
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
-import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze, Sleep}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -17,24 +18,6 @@ import org.scalatest.matchers.should
   */
 class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     with BattleSimulationTest:
-
-  private def registerMoves(
-      a: Move,
-      b: Move
-  )(controller: BattleController): Unit =
-    val (trainerA, trainerB) = controller.battle.trainersTuple
-    controller.registerAction(
-      trainerA,
-      MoveAction(trainerA.inField.get.move(a), trainerA, trainerB)
-    )
-    controller.registerAction(
-      trainerB,
-      MoveAction(trainerB.inField.get.move(b), trainerB, trainerA)
-    )
-
-  extension (pokemon: BattlePokemon)
-    def move(move: Move): BattleMove =
-      pokemon.moves.find(_.move.name == move.name).get
 
   "Tackle" should "just cause damage" in:
     val (battle, controller, _, _) = newBattle(pikachu)(rattata)
@@ -142,6 +125,13 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
 
     battle.state.field.weather shouldBe Some(Rain(0))
 
+  "Sunny Day" should "cause sun" in:
+    val (battle, controller, _, _) = newBattle(charmander)(charmander)
+    controller.update()
+    registerMoves(sunnyDay, sunnyDay)(controller)
+
+    battle.state.field.weather shouldBe Some(Sunny(0))
+
   "Rain" should "boost Water moves" in:
     val (battle, controller, _, _) = newBattle(pelipper)(pelipper)
     controller.update()
@@ -158,6 +148,22 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
       pelipper.hp - deltaHpBeforeRain - battle.state.inField._1.currentHP
 
     deltaHpAfterRain should be > deltaHpBeforeRain
+
+
+  "Rest" should "put the user to sleep and heal it" in:
+    val (battle, controller, _, _) = newBattle(snorlax)(rattata)
+    controller.update()
+    registerMoves(rest, quickAttack)(controller)
+
+    battle.state.inField._1.currentHP shouldBe snorlax.hp
+    battle.state.inField._1.nonVolatileStatus.map(_.status) shouldBe Some(Sleep)
+
+  "Trick Room" should "apply that room" in:
+    val (battle, controller, _, _) = newBattle(malamar)(rattata)
+    controller.update()
+    registerMoves(trickRoom, growl)(controller)
+
+    battle.state.field.room shouldBe Some(TrickRoom(0))
 
   "PP" should "decrement after move execution" in:
     val (battle, controller, _, _) = newBattle(pelipper)(pelipper)
