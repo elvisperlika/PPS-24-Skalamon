@@ -44,7 +44,20 @@ object Pokemon:
 
   def alakazam: Pokemon =
     pokemon("Alakazam"):
-      _ typed Psychic hp 55 weighing 48.0.kg ability synchronize stat Attack -> 50 stat Defense -> 45 stat SpecialAttack -> 135 stat SpecialDefense -> 95 stat Speed -> 120
+      _ typed Psychic hp 55 weighing 48.0.kg ability psychicSurge stat Attack -> 50 stat Defense -> 45 stat SpecialAttack -> 135 stat SpecialDefense -> 95 stat Speed -> 120 moves (
+        psychic,
+        calmMind,
+        protect,
+      )
+
+  def metagross: Pokemon =
+    pokemon("Metagross"):
+      _ typed Steel + Psychic hp 80 weighing 550.0.kg ability clearBody stat Attack -> 135 stat Defense -> 130 stat SpecialAttack -> 95 stat SpecialDefense -> 90 stat Speed -> 70 moves (
+        bulletPunch,
+        zenHeadbutt,
+        psychic,
+        earthquake
+      )
 
   def tyranitar: Pokemon =
     pokemon("Tyranitar"):
@@ -73,31 +86,23 @@ object Pokemon:
         dragonDance
       )
 
-  def scizor: Pokemon =
-    Pokemon(
-      name = "Scizor",
-      types = Bug :: Steel :: Nil,
-      hp = 70,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 130,
-          Stat.Defense -> 100,
-          Stat.SpecialAttack -> 55,
-          Stat.SpecialDefense -> 80,
-          Stat.Speed -> 65
-        )
-      ),
-      ability = Ability("Swarm", List.empty),
-      weightKg = 118.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
   def gardevoir: Pokemon =
     pokemon("Gardevoir"):
-      _ typed Psychic + Fairy hp 68 weighing 48.4.kg ability synchronize stat Attack -> 65 stat Defense -> 65 stat SpecialAttack -> 125 stat SpecialDefense -> 115 stat Speed -> 80
+      _ typed Psychic + Fairy hp 68 weighing 48.4.kg ability psychicSurge stat Attack -> 65 stat Defense -> 65 stat SpecialAttack -> 125 stat SpecialDefense -> 115 stat Speed -> 80 moves (
+        psychic,
+        zenHeadbutt,
+        protect,
+        calmMind,
+      )
+
+  def malamar: Pokemon =
+    pokemon("Malamar"):
+      _ typed Dark + Psychic hp 86 weighing 47.0.kg ability contrary stat Attack -> 92 stat Defense -> 88 stat SpecialAttack -> 68 stat SpecialDefense -> 75 stat Speed -> 73 moves (
+        hypnosis,
+        psychic,
+        nightSlash,
+        trickRoom,
+      )
 
   def gyarados: Pokemon =
     pokemon("Gyarados"):
@@ -121,35 +126,23 @@ object Pokemon:
     pokemon("Lucario"):
       _ typed Fighting + Steel hp 70 weighing 54.0.kg ability intimidate stat Attack -> 110 stat Defense -> 70 stat SpecialAttack -> 115 stat SpecialDefense -> 70 stat Speed -> 90 moves (
         quickAttack,
-        swordDance
+        swordDance,
+        protect,
+        superpower,
       )
 
   def snorlax: Pokemon =
-    Pokemon(
-      name = "Snorlax",
-      types = Normal :: Nil,
-      hp = 160,
-      stats = Stats(
-        base = Map(
-          Stat.Attack -> 110,
-          Stat.Defense -> 65,
-          Stat.SpecialAttack -> 65,
-          Stat.SpecialDefense -> 110,
-          Stat.Speed -> 30
-        )
-      ),
-      ability = Ability("Immunity", List.empty),
-      weightKg = 460.0,
-      moves = Nil
-//      List(
-//        Move("Thunder Shock"),
-//        Move("Electric")
-//      )
-    )
+    pokemon("Snorlax"):
+      _ typed Normal hp 160 weighing 460.0.kg ability none stat Attack -> 110 stat Defense -> 65 stat SpecialAttack -> 65 stat SpecialDefense -> 110 stat Speed -> 30 moves (
+        tackle,
+        rest,
+        earthquake,
+        protect,
+      )
 
   def bulbasaur: Pokemon =
     pokemon("Bulbasaur"):
-      _ typed Grass + Poison hp 45 weighing 6.9.kg ability naturalCure stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45 moves(
+      _ typed Grass + Poison hp 45 weighing 6.9.kg ability grassySurge stat Attack -> 49 stat Defense -> 49 stat SpecialAttack -> 65 stat SpecialDefense -> 65 stat Speed -> 45 moves(
         tackle,
         grassKnot,
         razorLeaf,
@@ -158,15 +151,19 @@ object Pokemon:
 
   def yanmega: Pokemon =
     pokemon("Yanmega"):
-      _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95
+      _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95 moves (
+        bugBuzz,
+        protect,
+        sunnyDay
+      )
 
   def charmander: Pokemon =
     pokemon("Charmander"):
       _ typed Fire hp 39 weighing 8.5.kg ability none stat Attack -> 52 stat Defense -> 43 stat SpecialAttack -> 60 stat SpecialDefense -> 50 stat Speed -> 65 moves (
-        tackle,
         slash,
         flamethrower,
-        willOWisp
+        willOWisp,
+        sunnyDay
       )
 
   def squirtle: Pokemon =
@@ -175,6 +172,14 @@ object Pokemon:
         tackle,
         aquaJet,
         surf
+      )
+
+  def grimer: Pokemon =
+    pokemon("Grimer"):
+      _ typed Poison hp 80 weighing 30.0.kg ability poisonTouch stat Attack -> 80 stat Defense -> 50 stat SpecialAttack -> 40 stat SpecialDefense -> 50 stat Speed -> 25 moves (
+        toxic,
+        poisonJab,
+        tackle,
       )
 
   def rattata: Pokemon =
