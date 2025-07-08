@@ -18,6 +18,8 @@ class MainView extends JFrame:
   private val terminalWidth: Int = 100
   private val terminalHeight: Int = 50
 
+  private val screenTitle: String = "ScalaMon Showdown"
+
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)
 
@@ -36,6 +38,9 @@ class MainView extends JFrame:
     setResizable(false)
     add(terminal)
     pack()
+
+    this.setTitle(screenTitle)
+    this.setFocusable(true)
 
     this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     this.setVisible(true)
