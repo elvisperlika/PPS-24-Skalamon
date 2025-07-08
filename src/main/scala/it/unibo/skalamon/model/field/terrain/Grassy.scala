@@ -14,8 +14,10 @@ case class Grassy(t: Int) extends Terrain with FieldEffect(t) with TypesModifier
   override val description: String = Grassy.Description
   override val typesModifier: Map[Type, Double] =
     Map(Grass -> Grassy.GrassModifier)
+  override val name: String = Grassy.Name
 
 object Grassy:
+  val Name = "Grassy"
   val GrassModifier: Double = 1.5
   val Description: String = "Grassy boosts Grass Pokémon."
   val Duration: Int = 5

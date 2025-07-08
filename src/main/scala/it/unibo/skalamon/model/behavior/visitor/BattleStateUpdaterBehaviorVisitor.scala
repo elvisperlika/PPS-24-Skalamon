@@ -9,6 +9,8 @@ import it.unibo.skalamon.model.behavior.damage.{
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.BehaviorModifiers
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
+  MutatedBattleRule,
+  Hooks,
   Room,
   SideCondition
 }
