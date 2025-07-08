@@ -8,23 +8,20 @@ import it.unibo.skalamon.view.teambuilder.TeamBuilderView
 private val TrainersCount = 2
 
 @main
-def main(args: String*): Unit = {
+def main(args: String*): Unit =
   if (args.headOption.contains("skip")) {
     startBattle(PokemonTestUtils.trainerAlice, PokemonTestUtils.trainerBob)
     return
   }
-  
+
   startTeamBuilder: trainers =>
     trainers.size match
       case TrainersCount =>
         println("Starting the battle.")
         startBattle(trainers.head, trainers.tail.head)
       case _ =>
-        println(
-          s"Expected $TrainersCount trainers, but got ${trainers.size}. Restarting."
-        )
+        println(s"Expected $TrainersCount trainers, but got ${trainers.size}. Restarting.")
         main(args*)
-}
 
 /** Starts the team builder.
   * @param onComplete
