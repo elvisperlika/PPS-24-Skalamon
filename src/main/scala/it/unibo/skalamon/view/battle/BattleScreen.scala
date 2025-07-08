@@ -282,16 +282,16 @@ object BattleScreen:
 
   // === Pokémon team layout ===
   private val pokemonSlotCount: Int = 5
-  private val pokemonSlotWidth: Int = 15
+  private val pokemonSlotWidth: Int = 18
   private val pokemonSlotHeight: Int = 4
 
   // === Ability layout ===
   private val abilitySlotCount: Int = 4
-  private val abilitySlotWidth: Int = 20
+  private val abilitySlotWidth: Int = 22
   private val abilitySlotHeight: Int = 8
 
   // === Battle Pokémon layout ===
-  private val battlePokemonWidth: Int = 46
+  private val battlePokemonWidth: Int = 54
   private val battlePokemonHeight: Int = 5
 
   // === Computed Y positions ===

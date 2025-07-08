@@ -4,6 +4,7 @@ import it.unibo.skalamon.controller.battle.action.SwitchAction
 import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.model.behavior.kind.StatChangeBehavior
 import it.unibo.skalamon.model.event.BehaviorEvent
+import it.unibo.skalamon.model.field.terrain.Grassy
 import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm}
 import it.unibo.skalamon.model.pokemon.Pokemon
 import it.unibo.skalamon.model.pokemon.Pokemon.*
@@ -83,3 +84,37 @@ class AbilityInBattleTest extends AnyFlatSpec with should.Matchers with BattleSi
     controller.update()
 
     battle.state.inField._2.statChanges(Attack) shouldBe 0
+
+  "Contrary" should "reverse stat changes" in:
+    val (battle, controller, a, b) = newBattle(gyarados)(malamar)
+    controller.update()
+    battle.state.inField._2.statChanges.getOrElse(Attack, 0) shouldBe 0
+
+    controller.registerAction(a, SwitchAction(a.team.last))
+    controller.registerAction(b, SwitchAction(b.team.last))
+    controller.update()
+
+    battle.state.inField._2.statChanges(Attack) shouldBe 1
+
+  "Grassy Surge" should "set grassy terrain" in:
+    val (battle, controller, a, b) = newBattle(bulbasaur)(neutral)
+    controller.update()
+    battle.state.field.terrain shouldBe None
+
+    controller.registerAction(a, SwitchAction(a.team.last))
+    controller.registerAction(b, SwitchAction(b.team.last))
+
+    battle.state.field.terrain shouldBe Some(Grassy(0))
+
+  /*"Synchronize" should "copy status to target" in:
+    val (battle, controller, a, b) = newBattle(gardevoir)(charmander)
+    controller.update()
+    battle.state.inField._1.nonVolatileStatus shouldBe None
+    battle.state.inField._2.nonVolatileStatus shouldBe None
+
+    registerMoves(calmMind, willOWisp)(controller)
+    controller.update()
+
+    battle.state.inField._2.nonVolatileStatus.map(_.status) shouldBe Some(Burn)
+    battle.state.inField._1.nonVolatileStatus.map(_.status) shouldBe Some(Burn)
+*/
