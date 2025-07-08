@@ -18,7 +18,8 @@ import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm}
 import it.unibo.skalamon.model.move.MoveContext
 import it.unibo.skalamon.model.move.MoveModel.Category.Physical
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, Stat}
-import it.unibo.skalamon.model.status.{Paralyze, Poison, Status}
+import it.unibo.skalamon.model.status.Status
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Paralyze, Poison}
 
 /** A base move, that may belong to a
   * [[it.unibo.skalamon.model.pokemon.Pokemon]] and can be triggered by a
@@ -171,8 +172,8 @@ object Ability:
 
   /** If hit by a physical move, the opponent has a chance to be paralyzed */
   def static: Ability =
-    statusOnContactAbility("Static", Paralyze, 30.percent)
+    statusOnContactAbility("Static", Paralyze(), 30.percent)
 
   /** If hit by a physical move, the opponent has a chance to be poisoned */
   def poisonTouch: Ability =
-    statusOnContactAbility("Poison Touch", Poison, 30.percent)
+    statusOnContactAbility("Poison Touch", Poison(), 30.percent)

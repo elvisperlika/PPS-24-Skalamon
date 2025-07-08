@@ -10,7 +10,8 @@ import it.unibo.skalamon.model.event.{
 }
 import it.unibo.skalamon.model.field.field
 import it.unibo.skalamon.model.pokemon.Stat
-import it.unibo.skalamon.model.status.{Burn, Confusion, Paralyze, Yawn}
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze}
+import it.unibo.skalamon.model.status.volatileStatus.{ProtectEndure, Yawn}
 import it.unibo.skalamon.utils.MockTrainers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -51,14 +52,14 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     getTarget(newState).statChanges(Stat.Attack) shouldBe 2
 
   "StatusBehavior" should "set volatile status" in:
-    val status = Confusion
+    val status = ProtectEndure()
     val behavior = StatusBehavior(_ => status)
     val newState = behavior(context)(state)
     getTarget(newState).volatileStatus.map(_.status) shouldBe Set(status)
 
   it should "stack volatile status" in:
-    val status1 = Confusion
-    val status2 = Yawn
+    val status1 = ProtectEndure()
+    val status2 = Yawn()
     val newState1 =
       StatusBehavior(_ => status1)(context)(state)
     val newState2 =
@@ -69,13 +70,13 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     )
 
   it should "set non-volatile status" in:
-    val status = Burn
+    val status = Burn()
     val newState = StatusBehavior(_ => status)(context)(state)
     getTarget(newState).nonVolatileStatus.map(_.status) shouldBe Some(status)
 
   it should "not overwrite existing non-volatile status" in:
-    val status1 = Burn
-    val status2 = Paralyze
+    val status1 = Burn()
+    val status2 = Paralyze()
     val newState1 =
       StatusBehavior(_ => status1)(context)(state)
     val newState2 =
@@ -101,7 +102,10 @@ class BattleStateUpdaterTest extends AnyFlatSpec with should.Matchers
     given manager: EventManager = EventManager()
 
     val behavior =
-      BehaviorGroup(DamageBehavior(damage), StatusBehavior(_ => Confusion))
+      BehaviorGroup(
+        DamageBehavior(damage),
+        StatusBehavior(_ => ProtectEndure())
+      )
 
     var currentState = state
     var count = 0

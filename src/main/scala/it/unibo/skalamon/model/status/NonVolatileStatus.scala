@@ -1,15 +1,14 @@
 package it.unibo.skalamon.model.status
 
-trait NonVolatileStatus extends Status
+import it.unibo.skalamon.model.pokemon.BattlePokemon
 
-case object Burn extends NonVolatileStatus
-
-case object Paralyze extends NonVolatileStatus
-
-case object Sleep extends NonVolatileStatus
-
-case object Freeze extends NonVolatileStatus
-
-case object Poison extends NonVolatileStatus
-
-case object BadlyPoison extends NonVolatileStatus
+trait NonVolatileStatus extends Status:
+  /** Executes the effect of the non-volatile status on the given Pokémon.
+    * @param pokemon
+    *   The Pokémon to apply the status effect to.
+    * @return
+    *   A copy of the Pokémon with the status effect applied.
+    */
+  def executeEffect(
+      pokemon: BattlePokemon
+  ): BattlePokemon

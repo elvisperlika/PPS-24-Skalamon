@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.behavior.visitor
 
-import it.unibo.skalamon.model.battle.{BattleRule, BattleState, Trainer}
+import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.BehaviorsContext
 import it.unibo.skalamon.model.behavior.damage.{
   DamageCalculator,
@@ -38,6 +38,24 @@ class BattleStateUpdaterBehaviorVisitor(
     override val context: BehaviorsContext[_],
     override val modifiers: BehaviorModifiers
 ) extends ContextualBehaviorVisitor[BattleState]:
+
+  /** Returns a new battle state with [[target]] updated according to [[map]].
+    */
+  private def updatePokemon(
+      target: BattlePokemon,
+      map: BattlePokemon => BattlePokemon
+  ): BattleState =
+    current.copy(
+      trainers = current.trainers.map { trainer =>
+        trainer.copy(
+          team = trainer.team.map { pokemon =>
+            if (pokemon.id == target.id && !pokemon.isProtected) then
+              map(pokemon).copy(isProtected = false)
+            else pokemon
+          }
+        )
+      }
+    )
 
   /** Returns a new battle state with the target Pokémon updated according to
     * [[map]].

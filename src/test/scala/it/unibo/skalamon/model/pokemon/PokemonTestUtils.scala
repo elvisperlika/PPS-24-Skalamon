@@ -3,11 +3,17 @@ package it.unibo.skalamon.model.pokemon
 import it.unibo.skalamon.model
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.EmptyBehavior
-import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.*
+import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.model.move.MoveModel.Accuracy.Of
 import it.unibo.skalamon.model.move.MoveModel.Category.{Physical, Special}
 import it.unibo.skalamon.model.status.*
+import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Sleep}
+import it.unibo.skalamon.model.status.volatileStatus.{
+  Flinch,
+  ProtectEndure,
+  Yawn
+}
 import it.unibo.skalamon.model.types.*
 import it.unibo.skalamon.model.types.TypesCollection.Electric
 
@@ -36,16 +42,19 @@ object PokemonTestUtils:
   private val startingHP: Int = 70
   private val powerPoint: Int = 4
 
+  private val firstTurn: Int = 1
+  private val midTurn: Int = 4
+  private val lateTurn: Int = 8
+
   val simplePokemon1: BattlePokemon = BattlePokemon(
     Pokemon.pikachu,
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn, 1)),
+    Option(AssignedStatus(Burn(), firstTurn)),
     Set(
-      AssignedStatus(Substitute, 4),
-      AssignedStatus(ProtectEndure, 3),
-      AssignedStatus(Substitute, 8)
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn)
     )
   )
 
@@ -56,14 +65,15 @@ object PokemonTestUtils:
     Male,
     currentHP = 0,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Burn, 1)),
+    Option(AssignedStatus(Burn(), firstTurn)),
     Set(
-      AssignedStatus(Substitute, 4),
-      AssignedStatus(ProtectEndure, 3),
-      AssignedStatus(Substitute, 8)
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn)
     )
   )
 
+  /** This Pokémon has no NonVolatileStatus and no VolatileStatus.
+    */
   val simplePokemon2: BattlePokemon = BattlePokemon(
     Pokemon.bulbasaur,
     Male,
@@ -73,17 +83,44 @@ object PokemonTestUtils:
     Set.empty
   )
 
-  private val simplePokemon3: BattlePokemon = BattlePokemon(
+  val simplePokemon3: BattlePokemon = BattlePokemon(
     Pokemon.charmander,
     Male,
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
-    Option(AssignedStatus(Sleep, 4)),
+    Option(AssignedStatus(Sleep(), midTurn)),
     Set(
-      AssignedStatus(Flinch, 4),
-      AssignedStatus(ProtectEndure, 3),
-      AssignedStatus(Yawn, 8)
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn),
+      AssignedStatus(Yawn(), lateTurn)
     )
+  )
+
+  /** This Pokémon has only VolatileStatus (Flinch, ProtectEndure, Yawn) and no
+    * NonVolatileStatus.
+    */
+  val simplePokemon4: BattlePokemon = BattlePokemon(
+    Pokemon.gyarados,
+    Male,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option.empty,
+    Set(
+      AssignedStatus(Flinch(firstTurn), firstTurn),
+      AssignedStatus(ProtectEndure(firstTurn), firstTurn),
+      AssignedStatus(Yawn(firstTurn), firstTurn)
+    )
+  )
+
+  /** This Pokémon has only a NonVolatileStatus (Burn) and no VolatileStatus.
+    */
+  val simplePokemon5: BattlePokemon = BattlePokemon(
+    Pokemon.gyarados,
+    Male,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option(AssignedStatus(Burn(), midTurn)),
+    Set.empty
   )
 
   def trainerAlice: Trainer =
@@ -94,3 +131,9 @@ object PokemonTestUtils:
 
   def trainerGio: Trainer =
     Trainer("Gio", List(simplePokemon3), _inField = Some(simplePokemon3))
+
+  def trainerKirk: Trainer =
+    Trainer("Kirk", List(simplePokemon4), _inField = Some(simplePokemon4))
+
+  def trainerLuca: Trainer =
+    Trainer("Luca", List(simplePokemon5), _inField = Some(simplePokemon5))
