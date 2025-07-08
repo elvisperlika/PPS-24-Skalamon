@@ -2,7 +2,6 @@ package it.unibo.skalamon.model.behavior.damage
 
 import it.unibo.skalamon.model.battle.{BattleState, Trainer}
 import it.unibo.skalamon.model.behavior.kind.Stats
-import it.unibo.skalamon.model.data.RandomGenerator
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Room,
   SideCondition,
@@ -15,8 +14,9 @@ import it.unibo.skalamon.model.move.BattleMove
 import it.unibo.skalamon.model.move.MoveModel.Category
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 import it.unibo.skalamon.model.pokemon.Stat.*
-import it.unibo.skalamon.model.types.TypesCollection.Electric
 import it.unibo.skalamon.model.types.{Type, TypeUtility}
+
+import scala.util.Random
 
 object DamageCalculatorUtility:
 
@@ -47,9 +47,11 @@ object DamageCalculatorUtility:
   ): Double =
     battleMove.move.category match
       case Category.Physical =>
-        sourceStat.base(Attack) / targetStat.base(Defense)
+        sourceStat.base(Attack).toDouble / targetStat.base(Defense).toDouble
       case Category.Special =>
-        sourceStat.base(SpecialAttack) / targetStat.base(SpecialDefense)
+        sourceStat.base(SpecialAttack).toDouble / targetStat.base(
+          SpecialDefense
+        ).toDouble
       case _ => NoMultiplier
 
   /** Calculates the level scalar based on the attacking Pokémon's level.
@@ -62,7 +64,7 @@ object DamageCalculatorUtility:
     LevelMultiplier * level / LevelDivider + LevelBoost
 
   /** Calculates the STAB (Same Type Attack Bonus) factor.
-    * @param sourceTypes
+    * @param pokemonTypes
     *   Types of the attacking Pokémon
     * @param moveType
     *   Type of the move being used
@@ -70,8 +72,8 @@ object DamageCalculatorUtility:
     *   The STAB multiplier if the move type matches one of the Pokémon's types,
     *   a neutral multiplier otherwise
     */
-  def calculateStabFactor(sourceTypes: List[Type], moveType: Type): Double =
-    if sourceTypes.contains(moveType) then StabMultiplier else NoMultiplier
+  def calculateStabFactor(pokemonTypes: List[Type], moveType: Type): Double =
+    if pokemonTypes.contains(moveType) then StabMultiplier else NoMultiplier
 
   /** Calculates the type effectiveness multiplier of a move against a target.
     * @param moveType
@@ -92,10 +94,9 @@ object DamageCalculatorUtility:
     *   A random multiplier between predefined percentage bounds.
     */
   def calculateRandomFactor: Double =
-    RandomGenerator().nextInt(
-      RandomFactorMinBound,
+    (Random.nextInt(
       RandomFactorMaxBound
-    ) / PercentageDivider
+    ) + RandomFactorMinBound).toDouble / PercentageDivider.toDouble
 
   /** Calculates the field-related type modifier affecting the move.
     *

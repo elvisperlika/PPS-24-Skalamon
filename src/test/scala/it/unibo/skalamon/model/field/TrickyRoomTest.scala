@@ -4,12 +4,7 @@ import it.unibo.skalamon.PokemonTestUtils
 import it.unibo.skalamon.controller.battle.BattleController
 import it.unibo.skalamon.controller.battle.action.MoveAction
 import it.unibo.skalamon.model.battle.turn.BattleEvents.{CreateRoom, Hit}
-import it.unibo.skalamon.model.battle.{
-  Battle,
-  BattleHooksConfigurator,
-  Trainer,
-  hookBattleStateUpdate
-}
+import it.unibo.skalamon.model.battle.{Battle, Trainer, hookBattleStateUpdate}
 import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.move.Move
 import org.scalatest.flatspec.AnyFlatSpec

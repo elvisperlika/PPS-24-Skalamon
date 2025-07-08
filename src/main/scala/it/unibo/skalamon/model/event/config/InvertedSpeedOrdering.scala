@@ -1,7 +1,6 @@
 package it.unibo.skalamon.model.event.config
 
-import it.unibo.skalamon.controller.battle.action.{Action, MoveAction}
-import it.unibo.skalamon.model.pokemon.Stat.Speed
+import it.unibo.skalamon.controller.battle.action.Action
 
 /** Alternative ordering: slower Pokémon act first at equal priority */
 object InvertedSpeedOrdering:

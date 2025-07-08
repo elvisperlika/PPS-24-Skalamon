@@ -4,7 +4,6 @@ import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.visitor.BattleStateUpdaterBehaviorVisitor
 import it.unibo.skalamon.model.event.{
   BattleStateEvents,
-  BehaviorEvent,
   EventManager,
   event
 }
