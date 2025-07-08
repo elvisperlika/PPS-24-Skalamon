@@ -15,9 +15,12 @@ import it.unibo.skalamon.model.field.weather.{Rain, Sunny}
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.pokemon.Stat.*
-import it.unibo.skalamon.model.status.Status
-import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
-import it.unibo.skalamon.model.status.nonVolatileStatus.{Poison as PoisonStatus, *}
+import it.unibo.skalamon.model.status.nonVolatileStatus.{
+  Poison as PoisonStatus,
+  *
+}
+import it.unibo.skalamon.model.status.volatileStatus.ProtectEndure
+
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -104,7 +107,7 @@ object Move:
 
   def protect: Move =
     move("Protect", Normal, Status):
-      _ pp 10 onSuccess new StatusBehavior(_ => ProtectEndure)
+      _ pp 10 onSuccess new StatusBehavior(_ => ProtectEndure())
         with TargetModifier(Self)
 
   // Dark
@@ -239,7 +242,7 @@ object Move:
 
   def hypnosis: Move =
     move("Hypnosis", Psychic, Status):
-      _ pp 20 onSuccess StatusBehavior(_ => Sleep)
+      _ pp 20 onSuccess StatusBehavior(_ => Sleep())
 
   def calmMind: Move =
     import it.unibo.skalamon.model.behavior.kind.+
@@ -254,7 +257,7 @@ object Move:
       _ pp 10 onSuccess: context =>
         new BehaviorGroup(
           HealthBehavior(context.source.base.hp),
-          StatusBehavior(_ => Sleep)
+          StatusBehavior(_ => Sleep())
         ) with TargetModifier(Self)
 
   def trickRoom: Move =
@@ -285,13 +288,13 @@ object Move:
 
   def toxic: Move =
     move("Toxic", Poison, Status):
-      _ pp 10 onSuccess StatusBehavior(_ => BadlyPoison)
+      _ pp 10 onSuccess StatusBehavior(_ => BadlyPoison())
 
   def poisonJab: Move =
     move("Poison Jab", Poison, Physical):
       _ pp 20 onSuccess groupOf(
         SingleHitBehavior(80),
-        new StatusBehavior(_ => PoisonStatus)
+        new StatusBehavior(_ => PoisonStatus())
           with ProbabilityModifier(30.percent)
       )
 
