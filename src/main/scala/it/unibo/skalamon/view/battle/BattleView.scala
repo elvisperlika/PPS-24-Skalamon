@@ -6,6 +6,9 @@ import it.unibo.skalamon.model.battle.{
 }
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
+/** Represents a view for the battle screen. It is responsible for updating the
+  * battle screen with the current state of the battle.
+  */
 trait BattleView:
 
   /** Update the whole battle view.
@@ -31,13 +34,14 @@ object BattleView:
     override def update(battleState: BattleState, turn: Int): Unit =
       val trainers = battleState.trainers
       require(
-        trainers.size == BattleScreen.playerNumber,
-        s"Expected ${BattleScreen.playerNumber} trainers, but got ${trainers.size}."
+        trainers.size == BattleScreen.PlayerCount,
+        s"Expected ${BattleScreen.PlayerCount} trainers, but got ${trainers.size}."
       )
 
       val Seq(player, opponent) = trainers
 
       screen.setTurn(turn)
+      screen.setField(battleState.field, turn)
       screen.setPlayersName(player.name, opponent.name)
       screen.setBattlePokemon(player.inField, opponent.inField)
       screen.setPokemonTeam(
@@ -48,6 +52,7 @@ object BattleView:
         movesWithKeys(player, PlayerSide.Player),
         movesWithKeys(opponent, PlayerSide.Opponent)
       )
+      screen.repaint()
 
     /** Returns the team of a trainer with each Pokémon paired with a key
       * binding.
