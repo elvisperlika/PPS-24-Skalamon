@@ -156,7 +156,7 @@ class MoveInBattleTest extends AnyFlatSpec with should.Matchers
     registerMoves(rest, quickAttack)(controller)
 
     battle.state.inField._1.currentHP shouldBe snorlax.hp
-    battle.state.inField._1.nonVolatileStatus.map(_.status) shouldBe Some(Sleep)
+    battle.state.inField._1.nonVolatileStatus.map(_.status) shouldBe Some(Sleep())
 
   "Trick Room" should "apply that room" in:
     val (battle, controller, _, _) = newBattle(malamar)(rattata)
