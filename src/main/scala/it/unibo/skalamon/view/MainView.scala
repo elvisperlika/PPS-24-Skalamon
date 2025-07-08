@@ -15,8 +15,8 @@ import javax.swing.{JFrame, WindowConstants}
   * sets up the terminal and handles key events for player inputs.
   */
 class MainView extends JFrame:
-  private val terminalWidth: Int = 88
-  private val terminalHeight: Int = 50//39
+  private val terminalWidth: Int = 100
+  private val terminalHeight: Int = 50
 
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)
