@@ -143,7 +143,7 @@ object Pokemon:
         bulletSeed
       )
 
-  val yanmega: Pokemon =
+  def yanmega: Pokemon =
     pokemon("Yanmega"):
       _ typed Bug + Flying hp 86 weighing 51.5.kg ability speedBoost stat Attack -> 76 stat Defense -> 86 stat SpecialAttack -> 116 stat SpecialDefense -> 56 stat Speed -> 95
 
