@@ -3,6 +3,7 @@ package it.unibo.skalamon.view.teambuilder
 import it.unibo.skalamon.controller.teambuilder.TeamBuilderController
 import it.unibo.skalamon.model.battle.Trainer
 
+import scala.annotation.tailrec
 import scala.io.StdIn.readLine
 
 /** A view for building a team of Pokémon for battle.
@@ -50,13 +51,21 @@ class TeamBuilderView(private val controller: TeamBuilderController):
     val trainers = (1 to NumTrainers).map(buildTrainer).toList
     onComplete(trainers)
 
+  @tailrec
   private def buildTrainer(index: Int): Trainer =
     println()
     val trainerName = readLine(s"Enter the name of Trainer $index: ")
     val teamString =
       readLine(s"Enter the team for Trainer $index (each char is a Pokémon): ")
-    val trainer = controller.buildTrainer(trainerName, teamString)
-    println(
-      s"$trainerName's team: ${trainer.team.map(_.base.name).mkString(", ")}"
-    )
-    trainer
+
+    try {
+      val trainer = controller.buildTrainer(trainerName, teamString)
+      println(
+        s"$trainerName's team: ${trainer.team.map(_.base.name).mkString(", ")}"
+      )
+      trainer
+    } catch {
+      case e: IllegalArgumentException =>
+        println(s"Invalid team: ${e.getMessage}. Please try again.")
+        buildTrainer(index)
+    }
