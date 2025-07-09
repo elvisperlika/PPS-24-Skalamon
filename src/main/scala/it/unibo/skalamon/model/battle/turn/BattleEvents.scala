@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.battle.turn
 
-import it.unibo.skalamon.model.battle.{Trainer, Turn}
+import it.unibo.skalamon.model.battle.Turn
 import it.unibo.skalamon.model.event.EventType
 import it.unibo.skalamon.model.field.FieldEffectMixin.{
   Room,

@@ -48,19 +48,19 @@ class BattleScreen(
   def setField(field: Field, currentTurn: Int): Unit =
     val terrainText = field.terrain match
       case Some(exp: FieldEffectMixin.Expirable) =>
-        s"${field.terrain.getOrElse(defaultTerrainName)} - Turns left: ${exp.turnsLeft(currentTurn)}"
+        s"${field.terrain.getOrElse(defaultTerrainName).getClass.getSimpleName} - Turns left: ${exp.turnsLeft(currentTurn)}"
       case _ => defaultTerrainName
     terminal.write(s"Terrain: $terrainText", leftScreenBorder, terrainY)
 
     val roomText = field.room match
       case Some(exp: FieldEffectMixin.Expirable) =>
-        s"${field.room.getOrElse(defaultRoomName)} - Turns left: ${exp.turnsLeft(currentTurn)}"
+        s"${field.room.getOrElse(defaultRoomName).getClass.getSimpleName} - Turns left: ${exp.turnsLeft(currentTurn)}"
       case _ => defaultRoomName
     terminal.write(s"Room: $roomText", leftScreenBorder, roomY)
 
     val weatherText = field.weather match
       case Some(exp: FieldEffectMixin.Expirable) =>
-        s"${field.weather.getOrElse(defaultWeatherName)} - Turns left: ${exp.turnsLeft(currentTurn)}"
+        s"${field.weather.getOrElse(defaultWeatherName).getClass.getSimpleName} - Turns left: ${exp.turnsLeft(currentTurn)}"
       case _ => defaultWeatherName
     terminal.write(s"Weather: $weatherText", leftScreenBorder, weatherY)
 
@@ -204,7 +204,9 @@ class BattleScreen(
         val hp = s"${bp.currentHP}HP"
         val ability = s"Ability: ${bp.base.ability.name}"
         val status =
-          bp.nonVolatileStatus.map(_.status.toString).getOrElse(NoStatusText)
+          bp.nonVolatileStatus.map(
+            _.status.getClass.getSimpleName
+          ).getOrElse(NoStatusText)
         val statLine = formatStatChanges(bp)
 
         Seq(s"$name $hp $ability", s"Status: $status", statLine)

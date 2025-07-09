@@ -78,7 +78,7 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
       )
     val baseDamage = movePower * (alice.inField.get.base.stats.base(
       Attack
-    ) / bob.inField.get.base.stats.base(Defense)) / 50 + 2
+    ).toDouble / bob.inField.get.base.stats.base(Defense).toDouble) / 25 + 3
     val multiplier = 1.5 * 0.5 * 1.5
     damage shouldEqual (baseDamage * multiplier).toInt
 
@@ -98,7 +98,7 @@ class DamageCalculatorGen1Test extends AnyFlatSpec with should.Matchers:
       )
     val baseDamage = movePower * (alice.inField.get.base.stats.base(
       Attack
-    ) / bob.inField.get.base.stats.base(Defense)) / 50 + 2
+    ).toDouble / bob.inField.get.base.stats.base(Defense).toDouble) / 25 + 3
     val multiplier = 1.5 * 0.5 * 1.0
     damage shouldEqual (baseDamage * multiplier).toInt
 

@@ -1,6 +1,6 @@
 package it.unibo.skalamon.model.behavior.visitor
 
-import it.unibo.skalamon.model.battle.{BattleRule, BattleState, Trainer}
+import it.unibo.skalamon.model.battle.BattleState
 import it.unibo.skalamon.model.behavior.BehaviorsContext
 import it.unibo.skalamon.model.behavior.damage.{
   DamageCalculator,
@@ -39,6 +39,24 @@ class BattleStateUpdaterBehaviorVisitor(
     override val modifiers: BehaviorModifiers
 ) extends ContextualBehaviorVisitor[BattleState]:
 
+  /** Returns a new battle state with [[target]] updated according to [[map]].
+    */
+  private def updatePokemon(
+      target: BattlePokemon,
+      map: BattlePokemon => BattlePokemon
+  ): BattleState =
+    current.copy(
+      trainers = current.trainers.map { trainer =>
+        trainer.copy(
+          team = trainer.team.map { pokemon =>
+            if (pokemon.id == target.id && !pokemon.isProtected) then
+              map(pokemon).copy(isProtected = false)
+            else pokemon
+          }
+        )
+      }
+    )
+
   /** Returns a new battle state with the target Pokémon updated according to
     * [[map]].
     */
@@ -52,11 +70,11 @@ class BattleStateUpdaterBehaviorVisitor(
       case MoveContext(origin, target, source, behaviors, _) =>
         val damageCalculator: DamageCalculator = DamageCalculatorGen1
         damageCalculator.calculate(
-          origin,
-          target,
-          source,
-          behavior.power,
-          current
+          origin = origin,
+          source = source,
+          target = target,
+          power = behavior.power,
+          battleState = current
         )
       case _ => 0
     updateTarget { pokemon =>
@@ -75,7 +93,10 @@ class BattleStateUpdaterBehaviorVisitor(
       pokemon.copy(statChanges =
         pokemon.statChanges.updated(
           behavior.change.stat,
-          pokemon.statChanges.getOrElse(behavior.change.stat, 0) + behavior.change.stage
+          pokemon.statChanges.getOrElse(
+            behavior.change.stat,
+            0
+          ) + behavior.change.stage
         )
       )
     }

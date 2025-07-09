@@ -4,7 +4,6 @@ import it.unibo.skalamon.model.battle.{
   BattleState,
   Trainer
 }
-import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 /** Represents a view for the battle screen. It is responsible for updating the
   * battle screen with the current state of the battle.

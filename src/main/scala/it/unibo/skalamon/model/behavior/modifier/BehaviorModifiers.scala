@@ -1,5 +1,4 @@
 package it.unibo.skalamon.model.behavior.modifier
-import it.unibo.skalamon.model.behavior.Behavior
 
 /** Modifiers that can be applied to a [[Behavior]]. In most cases, behavior
   * modifiers (e.g. [[ProbabilityModifier]]) act as decorators and do not need

@@ -15,7 +15,12 @@ import it.unibo.skalamon.model.field.weather.{Rain, Sunny}
 import it.unibo.skalamon.model.move.MoveModel.Category.*
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
 import it.unibo.skalamon.model.pokemon.Stat.*
-import it.unibo.skalamon.model.status.{Status, Poison as PoisonStatus, *}
+import it.unibo.skalamon.model.status.nonVolatileStatus.{
+  Poison as PoisonStatus,
+  *
+}
+import it.unibo.skalamon.model.status.volatileStatus.ProtectEndure
+
 import it.unibo.skalamon.model.types.Type
 import it.unibo.skalamon.model.types.TypesCollection.*
 
@@ -102,7 +107,7 @@ object Move:
 
   def protect: Move =
     move("Protect", Normal, Status):
-      _ pp 10 onSuccess new StatusBehavior(_ => ProtectEndure)
+      _ pp 10 onSuccess new StatusBehavior(_ => ProtectEndure())
         with TargetModifier(Self)
 
   // Dark
@@ -121,12 +126,12 @@ object Move:
     move("Thunderbolt", Electric, Special):
       _ pp 15 onSuccess groupOf(
         SingleHitBehavior(90),
-        new StatusBehavior(_ => Paralyze) with ProbabilityModifier(10.percent)
+        new StatusBehavior(_ => Paralyze()) with ProbabilityModifier(10.percent)
       )
 
   def thunderWave: Move =
     move("Thunder Wave", Electric, Status):
-      _ pp 20 onSuccess StatusBehavior(_ => Paralyze)
+      _ pp 20 onSuccess StatusBehavior(_ => Paralyze())
 
   // Dragon
 
@@ -174,12 +179,12 @@ object Move:
     move("Flamethrower", Fire, Special):
       _ pp 15 onSuccess groupOf(
         SingleHitBehavior(90),
-        new StatusBehavior(_ => Burn) with ProbabilityModifier(10.percent)
+        new StatusBehavior(_ => Burn()) with ProbabilityModifier(10.percent)
       )
 
   def willOWisp: Move =
     move("Will-O-Wisp", Fire, Status):
-      _ pp 15 onSuccess StatusBehavior(_ => Burn)
+      _ pp 15 onSuccess StatusBehavior(_ => Burn())
 
   def sunnyDay: Move =
     move("Sunny Day", Fire, Status):
@@ -237,7 +242,7 @@ object Move:
 
   def hypnosis: Move =
     move("Hypnosis", Psychic, Status):
-      _ pp 20 onSuccess StatusBehavior(_ => Sleep)
+      _ pp 20 onSuccess StatusBehavior(_ => Sleep())
 
   def calmMind: Move =
     import it.unibo.skalamon.model.behavior.kind.+
@@ -252,7 +257,7 @@ object Move:
       _ pp 10 onSuccess: context =>
         new BehaviorGroup(
           HealthBehavior(context.source.base.hp),
-          StatusBehavior(_ => Sleep)
+          StatusBehavior(_ => Sleep())
         ) with TargetModifier(Self)
 
   def trickRoom: Move =
@@ -283,13 +288,13 @@ object Move:
 
   def toxic: Move =
     move("Toxic", Poison, Status):
-      _ pp 10 onSuccess StatusBehavior(_ => BadlyPoison)
+      _ pp 10 onSuccess StatusBehavior(_ => BadlyPoison())
 
   def poisonJab: Move =
     move("Poison Jab", Poison, Physical):
       _ pp 20 onSuccess groupOf(
         SingleHitBehavior(80),
-        new StatusBehavior(_ => PoisonStatus)
+        new StatusBehavior(_ => PoisonStatus())
           with ProbabilityModifier(30.percent)
       )
 

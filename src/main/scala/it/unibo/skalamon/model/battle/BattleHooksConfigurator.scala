@@ -1,17 +1,30 @@
 package it.unibo.skalamon.model.battle
 
-import it.unibo.skalamon.controller.battle.GameState.GameOver
-import it.unibo.skalamon.controller.battle.action.Action
-import it.unibo.skalamon.controller.battle.action.MoveAction
-import it.unibo.skalamon.controller.battle.action.SwitchAction
 import it.unibo.skalamon.controller.battle.GameState
+import it.unibo.skalamon.controller.battle.GameState.GameOver
 import it.unibo.skalamon.controller.battle.action.{
   Action,
   MoveAction,
   SwitchAction
 }
+import it.unibo.skalamon.model.status.AssignedStatus
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
+import it.unibo.skalamon.model.battle.turn.BattleEvents.*
+import it.unibo.skalamon.model.behavior.{Behavior, notifyFieldEffects}
+import it.unibo.skalamon.model.event.{
+  ActionEvents,
+  BattleStateEvents,
+  EventType
+}
+import it.unibo.skalamon.model.event.TurnStageEvents.{
+  ActionsReceived,
+  Ended,
+  Started
+}
+import it.unibo.skalamon.model.field.FieldEffectMixin.*
+import it.unibo.skalamon.model.field.{Field, FieldEffectMixin, PokemonRule}
+import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.battle.turn.BattleEvents._
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.behavior.notifyFieldEffects
@@ -24,21 +37,13 @@ import it.unibo.skalamon.model.field.Field
 import it.unibo.skalamon.model.field.FieldEffectMixin._
 import it.unibo.skalamon.model.field.PokemonRule
 import it.unibo.skalamon.model.move._
-import it.unibo.skalamon.model.event.TurnStageEvents.{ActionsReceived, Started}
-import it.unibo.skalamon.model.event.{
-  ActionEvents,
-  BattleStateEvents,
-  EventType
-}
+import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.model.field.FieldEffectMixin
-import it.unibo.skalamon.model.field.FieldEffectMixin.MutatedBattleRule
-import it.unibo.skalamon.model.move.*
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
 
   def configure(battle: Battle): Unit =
-
 
     battle.eventManager.watch(Ended) { t =>
       checkGameOver(t)
@@ -69,7 +74,6 @@ object BattleHooksConfigurator:
     }
 
     battle.eventManager.watch(ActionsReceived) { turn =>
-      println("EXECUTING ACTIONS\nx\nx")
       executeActions(turn)
     }
 
@@ -87,24 +91,32 @@ object BattleHooksConfigurator:
       updateBattlefield(state)
     }
 
-    battle.hookBattleStateUpdateOption(BattleStateEvents.Changed) { (state, _) =>
-      val koTrainers = state.trainers.filter(t => !t.inField.exists(_.isAlive))
-      if battle.gameState == GameState.InProgress && koTrainers.nonEmpty then
-        val updatedTrainers = state.trainers.map { trainer =>
-          if koTrainers.contains(trainer) then
-            trainer.team.find(_.isAlive) match
-              case pokemon @ Some(_) => trainer.copy(_inField = pokemon)
-              case _                 =>
-                val winner = state.trainers.find(_ != trainer)
-                battle.gameState = GameState.GameOver(winner)
-                battle.eventManager.notify(BattleStateEvents.Finished of winner)
-                trainer
-          else
-            trainer
-        }
-        Some(state.copy(trainers = updatedTrainers))
-      else
-        None
+    battle.hookBattleStateUpdate(Ended) { (state, _) =>
+      executeStatus(state)
+    }
+
+    battle.hookBattleStateUpdateOption(BattleStateEvents.Changed) {
+      (state, _) =>
+        val koTrainers =
+          state.trainers.filter(t => !t.inField.exists(_.isAlive))
+        if battle.gameState == GameState.InProgress && koTrainers.nonEmpty then
+          val updatedTrainers = state.trainers.map { trainer =>
+            if koTrainers.contains(trainer) then
+              trainer.team.find(_.isAlive) match
+                case pokemon @ Some(_) => trainer.copy(_inField = pokemon)
+                case _                 =>
+                  val winner = state.trainers.find(_ != trainer)
+                  battle.gameState = GameState.GameOver(winner)
+                  battle.eventManager.notify(
+                    BattleStateEvents.Finished of winner
+                  )
+                  trainer
+            else
+              trainer
+          }
+          Some(state.copy(trainers = updatedTrainers))
+        else
+          None
     }
 
     battle.trainers.zipWithIndex.foreach { (trainer, trainerIndex) =>
@@ -225,3 +237,64 @@ object BattleHooksConfigurator:
         }
       battle.eventManager.notify(PokemonSwitchIn of pIn)
       state.copy(trainers = updatedTrainers)
+
+    /** Executes the status effects for each Pokémon in the battle state. This
+      * method is called at the end of each turn to apply non-volatile and
+      * volatile status effects.
+      *
+      * @param bt
+      *   The current battle state containing all trainers and their Pokémon.
+      * @return
+      *   The updated battle state with applied status effects.
+      */
+    def executeStatus(bt: BattleState): BattleState =
+      val updatedTrainers = bt.trainers.map { trainer =>
+        trainer.inField match
+          case Some(inFieldPokemon) =>
+            val original = trainer.team.find(_.id == inFieldPokemon.id).get
+            val resetFlags =
+              original.copy(isProtected = false, skipsCurrentTurn = false)
+
+            val afterNonVolatile = resetFlags.nonVolatileStatus match
+              case Some(assignedStatus) =>
+                assignedStatus.status.executeEffect(resetFlags)
+              case None => resetFlags
+
+            val afterVolatile =
+              afterNonVolatile.volatileStatus.foldLeft(afterNonVolatile) {
+                (current, assignedStatus) =>
+                  assignedStatus.status.executeEffect(
+                    current,
+                    battle.turnIndex,
+                    assignedStatus.turnAssigned
+                  )
+              }
+
+            val cleaned = removeExpiredStatuses(afterVolatile)
+
+            val updatedTeam = trainer.team.map {
+              case p if p.id == cleaned.id => cleaned
+              case p                       => p
+            }
+
+            trainer.copy(team = updatedTeam)
+
+          case None => trainer
+      }
+
+      bt.copy(trainers = updatedTrainers)
+
+    /** Removes expired volatile statuses from a Pokémon.
+      *
+      * @param pk
+      *   The Pokémon from which to remove expired statuses.
+      * @return
+      *   The Pokémon with expired statuses removed.
+      */
+    def removeExpiredStatuses(pk: BattlePokemon): BattlePokemon =
+      val updatedVolatileStatuses = pk.volatileStatus.filterNot {
+        case AssignedStatus(status: Expirable, _) =>
+          status.isExpired(battle.turnIndex)
+        case _ => false
+      }
+      pk.copy(volatileStatus = updatedVolatileStatuses)

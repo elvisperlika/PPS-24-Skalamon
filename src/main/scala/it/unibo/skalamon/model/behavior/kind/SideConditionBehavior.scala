@@ -3,7 +3,6 @@ package it.unibo.skalamon.model.behavior.kind
 import it.unibo.skalamon.model.battle.Trainer
 import it.unibo.skalamon.model.behavior.Behavior
 import it.unibo.skalamon.model.behavior.visitor.BehaviorVisitor
-import it.unibo.skalamon.model.field
 import it.unibo.skalamon.model.field.FieldEffectMixin.SideCondition
 
 /** Behavior that applies a side condition to the field.
