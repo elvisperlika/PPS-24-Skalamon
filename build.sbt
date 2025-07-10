@@ -1,7 +1,6 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
 resolvers += "jitpack" at "https://jitpack.io"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 
 inThisBuild(
   List(
