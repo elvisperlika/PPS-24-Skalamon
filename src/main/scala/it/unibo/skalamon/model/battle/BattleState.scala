@@ -23,24 +23,27 @@ case class BattleState(
         trainer.copy(
           team = trainer.team.map {
             case p if p.isProtected => p.copy(isProtected = false)
-            case p if p is target => map(p)
-            case p => p
+            case p if p is target   => map(p)
+            case p                  => p
           }
         )
       }
     )
 
-  /** Returns a new battle state with [[target]]'s moves updated according to [[map]].
+  /** Returns a new battle state with [[target]]'s moves updated according to
+    * [[map]].
     */
   def updateMove(
       target: BattlePokemon,
       move: BattleMove,
       map: BattleMove => BattleMove
   ): BattleState =
-    updatePokemon(target, pokemon =>
-      pokemon.copy(
-        moves = pokemon.moves.map { m =>
-          if (m eq move) map(m) else m
-        }
-      )
+    updatePokemon(
+      target,
+      pokemon =>
+        pokemon.copy(
+          moves = pokemon.moves.map { m =>
+            if (m eq move) map(m) else m
+          }
+        )
     )
