@@ -21,8 +21,10 @@ case class BattleState(
     copy(
       trainers = trainers.map { trainer =>
         trainer.copy(
-          team = trainer.team.map { pokemon =>
-            if (pokemon is target) map(pokemon) else pokemon
+          team = trainer.team.map {
+            case p if p.isProtected => p.copy(isProtected = false)
+            case p if p is target => map(p)
+            case p => p
           }
         )
       }
