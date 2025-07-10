@@ -24,22 +24,12 @@ extension (stat: Stat)
     *   The stage of the change.
     */
   def +(stage: Int): StatChange = StatChange(stat, stage)
-  
+
   /** Creates a [[StatChange]] with the given stage.
     * @param stage
     *   The stage of the change.
     */
   def -(stage: Int): StatChange = StatChange(stat, -stage)
-  
-  
-
-/** Behavior that changes a statistic of a Pokémon.
-  * @param change
-  *   The stat change to apply
-  */
-case class StatChangeBehavior(change: StatChange) extends HitBehavior:
-  override def accept[T](visitor: BehaviorVisitor[T]): T =
-    visitor.visit(this)
 
 /** Utility object for stat stage clamping and conversion.
   */
@@ -59,14 +49,14 @@ object StatStage:
     if stage >= 0 then (2.0 + stage) / 2.0
     else 2.0 / (2.0 - stage)
 
+/** Behavior that changes a statistic of a Pokémon.
+  * @param change
+  *   The stat change to apply
+  */
+case class StatChangeBehavior(change: StatChange) extends HitBehavior:
+  override def accept[T](visitor: BehaviorVisitor[T]): T =
+    visitor.visit(this)
+
 /** Represents the base stats and current stage-modifiers of a Pokémon.
   */
-case class Stats(
-    base: Map[Stat, Int]
-):
-  /** Apply a single stat change and return the updated stats.
-    */
-  def applyChange(change: StatChange): Stats =
-    this.copy(base =
-      base.updated(change.stat, StatStage.multiplier(change.stage).toInt)
-    )
+case class Stats(base: Map[Stat, Int])
