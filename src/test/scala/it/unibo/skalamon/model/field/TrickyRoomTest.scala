@@ -7,10 +7,11 @@ import it.unibo.skalamon.model.battle.turn.BattleEvents.{CreateRoom, Hit}
 import it.unibo.skalamon.model.battle.{Battle, Trainer, hookBattleStateUpdate}
 import it.unibo.skalamon.model.field.room.TrickRoom
 import it.unibo.skalamon.model.move.Move
+import it.unibo.skalamon.utils.Seeded
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class TrickyRoomTest extends AnyFlatSpec with should.Matchers:
+class TrickyRoomTest extends AnyFlatSpec with should.Matchers with Seeded:
   val trainerBob: Trainer = PokemonTestUtils.trainerBob.copy(_inField =
     Some(PokemonTestUtils.trainerBob.team.head)
   )
