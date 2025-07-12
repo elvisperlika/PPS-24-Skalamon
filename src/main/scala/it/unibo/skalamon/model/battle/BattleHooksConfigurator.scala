@@ -7,7 +7,6 @@ import it.unibo.skalamon.controller.battle.action.{
   MoveAction,
   SwitchAction
 }
-import it.unibo.skalamon.model.battle.ExpirableSystem.removeExpiredVolatileStatuses
 import it.unibo.skalamon.model.status.AssignedStatus
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
@@ -306,6 +305,7 @@ object BattleHooksConfigurator:
       *   The Pokémon with expired statuses removed.
       */
     def removeExpiredStatuses(pk: BattlePokemon): BattlePokemon =
+      import it.unibo.skalamon.model.battle.ExpirableSystem.removeExpiredVolatileStatuses
       pk.copy(volatileStatus =
         pk.volatileStatus.removeExpiredVolatileStatuses(battle.turnIndex)
       )
