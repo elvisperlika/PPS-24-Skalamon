@@ -7,6 +7,7 @@ import it.unibo.skalamon.controller.battle.action.{
   MoveAction,
   SwitchAction
 }
+import it.unibo.skalamon.model.battle.ExpirableSystem.removeExpiredVolatileStatuses
 import it.unibo.skalamon.model.status.AssignedStatus
 import it.unibo.skalamon.model.ability.hookAll
 import it.unibo.skalamon.model.battle.hookBattleStateUpdate
@@ -25,20 +26,6 @@ import it.unibo.skalamon.model.event.TurnStageEvents.{
 import it.unibo.skalamon.model.field.FieldEffectMixin.*
 import it.unibo.skalamon.model.field.{Field, FieldEffectMixin, PokemonRule}
 import it.unibo.skalamon.model.move.*
-import it.unibo.skalamon.model.battle.turn.BattleEvents._
-import it.unibo.skalamon.model.behavior.Behavior
-import it.unibo.skalamon.model.behavior.notifyFieldEffects
-import it.unibo.skalamon.model.event.ActionEvents
-import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.event.TurnStageEvents.ActionsReceived
-import it.unibo.skalamon.model.event.TurnStageEvents.Ended
-import it.unibo.skalamon.model.event.TurnStageEvents.Started
-import it.unibo.skalamon.model.field.Field
-import it.unibo.skalamon.model.field.FieldEffectMixin._
-import it.unibo.skalamon.model.field.PokemonRule
-import it.unibo.skalamon.model.move._
-import it.unibo.skalamon.model.event.BattleStateEvents
-import it.unibo.skalamon.model.field.FieldEffectMixin
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
@@ -299,17 +286,16 @@ object BattleHooksConfigurator:
         trainer: Trainer,
         state: BattleState
     ): BattleState =
-      val updatedTeam = trainer.team.map { pokemon =>
+      val updatedTeam = trainer.team.map: pokemon =>
         if pokemon.id == trainer.inField.get.id then
           pokemon.copy(volatileStatus = Set.empty)
         else
           pokemon
-      }
+
       state.copy(
-        trainers = state.trainers.map {
+        trainers = state.trainers.map:
           case t if t.id == trainer.id => trainer.copy(team = updatedTeam)
           case t                       => t
-        }
       )
 
     /** Removes expired volatile statuses from a Pokémon.
@@ -320,9 +306,6 @@ object BattleHooksConfigurator:
       *   The Pokémon with expired statuses removed.
       */
     def removeExpiredStatuses(pk: BattlePokemon): BattlePokemon =
-      val updatedVolatileStatuses = pk.volatileStatus.filterNot {
-        case AssignedStatus(status: Expirable, _) =>
-          status.isExpired(battle.turnIndex)
-        case _ => false
-      }
-      pk.copy(volatileStatus = updatedVolatileStatuses)
+      pk.copy(volatileStatus =
+        pk.volatileStatus.removeExpiredVolatileStatuses(battle.turnIndex)
+      )
