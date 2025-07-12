@@ -129,7 +129,11 @@ object PokemonTestUtils:
     startingHP,
     List(BattleMove(moveThunderShock, powerPoint)),
     Option(AssignedStatus(Sleep(), midTurn)),
-    Set.empty
+    Set(
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn),
+      AssignedStatus(Yawn(), lateTurn)
+    )
   )
 
   def trainerAlice: Trainer =

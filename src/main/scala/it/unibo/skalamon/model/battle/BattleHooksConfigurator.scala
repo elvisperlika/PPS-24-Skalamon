@@ -59,16 +59,16 @@ object BattleHooksConfigurator:
 
     battle.eventManager.watch(CreateWeather) {
       case t: Weather with Hooks => hookWeatherEffects(t)
-      case _                            =>
+      case _                     =>
     }
 
     battle.eventManager.watch(CreateTerrain) {
       case t: Terrain with Hooks => hookTerrainEffects(t)
-      case _                            =>
+      case _                     =>
     }
 
     battle.eventManager.watch(CreateRoom) {
-      case r: Room with Hooks      => hookRoomEffects(r)
+      case r: Room with Hooks             => hookRoomEffects(r)
       case r: Room with MutatedBattleRule => hookBattleRules(r)
       case _                              =>
     }
@@ -84,7 +84,10 @@ object BattleHooksConfigurator:
     }
 
     battle.hookBattleStateUpdate(ActionEvents.Switch) { (state, action) =>
-      executeSwitch(action.in, state)
+      val trainer =
+        state.trainers.find(_.team.exists(_.id == action.in.id)).head
+      val removedVolatileStatuses = removeVolatileStatuses(trainer, state)
+      executeSwitch(action.in, removedVolatileStatuses)
     }
 
     battle.hookBattleStateUpdate(Ended) { (state, _) =>
@@ -283,6 +286,31 @@ object BattleHooksConfigurator:
       }
 
       bt.copy(trainers = updatedTrainers)
+
+    /** Removes volatile statuses from the Pokémon in the trainer's team that is
+      * @param trainer
+      *   The trainer whose Pokémon's volatile statuses will be removed.
+      * @param state
+      *   The current battle state containing all trainers and their Pokémon.
+      * @return
+      *   The updated battle state with the trainer's Pokémon having no
+      */
+    def removeVolatileStatuses(
+        trainer: Trainer,
+        state: BattleState
+    ): BattleState =
+      val updatedTeam = trainer.team.map { pokemon =>
+        if pokemon.id == trainer.inField.get.id then
+          pokemon.copy(volatileStatus = Set.empty)
+        else
+          pokemon
+      }
+      state.copy(
+        trainers = state.trainers.map {
+          case t if t.id == trainer.id => trainer.copy(team = updatedTeam)
+          case t                       => t
+        }
+      )
 
     /** Removes expired volatile statuses from a Pokémon.
       *
