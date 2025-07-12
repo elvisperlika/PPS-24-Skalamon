@@ -2,10 +2,11 @@ package it.unibo.skalamon.model.battle
 
 import it.unibo.skalamon.model.data.percent
 import it.unibo.skalamon.controller.battle.BattleController
-import it.unibo.skalamon.controller.battle.action.MoveAction
+import it.unibo.skalamon.controller.battle.action.{MoveAction, SwitchAction}
 import it.unibo.skalamon.model.behavior.{Behavior, EmptyBehavior}
 import it.unibo.skalamon.model.move.{BattleMove, Move}
 import it.unibo.skalamon.model.move.MoveModel.{Accuracy, Category}
+import it.unibo.skalamon.model.pokemon.PokemonTestUtils.simplePokemon6
 import it.unibo.skalamon.model.pokemon.{BattlePokemon, PokemonTestUtils}
 import it.unibo.skalamon.model.status.volatileStatus.{Flinch, Yawn}
 import it.unibo.skalamon.model.types.TypesCollection.Ice
@@ -117,3 +118,29 @@ class StatusExecutionTest extends AnyFlatSpec with should.Matchers:
       pokemonAfter.isProtected shouldBe false
       pokemonAfter.skipsCurrentTurn shouldBe false
     }
+
+  "VolatileStatus" should "be removed if Pokémon switches out" in:
+    val targetTrainer = trainerKirk
+    val battle = Battle(List(targetTrainer, trainerLuca))
+    val controller = BattleController(battle)
+    controller.start()
+
+    currentPokemon(battle, targetTrainer).volatileStatus should not be empty
+
+    controller.update()
+    controller.update()
+
+    controller.registerAction(
+      targetTrainer,
+      SwitchAction(in = simplePokemon6)
+    )
+    controller.registerAction(
+      trainerLuca,
+      emptyMoveAction(trainerLuca)
+    )
+    controller.update() // end turn
+    controller.update() // start next turn
+    
+    val pokemonAfter = battle.currentTurn.get.state.snapshot.trainers.head.team.head
+
+    pokemonAfter.volatileStatus shouldBe empty
