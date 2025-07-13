@@ -1,5 +1,3 @@
-# Implementazione
-
 # Elvis Perlika
 
 ## Types

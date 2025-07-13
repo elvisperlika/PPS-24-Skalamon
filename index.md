@@ -1,5 +1,3 @@
-# PPS24-Skalamon
-
 *Norbert Gabos, Giorgio Garofalo, Elvis Perlika*
 
 - [Introduzione](sections/introduzione.md)

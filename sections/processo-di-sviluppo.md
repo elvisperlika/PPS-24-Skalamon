@@ -1,6 +1,6 @@
 # Processo di sviluppo
 
-# Scrum
+## Scrum
 
 La metodologia di sviluppo applicata su questo progetto è di tipo Agile, in particolare si è adottata la variante *Scrum*.
 
@@ -10,13 +10,13 @@ Il team si è stato organizzato nel seguente modo:
 - **Scrum Master** — Elvis Perlika — si assicurerà che il processo Scrum scorra regolarmente e medierà le interazioni tra il Team ed il Product Owner
 - **Development Team** — Giorgio Garofalo, Elvis Perlika, Norbert Gabos — si occuperà di sviluppare le feature del progetto e stimare
 
-## **Pianificazione Sprint**
+### Pianificazione Sprint
 
 Poiché il team ed il dominio sono nuovi si è scelto di attuare una versione variata di Scrum con sessioni tra i veri Sprint più brevi di cerca 4 giorni, a differenza dei più canonici 7. 
 
 Le riunioni saranno svolte su Discord e l’organizzazione dei task è gestita attraverso GitHub Projects.
 
-## **Assegnazione**
+### Assegnazione
 
 Nella seguente tabella si riportano i vari task assegnati ai vari Developer negli Sprint che hanno portato al rilascio della prima release:
 
@@ -66,7 +66,7 @@ Nella seguente tabella si riportano i vari task assegnati ai vari Developer negl
 | Room, Weather, Side condition behavior | Elvis Perlika |  |  |  |  |  |  |  | x |  |
 | Schermata di GameOver | Norbert Gabos |  |  |  |  |  |  |  | x |  |
 
-## **Modalità revisione Sprint**
+### Modalità revisione Sprint
 
 Durante il periodo di sviluppo i membri del Team aprono le Pull Request (P.R.) con l’implementazione della feature assegnata. Ad inizio Sprint, ogni membro del Team che ha aperto una P.R. espone la funzionalità implementata e le scelte che ha fatto in merito, ricevendo feedback dagli altri membri del Team.
 
@@ -74,20 +74,20 @@ Nel caso la P.R. venga accolta con feedback positivi e abbia superato i test si 
 
 Al termine delle revisioni si procede con l’assegnazione dei nuovi Task.
 
-# Test Driven Development
+## Test Driven Development
 
 Per un buon mantenimento della qualità del codice si adotta il **Test Driven Development** con l’obiettivo di mantenere un livello di qualità del codice quanto più alto. Gli strumenti che si andranno ad utilizzare sono:
 
 - ***ScalaTest*** per lo sviluppo dei vari test
 - ***SCoverage*** per quantificare e monitorare la copertura dei test sul sorgente di produzione
 
-# Continuous Integration & Delivery
+## Continuous Integration & Delivery
 
 Per mantenere un buon livello di qualità ed affidabilità del codice sono stati sviluppati workflow che eseguono i test del sorgente e controllando che lo stile sia conforme in tutte le porzioni di codice.
 
 Per la parte di delivery è stato creato un workflow che si occupa di produrre il Jar di release.
 
-# Versioning
+## Versioning
 
 Si è scelto di adottare di utilizzare la struttura dei **Conventional Commits** per mantenere uniformità nella parte di commitment del codice.
 
@@ -97,11 +97,11 @@ Per il versionamento del sistema si adotta lo standard ***Semantic Versioning**:
 - la versione **MINOR** quando si aggiungono funzionalità, mantenendo il sistema retrocompatibile
 - la versione **PATCH** quando si correggono bug, mantenendo il sistema retrocompatibile
 
-# Quality Assurance
+## Quality Assurance
 
-Per mantenere uniformità nel codice è stato integrato ***Scala Formatter***.
+Per mantenere uniformità nel codice sono stati integrati ***Scalafix*** e ***Scala Formatter***.
 
-# **Tools**
+# Strumenti
 
 Per il progetto in questione sono stati utilizzati i seguenti supporti:
 
