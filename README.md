@@ -16,7 +16,11 @@ It features a turn-based strategic combat mechanic between two teams of Pokémon
 
 **Download the latest JAR file from the GitHub releases page.**
 
-Run the JAR, then you and your friend can create your own teams and join the battle.
+Run the JAR:
+```bash
+java -jar Skalamon.jar
+```
+then you and your friend can create your own teams and join the battle.
 
 ### Build your team
 
