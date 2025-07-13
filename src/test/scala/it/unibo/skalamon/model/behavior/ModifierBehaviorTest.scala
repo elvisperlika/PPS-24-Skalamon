@@ -4,12 +4,13 @@ import it.unibo.skalamon.model.behavior.BehaviorTestUtils.*
 import it.unibo.skalamon.model.behavior.kind.*
 import it.unibo.skalamon.model.behavior.modifier.*
 import it.unibo.skalamon.model.data.{RandomGenerator, percent}
+import it.unibo.skalamon.utils.Seeded
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 /** Tests for [[HitBehavior]] and its implementations.
   */
-class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers:
+class ModifierBehaviorTest extends AnyFlatSpec with should.Matchers with Seeded:
   private val HIT_POWER = 30
 
   "Behavior with self-target" should "target the move's source" in:

@@ -9,12 +9,13 @@ import it.unibo.skalamon.model.field.weather.{Rain, Sandstorm}
 import it.unibo.skalamon.model.pokemon.Pokemon
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
+import it.unibo.skalamon.utils.Seeded
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 /** Tests for the execution of abilities in battle, from the ability factory.
   */
-class AbilityInBattleTest extends AnyFlatSpec with should.Matchers with BattleSimulationTest:
+class AbilityInBattleTest extends AnyFlatSpec with should.Matchers with BattleSimulationTest with Seeded:
   
   "Speed Boost" should "increase source's speed on turn start" in:
     val (battle, controller, _, _) = newBattle(yanmega)(neutral)

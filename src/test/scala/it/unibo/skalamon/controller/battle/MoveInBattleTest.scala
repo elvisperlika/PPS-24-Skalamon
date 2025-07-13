@@ -9,15 +9,14 @@ import it.unibo.skalamon.model.move.Move.*
 import it.unibo.skalamon.model.pokemon.Pokemon
 import it.unibo.skalamon.model.pokemon.Pokemon.*
 import it.unibo.skalamon.model.pokemon.Stat.{Attack, Speed}
-import it.unibo.skalamon.model.pokemon.{BattlePokemon, Pokemon}
 import it.unibo.skalamon.model.status.nonVolatileStatus.{Burn, Paralyze, Sleep}
+import it.unibo.skalamon.utils.Seeded
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 /** Tests for the execution of moves in battle, from the move factory.
   */
-class MoveInBattleTest extends AnyFlatSpec with should.Matchers
-    with BattleSimulationTest:
+class MoveInBattleTest extends AnyFlatSpec with should.Matchers with Seeded with BattleSimulationTest:
 
   "Tackle" should "just cause damage" in:
     val (battle, controller, _, _) = newBattle(pikachu)(rattata)
