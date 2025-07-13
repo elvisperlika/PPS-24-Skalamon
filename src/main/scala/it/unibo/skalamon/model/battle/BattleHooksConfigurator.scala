@@ -25,20 +25,6 @@ import it.unibo.skalamon.model.event.TurnStageEvents.{
 import it.unibo.skalamon.model.field.FieldEffectMixin.*
 import it.unibo.skalamon.model.field.{Field, FieldEffectMixin, PokemonRule}
 import it.unibo.skalamon.model.move.*
-import it.unibo.skalamon.model.battle.turn.BattleEvents._
-import it.unibo.skalamon.model.behavior.Behavior
-import it.unibo.skalamon.model.behavior.notifyFieldEffects
-import it.unibo.skalamon.model.event.ActionEvents
-import it.unibo.skalamon.model.event.EventType
-import it.unibo.skalamon.model.event.TurnStageEvents.ActionsReceived
-import it.unibo.skalamon.model.event.TurnStageEvents.Ended
-import it.unibo.skalamon.model.event.TurnStageEvents.Started
-import it.unibo.skalamon.model.field.Field
-import it.unibo.skalamon.model.field.FieldEffectMixin._
-import it.unibo.skalamon.model.field.PokemonRule
-import it.unibo.skalamon.model.move._
-import it.unibo.skalamon.model.event.BattleStateEvents
-import it.unibo.skalamon.model.field.FieldEffectMixin
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
 object BattleHooksConfigurator:
@@ -59,16 +45,16 @@ object BattleHooksConfigurator:
 
     battle.eventManager.watch(CreateWeather) {
       case t: Weather with Hooks => hookWeatherEffects(t)
-      case _                            =>
+      case _                     =>
     }
 
     battle.eventManager.watch(CreateTerrain) {
       case t: Terrain with Hooks => hookTerrainEffects(t)
-      case _                            =>
+      case _                     =>
     }
 
     battle.eventManager.watch(CreateRoom) {
-      case r: Room with Hooks      => hookRoomEffects(r)
+      case r: Room with Hooks             => hookRoomEffects(r)
       case r: Room with MutatedBattleRule => hookBattleRules(r)
       case _                              =>
     }
@@ -128,7 +114,6 @@ object BattleHooksConfigurator:
         pokemon.base.ability.hookAll(battle)(
           source = state =>
             for inField <- sourceTrainer(state).inField
-            // if pokemon is inField // TODO problem with non-updated state
             yield pokemon,
           target = targetTrainer(_).flatMap(_.inField)
         )

@@ -2,7 +2,6 @@ package it.unibo.skalamon.view
 
 import asciiPanel.AsciiPanel
 import it.unibo.skalamon.view.battle.{
-  BattleInput,
   BattleKeyBindings,
   BattleScreen
 }
@@ -23,11 +22,11 @@ class MainView extends JFrame:
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)
 
-  private var onKeyPressedCallback: Option[BattleInput => Unit] = None
+  private var onKeyPressedCallback: Option[InputKeyWords => Unit] = None
 
   addKeyListener(new KeyAdapter:
     override def keyPressed(e: KeyEvent): Unit =
-      BattleKeyBindings.keyEventToBattleInput(e).foreach { battleInput =>
+      BattleKeyBindings.keyEventToKeyWords(e).foreach { battleInput =>
         onKeyPressedCallback.foreach(_(battleInput))
       })
 
@@ -67,5 +66,5 @@ class MainView extends JFrame:
       * @param handler
       *   A function that takes a BattleInput and performs an action.
       */
-  def setKeyPressedHandler(handler: BattleInput => Unit): Unit =
+  def setKeyPressedHandler(handler: InputKeyWords => Unit): Unit =
     onKeyPressedCallback = Some(handler)

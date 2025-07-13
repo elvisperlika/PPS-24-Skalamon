@@ -5,7 +5,7 @@ import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.view.*
-import it.unibo.skalamon.view.battle.{BattleView, BattleInput, PlayerSide}
+import it.unibo.skalamon.view.battle.BattleView
 import it.unibo.skalamon.view.gameOver.GameOverView
 
 /** The main controller for the game, responsible for managing the battle
@@ -93,31 +93,31 @@ class MainController(
 
       input match
         case i
-            if BattleInput.playerMove1.ordinal to BattleInput.playerMove4.ordinal contains i.ordinal =>
+            if InputKeyWords.playerMove1.ordinal to InputKeyWords.playerMove4.ordinal contains i.ordinal =>
           handleMove(
             PlayerSide.Player,
-            i.ordinal - BattleInput.playerMove1.ordinal
+            i.ordinal - InputKeyWords.playerMove1.ordinal
           )
 
         case i
-            if BattleInput.opponentMove1.ordinal to BattleInput.opponentMove4.ordinal contains i.ordinal =>
+            if InputKeyWords.opponentMove1.ordinal to InputKeyWords.opponentMove4.ordinal contains i.ordinal =>
           handleMove(
             PlayerSide.Opponent,
-            i.ordinal - BattleInput.opponentMove1.ordinal
+            i.ordinal - InputKeyWords.opponentMove1.ordinal
           )
 
         case i
-            if BattleInput.playerPokemon1.ordinal to BattleInput.playerPokemon5.ordinal contains i.ordinal =>
+            if InputKeyWords.playerPokemon1.ordinal to InputKeyWords.playerPokemon5.ordinal contains i.ordinal =>
           handleSwitch(
             PlayerSide.Player,
-            i.ordinal - BattleInput.playerPokemon1.ordinal
+            i.ordinal - InputKeyWords.playerPokemon1.ordinal
           )
 
         case i
-            if BattleInput.opponentPokemon1.ordinal to BattleInput.opponentPokemon5.ordinal contains i.ordinal =>
+            if InputKeyWords.opponentPokemon1.ordinal to InputKeyWords.opponentPokemon5.ordinal contains i.ordinal =>
           handleSwitch(
             PlayerSide.Opponent,
-            i.ordinal - BattleInput.opponentPokemon1.ordinal
+            i.ordinal - InputKeyWords.opponentPokemon1.ordinal
           )
 
         case _ => ()
