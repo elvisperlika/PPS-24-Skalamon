@@ -519,6 +519,8 @@ Alcuni status volatili, come `Protect`, sono validi solo per uno o pochi turni. 
 
 Ogni `Status` quando assegnato ad un Pokémon tramite una classe `AssignedStatus` che oltre a memorizzarne lo `Status`, ne memorizza anche il turno di assegnamento.
 
+Per alcuni NonVolatileStatus che includono un elemento di casualità (come Freeze o Paralyze) è stato adottato lo Strategy Pattern, che permette di iniettare un’implementazione personalizzata dell’interfaccia RandomGenerator. Questo approccio migliora la testabilità del sistema, poiché consente l’uso di generatori fittizi in fase di test per ottenere risultati deterministici.
+
 ![](../uml/status.svg)
 
 Esempio di uno status non volatile:
@@ -537,6 +539,30 @@ case class Sleep(turnsLeft: Int = Sleep.DefaultTurns) extends NonVolatileStatus:
 
 object Sleep:
   val DefaultTurns: Int = 3
+```
+
+```scala
+case class Paralyze(generator: RandomGenerator = RandomGenerator())
+    extends NonVolatileStatus:
+  override def executeEffect(
+      pokemon: BattlePokemon
+  ): BattlePokemon =
+    val updatedStats = pokemon.base.stats.base.updatedWith(Stat.Speed) {
+      case Some(value) => Some(value / Paralyze.AttackReduction)
+      case other       => other
+    }
+    pokemon.copy(
+      base = pokemon.base.copy(stats =
+        pokemon.base.stats.copy(base = updatedStats)
+      ),
+      skipsCurrentTurn =
+        if Paralyze.TriggerChance.randomBoolean(using generator) then true
+        else pokemon.skipsCurrentTurn
+    )
+
+object Paralyze:
+  val AttackReduction: Int = 2
+  val TriggerChance: Percentage = 25.percent
 ```
 
 Esempio di come grazie al mixin di Expirable è stato facile rimuovere gli status scaduti:
@@ -562,6 +588,6 @@ Ogni interfaccia è composta da due livelli principali:
 
 Ad esempio, la `BattleView` gestisce la logica della schermata di battaglia e delega alla `BattleScreen` il compito di disegnare graficamente le informazioni come i Pokémon in campo, la vita residua, e le mosse disponibili.
 
-La `MainView` inizializza un terminale `AsciiPanel` con dimensioni fisse e aggiunge un `KeyListener` per gestire gli input da tastiera. Questi input vengono interpretati tramite gli object che implementano il trait `Inputs`, come `BattleKeyBindings`, che li mappa in comandi comprensibili dal controller. La `MainView` passa quest’ultimo object alle varie `View` tramite il pattern Strategy.
+La `MainView` inizializza un terminale `AsciiPanel` con dimensioni fisse e aggiunge un `KeyListener` per gestire gli input da tastiera. Questi input vengono interpretati tramite le classi che implementano il trait `Inputs`, come `BattleKeyBindings`, che li mappa in comandi comprensibili dal controller. La `MainView` passa quest’ultima classe alle varie `View` tramite il pattern Strategy.
 
 ![](../uml/view.svg)
