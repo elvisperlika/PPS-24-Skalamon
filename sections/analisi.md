@@ -137,7 +137,7 @@ Un tipo può essere verso un altro tipo:
 
 Le relazioni di efficacia trai i vari tipi sono espressi nella seguente matrice:
 
-`/img #tabellaTipi`
+![Efficacia dei tipi](../images/type-efficiency.png)
 
 ### Danno
 
@@ -247,7 +247,7 @@ Prima dell’inizio della battaglia, i team partecipanti in essa vengono costrui
     - Numero del turno corrente, partendo da 1.
 - Al momento della scelta delle azioni (mosse o sostituzione) per il loro Pokémon in campo, premere il tasto corrispondente mostrato a video la selezionerà. Un utente può selezionare una sola mossa per turno, ma può sovrascriverla finché tutti i giocatori avranno terminato la selezione.
 
-`// uml #petri`
+![Petri](../uml/petri.svg)
 
 ### Esempio di battaglia
 
@@ -304,8 +304,8 @@ Prima dell’inizio della battaglia, i team partecipanti in essa vengono costrui
 
 Sulla base dei requisiti precedentemente spiegati emergono i seguenti diagrammi di analisi:
 
-`// uml #analysis_pokemon`
+![Analisi: Pokémon](../uml/analysis_pokemon.svg)
 
-`// uml #analysis_battle`
+![Analisi: Battaglia](../uml/analysis_battle.svg)
 
-`// uml #analysis_action`
+![Analisi: Azioni](../uml/analysis_action.svg)

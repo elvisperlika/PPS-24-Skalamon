@@ -20,7 +20,7 @@ L’enumerazione `Efficacy` modella i quattro livelli di efficacia possibili:
 
 - `calculateTypeMultiplier` che prende una lista di `Efficacy` e calcola il **moltiplicatore finale** per l’attacco, utile per attacchi contro bersagli con più tipi (es. *Grass/Steel*).
 
- `/uml #types_impl`
+  ![](../uml/types_impl.svg)
 
 ## Campo di battaglia
 
@@ -103,9 +103,9 @@ Di seguito alcuni esempi di effetti del campo di battaglia:
       val Duration: Int = 5
       def apply(t: Int): Misty = new Misty(t)
     ```
-    
 
-`/uml field_mixin_impl`
+
+![](../uml/field_mixin_impl.svg)
 
 ### Hooks
 
@@ -148,9 +148,9 @@ Gli effetti del campo di battaglia influenzano i Pokémon in modo diverso a seco
         )
     }
     ```
-    
 
-`/uml modify_builder_uml`
+
+![](../uml/modify_builder_uml.svg)
 
 ### MutatedBattleRule
 
@@ -165,7 +165,7 @@ def hookRoomBattleRules[T <: Room with MutatedBattleRule](o: T): Unit =
   }
 ```
 
-`/uml #battleRule_impl`
+![](../uml/battleRule_impl.svg)
 
 ### Expirable
 
@@ -193,7 +193,7 @@ Le Side Condition applicabili a una porzione del campo di battaglia (lato di un 
 
 Questa distinzione è stata implementata andando ad ampliare il Mixin integrando il trait `AddConstraint`.
 
-`/uml unique_multiple_impl`
+![](../uml/unique_multiple_impl.svg)
 
 ```scala
 trait Unique[E] extends AddConstraint:
@@ -225,7 +225,7 @@ L’ordinamento concreto viene fornito tramite istanze implicite definite con **
 
 Ogni implementazione di `BattleRule` (es. `Classic`, `Tricky`) assegna alla strategia `actionOrderStrategy` l’ordinamento desiderato attraverso il relativo `given`, come mostrato:
 
-`/uml #battleRule_impl`
+![](../uml/battleRule_impl.svg)
 
 ```scala
 
@@ -293,9 +293,9 @@ Un’ottima gestione dei behaviors è un punto cruciale del progetto al fine di 
     Ottenuto il contesto di esecuzione decorato dai behavior, è necessario avere un modo per applicarlo alla battaglia per ottenere un nuovo stato. Questo viene effettuato dal `BattleStateUpdaterBehaviorVisitor`, che per ogni behavior primitivo crea un nuovo snapshot dello stato della battaglia, basandosi anche sui `BehaviorModifiers` forniti.
     
     Inoltre, l’esecuzione di un behavior notifica l’`EventManager` di un `BehaviorEvent[T]`, che può essere ascoltato tramite reificazione del tipo di behavior, ad esempio: `eventManager.watch(BehaviorEvent[StatusBehavior])(...)`
-    
 
-`// uml behaviors_impl`
+
+![](../uml/behaviors_impl.svg)
 
 ## DSL
 
@@ -464,7 +464,7 @@ Tipi di eventi osservabili durante la partita sono:
 - `BattleStateEvents.Finished(Option[Trainer])` (game over, con il giocatore vincitore in parametro)
 - `ActionEvents.{Move, Switch}(Action)` (esecuzione di un’azione)
 
-`// uml #eventManager_impl`
+![](../uml/eventManager_impl.svg)
 
 ## Team builder
 
@@ -509,7 +509,7 @@ Durante le battaglie, viene utilizzata una rappresentazione più ricca (**Battle
 
 Questo sistema permette di gestire in modo coerente ed efficiente gli effetti delle mosse che alterano le statistiche durante il combattimento, mantenendo una **chiara separazione tra i valori fissi (immutabili)** e quelli **modificabili**. Tale separazione consente una gestione funzionale e priva di ambiguità del comportamento dei Pokémon, migliorando la leggibilità e la manutenibilità del codice.
 
-`// manca UML #stats`
+![](../uml/stats.svg)
 
 ## Status
 
@@ -521,7 +521,7 @@ Alcuni status volatili, come `Protect`, sono validi solo per uno o pochi turni. 
 
 Ogni `Status` quando assegnato ad un Pokémon tramite una classe `AssignedStatus` che oltre a memorizzarne lo `Status`, ne memorizza anche il turno di assegnamento.
 
-`// manca UML #status`
+![](../uml/status.svg)
 
 Esempio di uno status non volatile:
 
@@ -566,4 +566,4 @@ Ad esempio, la `BattleView` gestisce la logica della schermata di battaglia e de
 
 La `MainView` inizializza un terminale `AsciiPanel` con dimensioni fisse e aggiunge un `KeyListener` per gestire gli input da tastiera. Questi input vengono interpretati tramite gli object che implementano il trait `Inputs`, come `BattleKeyBindings`, che li mappa in comandi comprensibili dal controller. La `MainView` passa quest’ultimo object alle varie `View` tramite il pattern Strategy.
 
-`// manca UML #view`
+![](../uml/view.svg)

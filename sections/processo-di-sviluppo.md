@@ -2,7 +2,7 @@
 
 # Scrum
 
-La metodologia di sviluppo applicata su questo progetto è di tipo *Agile*, in particolare si è adottata la variante *Scrum*.
+La metodologia di sviluppo applicata su questo progetto è di tipo Agile, in particolare si è adottata la variante *Scrum*.
 
 Il team si è stato organizzato nel seguente modo:
 
