@@ -1,10 +1,7 @@
 package it.unibo.skalamon.view
 
 import asciiPanel.AsciiPanel
-import it.unibo.skalamon.view.battle.{
-  BattleKeyBindings,
-  BattleScreen
-}
+import it.unibo.skalamon.view.battle.BattleScreen
 import it.unibo.skalamon.view.gameOver.GameOverScreen
 
 import java.awt.event.{KeyAdapter, KeyEvent}
@@ -17,7 +14,7 @@ class MainView extends JFrame:
   private val terminalWidth: Int = 100
   private val terminalHeight: Int = 50
 
-  private val screenTitle: String = "Scalamon"
+  private val screenTitle: String = "Skalamon"
 
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)
