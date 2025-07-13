@@ -7,7 +7,7 @@ Il committente richiede la progettazione di un videogame ispirato dai combattime
 Gli obiettivi principali del seguente progetto sono:
 
 - Offrire una esperienza di combattimento tra due giocatori offline quanto più fedele possibile a quella originale.
-- Permettere l'integrazione di muove creature, mosse, abilità, effetti del campo di battaglia — ogni integrazione prenderà il nome di “Generazione” affiancato da un numero sequenziale $x$ (es. Generazione 3).
+- Permettere l'integrazione di muove creature, mosse, abilità, effetti del campo di battaglia — ogni integrazione prenderà il nome di “Generazione” affiancato da un numero sequenziale *x* (es. Generazione 3).
 - Stimolare la community a sviluppare le proprie Generazioni grazie ai *Domain Specific Language*.
 - Stabilire una base di almeno 12 creature distinte, ciascuna con statistiche, tipo e set mosse coerente con un sistema di bilanciamento e fedele al gioco originale.
 
@@ -304,8 +304,18 @@ Prima dell’inizio della battaglia, i team partecipanti in essa vengono costrui
 
 Sulla base dei requisiti precedentemente spiegati emergono i seguenti diagrammi di analisi:
 
+Pokémon:
+
 ![Analisi: Pokémon](../uml/analysis_pokemon.svg)
 
+---
+
+Battaglia:
+
 ![Analisi: Battaglia](../uml/analysis_battle.svg)
+
+---
+
+Azioni:
 
 ![Analisi: Azioni](../uml/analysis_action.svg)
