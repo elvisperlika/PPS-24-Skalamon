@@ -12,12 +12,7 @@ It features a turn-based strategic combat mechanic between two teams of Pokémon
 - Turn-based system designed for competitive and casual play
 - Quick to set up — just download, launch, and start battling
 
-## Requirements
-
-// TODO
-
 ## How to play
-
 
 **Download the latest JAR file from the GitHub releases page.**
 
