@@ -18,7 +18,17 @@ It features a turn-based strategic combat mechanic between two teams of Pokémon
 
 Run the JAR, then you and your friend can create your own teams and join the battle.
 
-### Commands
+### Build your team
+
+At the start of the battle, you and your opponent will receive a dictionary 
+that maps each letter of the alphabet to a specific Pokémon.
+Each player must enter their nickname and select their team by typing the 
+letters corresponding to the chosen Pokémon in the terminal.
+
+Alternatively, to jump straight into the game without manually selecting a 
+team, you can type skip during the team selection phase to receive a default team automatically.
+
+### Gameplay Commands
 
 Player 1
 - Moves are assigned to buttons: **Q - W - E - R**
