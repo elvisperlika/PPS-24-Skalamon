@@ -17,18 +17,12 @@ class MainView extends JFrame:
   private val terminalWidth: Int = 100
   private val terminalHeight: Int = 50
 
-  private val screenTitle: String = "ScalaMon Showdown"
+  private val screenTitle: String = "Scalamon"
 
   /** The terminal used for displaying the battle screen. */
   val terminal: AsciiPanel = AsciiPanel(terminalWidth, terminalHeight)
 
   private var onKeyPressedCallback: Option[InputKeyWords => Unit] = None
-
-  addKeyListener(new KeyAdapter:
-    override def keyPressed(e: KeyEvent): Unit =
-      BattleKeyBindings.keyEventToKeyWords(e).foreach { battleInput =>
-        onKeyPressedCallback.foreach(_(battleInput))
-      })
 
   /** Sets up the main view of the game, including the terminal and key event
     * handling.
@@ -61,6 +55,18 @@ class MainView extends JFrame:
   override def repaint(): Unit =
     terminal.clear()
     super.repaint()
+
+  /** Sets the input handler for the main view. This method listens for key
+    * events and converts them into BattleInput
+    * @param handler
+    *   An instance of Inputs that defines how key events are mapped to
+    */
+  def setInputHandler(handler: Inputs): Unit =
+    addKeyListener(new KeyAdapter:
+      override def keyPressed(e: KeyEvent): Unit =
+        handler.keyEventToKeyWords(e).foreach { battleInput =>
+          onKeyPressedCallback.foreach(_(battleInput))
+        })
 
     /** Sets the key pressed handler to process BattleInput events.
       * @param handler

@@ -5,7 +5,7 @@ import it.unibo.skalamon.model.battle.{Battle, Trainer}
 import it.unibo.skalamon.controller.battle.{BattleController, GameState}
 import it.unibo.skalamon.model.event.BattleStateEvents
 import it.unibo.skalamon.view.*
-import it.unibo.skalamon.view.battle.BattleView
+import it.unibo.skalamon.view.battle.{BattleKeyBindings, BattleView}
 import it.unibo.skalamon.view.gameOver.GameOverView
 
 /** The main controller for the game, responsible for managing the battle
@@ -49,7 +49,7 @@ class MainController(
       battleView.update(turn.state.snapshot, controller.battle.turnIndex)
     )
 
-    setupInputHandler()
+    setupBattleInputs()
 
     gameLoop()
 
@@ -58,7 +58,8 @@ class MainController(
     * This method listens for key presses and handles them according to the
     * current game state, allowing players to select moves or switch Pokémon.
     */
-  private def setupInputHandler(): Unit =
+  private def setupBattleInputs(): Unit =
+    mainView.setInputHandler(BattleKeyBindings)
     mainView.setKeyPressedHandler { input =>
       val trainers = battle.currentTurn.get.state.snapshot.trainers
       val player = trainers.head
