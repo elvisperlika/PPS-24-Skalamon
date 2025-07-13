@@ -70,7 +70,10 @@ object BattleHooksConfigurator:
     }
 
     battle.hookBattleStateUpdate(ActionEvents.Switch) { (state, action) =>
-      executeSwitch(action.in, state)
+      val trainer =
+        state.trainers.find(_.team.exists(_.id == action.in.id)).head
+      val removedVolatileStatuses = removeVolatileStatuses(trainer, state)
+      executeSwitch(action.in, removedVolatileStatuses)
     }
 
     battle.hookBattleStateUpdate(Ended) { (state, _) =>
@@ -269,6 +272,30 @@ object BattleHooksConfigurator:
 
       bt.copy(trainers = updatedTrainers)
 
+    /** Removes volatile statuses from the Pokémon in the trainer's team that is
+      * @param trainer
+      *   The trainer whose Pokémon's volatile statuses will be removed.
+      * @param state
+      *   The current battle state containing all trainers and their Pokémon.
+      * @return
+      *   The updated battle state with the trainer's Pokémon having no
+      */
+    def removeVolatileStatuses(
+        trainer: Trainer,
+        state: BattleState
+    ): BattleState =
+      val updatedTeam = trainer.team.map: pokemon =>
+        if pokemon.id == trainer.inField.get.id then
+          pokemon.copy(volatileStatus = Set.empty)
+        else
+          pokemon
+
+      state.copy(
+        trainers = state.trainers.map:
+          case t if t.id == trainer.id => trainer.copy(team = updatedTeam)
+          case t                       => t
+      )
+
     /** Removes expired volatile statuses from a Pokémon.
       *
       * @param pk
@@ -277,9 +304,7 @@ object BattleHooksConfigurator:
       *   The Pokémon with expired statuses removed.
       */
     def removeExpiredStatuses(pk: BattlePokemon): BattlePokemon =
-      val updatedVolatileStatuses = pk.volatileStatus.filterNot {
-        case AssignedStatus(status: Expirable, _) =>
-          status.isExpired(battle.turnIndex)
-        case _ => false
-      }
-      pk.copy(volatileStatus = updatedVolatileStatuses)
+      import it.unibo.skalamon.model.battle.ExpirableSystem.removeExpiredVolatileStatuses
+      pk.copy(volatileStatus =
+        pk.volatileStatus.removeExpiredVolatileStatuses(battle.turnIndex)
+      )

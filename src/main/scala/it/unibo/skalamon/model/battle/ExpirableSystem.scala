@@ -3,6 +3,7 @@ package it.unibo.skalamon.model.battle
 import it.unibo.skalamon.model.field.FieldEffectMixin.{Expirable, SideCondition}
 import it.unibo.skalamon.model.field.fieldside.FieldSide
 import it.unibo.skalamon.model.field.{Field, FieldEffectMixin}
+import it.unibo.skalamon.model.status.{AssignedStatus, VolatileStatus}
 
 object ExpirableSystem:
 
@@ -44,7 +45,8 @@ object ExpirableSystem:
         })
 
       field.copy(
-        sides = field.sides.view.mapValues(removeExpiredConditions(_, t)).toMap,
+        sides =
+          field.sides.view.mapValues(removeExpiredConditions(_, t)).toMap,
         terrain = cleanEffect(field.terrain.collect {
           case e: FieldEffectMixin.Terrain with Expirable => e
         }),
@@ -55,3 +57,18 @@ object ExpirableSystem:
           case e: FieldEffectMixin.Weather with Expirable => e
         })
       )
+
+  extension (status: Set[AssignedStatus[VolatileStatus]])
+    /** Remove all expired [[VolatileStatus]] from the set of
+      * [[AssignedStatus]].
+      *
+      * @param t
+      *   Current turn
+      * @return
+      *   Set of [[AssignedStatus]] without expired [[VolatileStatus]]
+      */
+    def removeExpiredVolatileStatuses(t: Int)
+        : Set[AssignedStatus[VolatileStatus]] =
+      status.filterNot:
+        case AssignedStatus(status: Expirable, _) => status.isExpired(t)
+        case _                                    => false

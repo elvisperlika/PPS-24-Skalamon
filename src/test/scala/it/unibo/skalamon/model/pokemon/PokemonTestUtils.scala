@@ -123,6 +123,19 @@ object PokemonTestUtils:
     Set.empty
   )
 
+  val simplePokemon6: BattlePokemon = BattlePokemon(
+    Pokemon.squirtle,
+    Female,
+    startingHP,
+    List(BattleMove(moveThunderShock, powerPoint)),
+    Option(AssignedStatus(Sleep(), midTurn)),
+    Set(
+      AssignedStatus(Flinch(), midTurn),
+      AssignedStatus(ProtectEndure(), midTurn),
+      AssignedStatus(Yawn(), lateTurn)
+    )
+  )
+
   def trainerAlice: Trainer =
     Trainer("Alice", List(simplePokemon1), _inField = Some(simplePokemon1))
 
@@ -133,7 +146,11 @@ object PokemonTestUtils:
     Trainer("Gio", List(simplePokemon3), _inField = Some(simplePokemon3))
 
   def trainerKirk: Trainer =
-    Trainer("Kirk", List(simplePokemon4), _inField = Some(simplePokemon4))
+    Trainer(
+      "Kirk",
+      List(simplePokemon4, simplePokemon6),
+      _inField = Some(simplePokemon4)
+    )
 
   def trainerLuca: Trainer =
     Trainer("Luca", List(simplePokemon5), _inField = Some(simplePokemon5))
