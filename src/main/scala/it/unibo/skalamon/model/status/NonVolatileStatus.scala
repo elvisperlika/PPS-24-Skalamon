@@ -2,6 +2,8 @@ package it.unibo.skalamon.model.status
 
 import it.unibo.skalamon.model.pokemon.BattlePokemon
 
+/** Represents the Non-Volatile status of a Pokémon.
+  */
 trait NonVolatileStatus extends Status:
   /** Executes the effect of the non-volatile status on the given Pokémon.
     * @param pokemon
