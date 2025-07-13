@@ -1,7 +1,7 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / scalaVersion := "2.13.11"
 
 resolvers += "jitpack" at "https://jitpack.io"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 
 inThisBuild(
   List(
@@ -18,5 +18,6 @@ lazy val root = (project in file("."))
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
     libraryDependencies += "com.github.trystan" % "AsciiPanel" % "master-SNAPSHOT",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
-    coverageEnabled := true
+    coverageEnabled := true,
+    assembly / mainClass := Some("it.unibo.skalamon.main.scala")
   )
