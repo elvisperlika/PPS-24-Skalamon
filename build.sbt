@@ -19,5 +19,5 @@ lazy val root = (project in file("."))
     libraryDependencies += "com.github.trystan" % "AsciiPanel" % "master-SNAPSHOT",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     coverageEnabled := true,
-    assembly / mainClass := Some("it.unibo.skalamon.main.scala")
+    assembly / mainClass := Some("it.unibo.skalamon.main")
   )
