@@ -14,4 +14,6 @@
 
 - [Testing](sections/testing.md)
 
+- [Screenshots](sections/screenshots.md)
+
 - [Retrospettiva](sections/retrospettiva.md)

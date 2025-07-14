@@ -1,6 +1,6 @@
 # Introduzione
 
-Il progetto *Skalámon* si propone di realizzare un sistema per la simulazione di battaglie Pokémon a turni fedele alla celebre serie Nintendo.
+Il progetto *Skálamon* si propone di realizzare un sistema per la simulazione di battaglie Pokémon a turni fedele alla celebre serie Nintendo.
 
 Le battaglie Pokémon sono combattimenti strategici a turni in cui due allenatori si sfidano utilizzando una squadra di massimo 6 Pokémon ciascuno. Ogni Pokémon può imparare fino a 4 mosse, ciascuna con effetti diversi. Durante ogni turno, entrambi i giocatori selezionano contemporaneamente un’azione tra le seguenti: eseguire una delle mosse disponibili o sostituire il Pokémon attivo con un altro della propria squadra (non KO). I turni vengono poi risolti tenendo conto di priorità e velocità. Il combattimento termina quando un allenatore non ha più Pokémon disponibili, decretando la vittoria dell’avversario.
 
