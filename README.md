@@ -1,7 +1,7 @@
-# PPS-24-Skalámon
+# PPS-24-Skalamon
 
-**Skalámon** is a faithful clone of the classic Pokémon battle system.
-It features a turn-based strategic combat mechanic between two teams of Pokémon (or rather _Skalámon_), each controlled by a trainer.
+**Skálamon** is a faithful clone of the classic Pokémon battle system.
+It features a turn-based strategic combat mechanic between two teams of Pokémon (or rather _Skálamon_), each controlled by a trainer.
 
 ## Features
 
@@ -32,6 +32,9 @@ letters corresponding to the chosen Pokémon in the terminal.
 Alternatively, to jump straight into the game without manually selecting a 
 team, you can type skip during the team selection phase to receive a default team automatically.
 
+<img width="600" alt="Team builder" src="https://github.com/user-attachments/assets/344e4e0e-d609-459e-88a5-fca8e7b0ce1d" />
+
+
 ### Gameplay Commands
 
 Player 1
@@ -46,16 +49,17 @@ One action per turn per player: if a move is executed, switching is not allowed 
 
 The turn automatically progresses once both players have made their choices.
 
-// TODO: add game screenshot
+<img width="650" alt="Battle" src="https://github.com/user-attachments/assets/7c87056f-1627-4f08-a68f-3eea28ccb469" />
 
-## Create your Skalámon generation
 
-### Skalámon creatures DSL
+## Create your Skálamon generation
+
+### Skálamon creatures DSL
 
 Easy way to create your Skalámon using a fluent DSL
 
 Customize the following attributes:
-1. **Name** – Give your Skalámon a unique name
+1. **Name** – Give your Skálamon a unique name
 2. **Types** – Specify one or more elemental types
 3. **Max HP** – Define its maximum health points
 4. **Weight** – Set its weight
@@ -112,7 +116,6 @@ def quickAttack: Move =
 
 ```scala
 def dragonDance: Move =
-    import it.unibo.skalamon.model.behavior.kind.+
     move("Dragon Dance", Dragon, Status):
       _ pp 20 onSuccess new BehaviorGroup(
         StatChangeBehavior(Attack + 1),
